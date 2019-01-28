@@ -1,0 +1,75 @@
+C:\test>md5sum collision*.exe
+e5ada204da050d46f926e598befa1339 *collision1.exe
+e5ada204da050d46f926e598befa1339 *collision2.exe
+
+C:\test>powershell -Command "(Get-Item -path collision1.exe).VersionInfo | fl"
+
+
+OriginalFilename  : tweakpng.exe
+FileDescription   : TweakPNG
+ProductName       : TweakPNG
+Comments          : Website: http://entropymine.com/jason/tweakpng/
+CompanyName       : Jason Summers
+FileName          : C:\test\collision1.exe
+FileVersion       : 1, 4, 6, 1
+ProductVersion    : 1, 4, 6, 1
+IsDebug           : False
+IsPatched         : False
+IsPreRelease      : False
+IsPrivateBuild    : False
+IsSpecialBuild    : False
+Language          : English (United States)
+LegalCopyright    : Copyright (C) 1999-2014 Jason Summers
+LegalTrademarks   :
+PrivateBuild      :
+SpecialBuild      :
+FileVersionRaw    : 1.4.6.1
+ProductVersionRaw : 1.4.6.1
+
+
+
+
+C:\test>powershell -Command "(Get-Item -path collision2.exe).VersionInfo | fl"
+
+
+OriginalFilename  :
+FileDescription   : MD5 Collision Generator
+ProductName       : MD5 Collision Generator
+Comments          : by Marc Stevens (http://www.win.tue.nl/hashclash/
+CompanyName       :
+FileName          : C:\test\collision2.exe
+FileVersion       : 1, 0, 0, 5
+ProductVersion    : 1, 0, 0, 5
+IsDebug           : False
+IsPatched         : False
+IsPreRelease      : False
+IsPrivateBuild    : False
+IsSpecialBuild    : False
+Language          : English (United States)
+LegalCopyright    : Copyright (C) 2006
+LegalTrademarks   :
+PrivateBuild      :
+SpecialBuild      :
+FileVersionRaw    : 1.0.0.5
+ProductVersionRaw : 1.0.0.5
+
+
+
+
+C:\test>collision2.exe
+MD5 collision generator v1.5
+by Marc Stevens (http://www.win.tue.nl/hashclash/)
+
+Allowed options:
+  -h [ --help ]           Show options.
+  -q [ --quiet ]          Be less verbose.
+  -i [ --ihv ] arg        Use specified initial value. Default is MD5 initial
+                          value.
+  -p [ --prefixfile ] arg Calculate initial value using given prefixfile. Also
+                          copies data to output files.
+  -o [ --out ] arg        Set output filenames. This must be the last option
+                          and exactly 2 filenames must be specified.
+                          Default: -o msg1.bin msg2.bin
+
+
+C:\test>collision1.exe

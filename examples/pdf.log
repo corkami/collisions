@@ -1,0 +1,38 @@
+12:17:35.33>wget -q https://meltdownattack.com/meltdown.pdf
+
+12:17:35.81>wget -q https://spectreattack.com/spectre.pdf
+
+12:17:36.38>md5sum meltdown.pdf spectre.pdf
+883ceb20e0b066e4df55e4c2f6a5459e *meltdown.pdf
+49626fa1ea90631b66135f4ba2e10ef2 *spectre.pdf
+
+12:17:36.44>pdf.py spectre.pdf meltdown.pdf
+
+KEEP CALM and IGNORE THE NEXT ERRORS
+error: cannot recognize xref format
+warning: trying to repair broken xref
+warning: repairing PDF document
+
+collision1.pdf:
+
+PDF-1.3
+Info object (77 0 R):
+<</Creator(cairo 1.14.6 \(http://cairographics.org\))/Producer(cairo 1.14.6 \(http://cairographics.org\))>>
+Pages: 18
+
+Retrieving info from pages 1-18...
+
+
+collision2.pdf:
+
+PDF-1.3
+Info object (77 0 R):
+<</Creator(cairo 1.14.6 \(http://cairographics.org\))/Producer(cairo 1.14.6 \(http://cairographics.org\))>>
+Pages: 19
+
+Retrieving info from pages 1-19...
+
+MD5: bcc4be725bbc03c6c3dfc42f59b3df96
+Success!
+
+12:17:36.94>
