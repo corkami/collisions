@@ -1,0 +1,2 @@
+# collisions
+Hash collisions
