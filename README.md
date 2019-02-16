@@ -22,6 +22,7 @@ This page provide tricks specific to file formats and pre-computed collision pre
 - [Exploitations](#exploitations)
   - [Standard strategy](#standard-strategy)
     - [JPG](#jpg)
+      - [custom scans](#custom-scans)
     - [PNG](#png)
       - [incompatibility](#incompatibility)
     - [GIF](#gif)
@@ -175,7 +176,7 @@ These common properties of file formats make it possible - they are not typicall
 Both files are almost identical (their content have only a few bits of differences)
 
 
-**Exploitation**: 
+**Exploitation**:
 
 Bundle 2 contents, then either:
 - Data exploit: run code that checks for differences and displays one or the other (typically trivial since differences are known in advance).
@@ -277,7 +278,7 @@ Examples with `N=1` and 20 bytes of set text in the collision blocks:
 00:  55 6E 69 43-6F 6C 6C 20-31 20 70 72-65 66 69 78  UniColl 1 prefix
 10:  20 32 30 62-F5 48 34 B9-3B 1C 01 9F-C8 6B E6 44   20b⌡H4╣;∟☺ƒ╚kµD
 20:  FE F6 31 3A-63 DB 99 3E-77 4D C7 5A-6E B0 A6 88  ■÷1:c█Ö>wM╟Zn░ªê
-30:  04 05 FB 39-33 21 64 BF-0D A4 FE E2-A6 9D 83 36  ♦♣√93!d┐♪ñ■Γª¥â6  \ 
+30:  04 05 FB 39-33 21 64 BF-0D A4 FE E2-A6 9D 83 36  ♦♣√93!d┐♪ñ■Γª¥â6  \
 40:  4B 14 D7 F2-47 53 84 BA-12 2D 4F BB-83 78 6C 70  K¶╫≥GSä║↕-O╗âxlp
 50:  C6 EB 21 F2-F6 59 9A 85-14 73 04 DD-57 5F 40 3C  ╞δ!≥÷YÜà¶s♦▌W_@<    .........X......
 60:  E1 3F B0 DB-E8 B4 AA B0-D5 56 22 AF-B9 04 26 FC  ß?░█Φ┤¬░╒V"»╣♦&ⁿ    ................
@@ -344,7 +345,7 @@ They allow to collide any content. They don't exist for SHA-1 yet.
 2. pad the shortest to be as long as the longest. both are padded to the next block - minus 12 bytes
   - these 12 bytes of random data will be added on both sides to randomize the birthday search
 3. X near-collision blocks will be computed and appended.
-   
+
    The fewer blocks, the longer the computation.
 
    Ex: [400 kHours for 1 block](https://www.win.tue.nl/hashclash/SingleBlock/). 72 hours.cores for 9 blocks with [HashClash](https://github.com/cr-marcstevens/hashclash).
@@ -362,26 +363,26 @@ Examples: let's collide `yes` and `no`. It took 3 hours on 24 cores.
 
 ```
 'yes' prefix:
-000:  79 65 73 0A-3D 62 84 11-01 75 D3 4D-EB 80 93 DE  yes◙=bä◄☺u╙MδÇô▐
+000:  79 65 73 0A-3D 62 84 11-01 75 D3 4D-EB 80 93 DE  yes◙=bä◄☺u╙MδÇô▐   - Prefix, padding
 010:  31 C1 D9 30-45 FB BE 1E-71 F0 0A 63-75 A8 30 AA  1┴┘0E√╛▲q≡◙cu¿0¬
 020:  98 17 CA E3-A2 6B 8E 3D-44 A9 8F F2-0E 67 96 48  ÿ↨╩πókÄ=D⌐Å≥♫gûH
-030:  97 25 A6 FB-00 00 00 00-49 08 09 33-F0 62 C4 E8  ù%ª√    I◘○3≡b─Φ                                                                                     
-                                                                       
-040:  D5 F1 54 CD-CA A1 42 90-7F 9D 3D 9A-67 C4 1B 0F  ╒±T═╩íBÉ⌂¥=Üg─←☼
+030:  97 25 A6 FB-00 00 00 00-49 08 09 33-F0 62 C4 E8  ù%ª√    I◘○3≡b─Φ
+
+040:  D5 F1 54 CD-CA A1 42 90-7F 9D 3D 9A-67 C4 1B 0F  ╒±T═╩íBÉ⌂¥=Üg─←☼  - Collision blocks start
 050:  04 9F 19 E8-92 C3 AA 19-43 31 1A DB-DA 96 01 54  ♦ƒ↓ΦÆ├¬↓C1→█┌û☺T
 060:  85 B5 9A 88-D8 A5 0E FB-CD 66 9A DA-4F 20 8A AA  à╡Üê╪Ñ♫√═fÜ┌O è¬
 070:  BA E3 9C F0-78 31 8F D1-14 5F 3E B9-0F 9F 3E 19  ║π£≡x1Å╤¶_>╣☼ƒ>↓
-                                                                       
+
 080:  09 9C BB A9-45 89 BA A8-03 E6 C0 31-A0 54 D6 26  ○£╗⌐Eë║¿♥µ└1áT╓&
 090:  3F 80 4C 06-0F C7 D9 19-09 D3 DA 14-FD CB 39 84  ?ÇL♠☼╟┘↓○╙┌¶²╦9ä
 0A0:  1F 0D 77 5F-55 AA 7A 07-4C 24 8B 13-0A 54 A2 BC  ▼♪w_U¬z•L$ï‼◙Tó╝
 0B0:  C5 12 7D 4F-E0 5E F2 23-C5 07 61 E4-80 91 B2 13  ┼↕}Oα^≥#┼•aΣÇæ▓‼
-                                                                       
+
 0C0:  E7 79 07 2A-CF 1B 66 39-8C F0 8E 7E-75 25 22 1D  τy•*╧←f9î≡Ä~u%"↔
 0D0:  A7 3B 49 4A-32 A4 3A 07-61 26 64 EA-6B 83 A2 8D  º;IJ2ñ:•a&dΩkâóì
 0E0:  BE A3 FF BE-4E 71 AE 18-E2 D0 86 4F-20 00 30 26  ╛ú ╛Nq«↑Γ╨åO  0&
 0F0:  0A 71 DE 1F-40 B4 F4 8F-9C 50 5C 78-DD CD 72 89  ◙q▐▼@┤⌠Å£P\x▌═rë
-                                                                       
+
 100:  BA D1 BF F9-96 80 E3 06-96 F3 B9 7C-77 2D EB 25  ║╤┐∙ûÇπ♠û≤╣|w-δ%
 110:  1E 56 70 D7-14 1F 55 4D-EC 11 58 59-92 45 E1 33  ▲Vp╫¶▼UM∞◄XYÆEß3
 120:  3E 0E A1 6E-FF D9 90 AD-F6 A0 AD 0E-C6 D6 88 12  >♫ín ┘É¡÷á¡♫╞╓ê↕
@@ -428,17 +429,17 @@ Examples: let's collide `yes` and `no`. It took 3 hours on 24 cores.
 110:  1E 56 70 D7-14 1F 55 4D-EC 11 58 59-92 45 E1 33  ▲Vp╫¶▼UM∞◄XYÆEß3
 120:  3E 0E A1 6E-FF D9 90 AD-F6 A0 AD 0E-CA D6 88 12  >♫ín ┘É¡÷á¡♫╩╓ê↕
 130:  B8 74 F2 9E-DD 53 F7 88-19 73 85 39-AA 9B E0 8D  ╕t≥₧▌S≈ê↓sà9¬¢αì
-                                                                       
+
 140:  82 BF 9C 5E-58 42 1E 3B-94 CF 5B 54-73 5F A8 4A  é┐£^XB▲;ö╧[Ts_¿J
 150:  FD 5B 64 CF-59 D1 96 74-14 B3 0C AF-11 1C F9 47  ²[d╧Y╤ût¶│♀»◄∟∙G
 160:  C5 7A 2C F7-D5 24 F5 EB-BE 54 3E 12-70 24 67 3F  ┼z,≈╒$⌡δ╛T>↕p$g?
 170:  01 DD 95 76-8D 0D 58 FB-50 23 70 3A-BD ED BE AC  ☺▌òvì♪X√P#p:╜φ╛¼
-                                                                       
+
 180:  B8 32 DB AE-E8 DC 3A 83-7A C8 D5 0F-08 90 1D 99  ╕2█«Φ▄:âz╚╒☼◘É↔Ö
 190:  2D 7D 17 34-4E A8 21 98-61 1A 65 DA-FC 9B A4 BA  -}↨4N¿!ÿa→e┌ⁿ¢ñ║
 1A0:  E1 42 2B 86-0C 94 2A F6-D6 A4 81 B5-2B 2B E9 37  ßB+å♀ö*÷╓ñü╡++Θ7
 1B0:  44 D2 E4 23-14 7C 16 B8-84 90 8B E0-A1 A7 BD 27  D╥Σ#¶|▬╕äÉïαíº╜'
-                                                                       
+
 1C0:  C7 7E E6 17-1A 93 C5 EE-59 70 91 26-4E 9D C7 7C  ╟~µ↨→ô┼εYpæ&N¥╟|
 1D0:  1D 3D AB F1-B4 F4 F1 D9-86 48 75 77-6E FE 98 84  ↔=½±┤⌠±┘åHuwn■ÿä
 1E0:  EF 3C 1C C7-16 5A 1F 83-60 EC 5C FE-CA 17 0C 54  ∩<∟╟▬Z▼â`∞\■╩↨♀T
@@ -478,8 +479,8 @@ Classic collisions of 2 valid files with the same file type.
 Theoretical limitations and workarounds:
 - the *Application* segment should in theory right after the *Start of Image* marker.
   In practice, this is not necessary, so our collision can be generic: the only limitation is the size of the smallest image.
-- a comment's length is stored on 2 bytes, so it's limited to 65536 bytes.
-  To jump over another image, its *Entropy Coded Segment* needs to be split to scans smaller than this, either by storing the image as progressive, either by using *JPEGTran* and custom scans definition.
+- a comment's length is stored on 2 bytes, so the amount it can store is limited to it's limited to 65536 bytes (something like a 400x400 photo)
+  To jump over another image, its *Entropy Coded Segment* needs to be split to scans smaller than this, either by storing the image as progressive (easy, but limited), either by using *JPEGTran* and custom scans definition.
 
 So an MD5 collision of 2 arbitrary JPGs is *instant*, and needs no chosen-prefix collision, just UniColl.
 
@@ -491,8 +492,52 @@ With the [script](scripts/jpg.py):
 ```
 
 Examples:
+
 <img alt='identical prefix collisions' src=examples/collision1.jpg height=200/> ⟷ <img alt='identical prefix collisions' src=examples/collision2.jpg height=200/>
 
+
+#### custom scans
+
+*2 MD5-colliding JPGs*
+
+Here's an example of *JPEGTran* scans definition
+to turn [a 1944x2508 RGB image](pics/pocorgtfo14.png) into a 100% JPG with 20 scans in which they all fit in 64 kb.
+
+```
+// <component>: <minbyte>-<maxbyte>, <minbit>, <maxbit>;
+
+// 0=luma
+0: 0-0, 0, 0;
+0: 1-1, 0, 0;
+0: 2-6, 0, 0;
+0: 7-10, 0, 0;
+0: 11-13, 0, 0;
+0: 14-20, 0, 0;
+0: 21-26, 0, 0;
+0: 27-32, 0, 0;
+0: 33-40, 0, 0;
+0: 41-48, 0, 0;
+0: 49-54, 0, 0;
+0: 55-63, 0, 0;
+
+// 1=blueness
+1: 0-0, 0, 0;
+1: 1-16, 0, 0;
+1: 17-32, 0, 0;
+1: 33-63, 0, 0;
+
+// 2=redness
+2: 0-0, 0, 0;
+2: 1-16, 0, 0;
+2: 17-32, 0, 0;
+2: 33-63, 0, 0;
+```
+
+Result:
+
+<img alt='a 1944x2508 RGB image as a 100% JPG with 20 scans' src=examples/20scans.jpg width=300/>
+
+*a 1944x2508 RGB image as a 100% JPG with 20 scans*
 
 ### PNG
 
@@ -505,7 +550,7 @@ Theoretical limitations and workarounds:
   which should in theory be right after the signature (ie, before any potential comment),
   so it would mean that we can only precompute collisions of images with the same meta data.
   However, that chunk can actually be after a comment block (in the vast majority of readers), so we can put the collision data before the header,
-  which enables to collide any pair of PNG with a single precomputation. 
+  which enables to collide any pair of PNG with a single precomputation.
 
 Since a PNG chunk has a length on 4 bytes, there's no need to modify the structure of either file: we can jump over a whole image in one go.
 
@@ -523,6 +568,9 @@ Examples:
 
 <img alt='identical prefix collisions' src=examples/collision1.png width=40% /> ⟷
 <img alt='identical prefix collisions' src=examples/collision2.png width=40% />
+
+*2 MD5-colliding PNGs with different properties*
+
 
 #### incompatibility
 
@@ -544,6 +592,7 @@ Examples:
 <img alt='identical prefix collisions' src=examples/aac2423a-1.png width=350/> ⟷
 <img alt='identical prefix collisions' src=examples/aac2423a-2.png width=350/>
 
+*2 pairs of MD5-colliding PNGs with identical properties for maximum compatibility*
 
 ### GIF
 
@@ -556,7 +605,7 @@ GIF is tricky:
 
 However, the comment chunks follow a peculiar structure: it's a chain of `<length:1>` `<data:length>` until a null length is defined.
 So it makes any non-null byte a valid 'jump forward'. Which makes it suitable to be used with FastColl,
-as shown in [PoC||GTFO 14:11](https://github.com/angea/pocorgtfo#0x14). 
+as shown in [PoC||GTFO 14:11](https://github.com/angea/pocorgtfo#0x14).
 
 So at least, even if we can't have a generic prefix, we can collide any pair of GIF of same metadata (dimensions, palette) and we only need a second of FastColl to compute its prefix.
 
@@ -569,7 +618,7 @@ so if we take 2 GIFs with no animation, we only have to:
 - normalize the palette
 - set the first frame duration to the maximum
 - craft a comment that will jump to the start of the first frame data, so that the comment will sled over the image data as a comment,
-  and end the same way: until a null length is encountered. Then the parser will meet the next frame, and display it. 
+  and end the same way: until a null length is encountered. Then the parser will meet the next frame, and display it.
 
 With a minor setup (only a few hundred bytes of overhead), we can sled over any GIF image and work around the 256 bytes limitation.
 This idea was suggested by Marc, and it's brilliant!
@@ -586,7 +635,7 @@ Examples:
 <img alt='identical prefix collisions' src=examples/collision1.gif width=350/> ⟷
 <img alt='identical prefix collisions' src=examples/collision2.gif width=350/>
 
-*Pics by [KidMoGraph](https://www.kidmograph.com/)*
+*2 MD5-colliding GIFs - pics by [KidMoGraph](https://www.kidmograph.com/)*
 
 
 ### Portable Executable
@@ -598,7 +647,7 @@ The Portable Executable has a peculiar structure:
   The DOS headers has no other role. DOS headers can be exchanged between executables.
 - the DOS header has to be at offset 0, and has a fixed length of a full block, and the pointer is at the end of the structure,
   beyond UniColl's reach: so only Chosen Prefix collision is useful to collide PE files this way.
-- The PE header and what follows defines the whole file. 
+- The PE header and what follows defines the whole file.
 
 So the strategy is:
 1. the PE header can be moved down to leave room for collision blocks after the DOS header.
@@ -683,7 +732,7 @@ Shattered-compatible, but with comments limited to 64Kb.
 On the other hand, if you manipulate JPEG2000 files with the Atom/Box,
 you don't have this limitation.
 
-As mentioned before, if you're trying to collide this structure and 
+As mentioned before, if you're trying to collide this structure and
 if there are more restriction - for example starting with a `free` atom is not tolerated by some format -
 then you can compute another UniColl prefix pairs specific to this format:
 JPEG2000 seems to [enforce](https://github.com/uclouvain/openjpeg/blob/d2205ba2ee78faeea659263383446c4472b1f9df/src/bin/wx/OPJViewer/source/imagjpeg2000.cpp#L100-L111) a `'jP  '` atom first before the usual `ftyp`,
@@ -784,7 +833,7 @@ This way, we can safely collide any pair of PDFs, no matter the page numbers, di
 
 **comments**
 
-PDF can store foreign data in two ways: 
+PDF can store foreign data in two ways:
 - as a line comment, in which the only forbidden characters are newline (`\r` and `\n`).
   This can be used inside a dictionary object, to modify for example an object reference, via UniColl.
   So this is a valid PDF object even if it contains binary collision blocks - just retry until you have no newline characters:
@@ -983,7 +1032,7 @@ Since a PE header is usually smaller than 0x500 bytes, it's a perfect fit for a 
 
 Once again, the collision is [instant](scripts/jpgpe.py)
 
-Examples: [fastcoll.exe](examples/jpg-pe.exe) ⟷ [Marc.jpg](examples/jpg-pe.jpg) 
+Examples: [fastcoll.exe](examples/jpg-pe.exe) ⟷ [Marc.jpg](examples/jpg-pe.jpg)
 
 #### PDF - PE
 
@@ -1061,14 +1110,14 @@ and the evil images would be revealed as a file with the same MD5 as previously 
 
 Let's take 2 files:
 
-<img alt='MS 08-067' src=pics/trinity.png width=300/> ⟷ 
+<img alt='MS 08-067' src=pics/trinity.png width=300/> ⟷
 <img alt='MS 08-067' src=pics/javascript.png width=300/>
 
 and collide them with the same PNG.
 
 They now show the same dummy image, and they're absolutely identical until the 2nd image at file level!
 
-<img alt='MS 08-067' src=examples/gcea1.png width=200/> ⟷ 
+<img alt='MS 08-067' src=examples/gcea1.png width=200/> ⟷
 <img alt='MS 08-067' src=examples/gcea2.png width=200/>
 
 Their evil payload is hidden behind a file with the same MD5 respectively.
@@ -1129,7 +1178,7 @@ so no universal collisions for all files.
 
 However, many files still have a common version and we can pad the shortest constant pool to the longuest count.
 First, insert a *UTF8 literal* to align information,
-then declare another one with its length abused by a UniColl (the length is stored on 16 bytes as big endian). 
+then declare another one with its length abused by a UniColl (the length is stored on 16 bytes as big endian).
 
 However this will require code manipulation since all pool indexes will be shifted.
 
@@ -1215,7 +1264,7 @@ a way to make sure that both files are properly parsed is to chain 2 UniColl blo
 to enable/disable each `End of Central Directory`.
 
 To prevent ZIP parsers from complaining about unused space,
-one can abuse `Extra Fields`, 
+one can abuse `Extra Fields`,
 file comments in `Central Directory` and archive comments in `End of Central Directory`.
 
 ![diagram of ZIP collision](pics/zip.png)
@@ -1235,7 +1284,7 @@ JPG      | Y (1)    |          | x       | x (2)     | x
 PNG      | Y/N (3)  |          | x       |           | x
 MP4      | Y (4)    |          | x       | x (5)     | x
 PE       | Y        |          |         |           | x
-         |          |          |         |           | 
+         |          |          |         |           |
 GIF      | N        | x        |         |           | x
 ZIP      | N        |          | x (6)   |           | x
          |          |          |         |           |
@@ -1246,7 +1295,7 @@ Class    | N        |          |         |           | x
 
 1. JPG: has some limitations on data that can be improved to some extend by manipulating scans encoding.
 1. PDF w/ JPG is the [initial implementation](http://shattered.io) of the Shattered attack, but it's just a pure JPG trick in a PDF document.
-1. PNG: Safari requires PNG to have their `IHDR` chunk in first slot, before any collision block. Doing so prevents a generic prefix, in which case the collision is limited to specific dimensions, color space, BPP and interlacing. 
+1. PNG: Safari requires PNG to have their `IHDR` chunk in first slot, before any collision block. Doing so prevents a generic prefix, in which case the collision is limited to specific dimensions, color space, BPP and interlacing.
 1. Atom/Box formats like MP4 may work with the same prefix for different subformats. Some subformats like JPEG2000 or HEIF require extra grooming, but the exploit strategy is the same - it's just that the collision is not possible between sub-formats, only with a pair of prefix for a specific sub-format.
 1. Atom/Box is Shattered-compatible when using 64bit lengths.
 1. For better compatibility, ZIP needs 2 UniColl for a complete archive, and this collisions depend on both files contents.
