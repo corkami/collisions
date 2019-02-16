@@ -47,6 +47,7 @@ This page provide tricks specific to file formats and pre-computed collision pre
     - [Java Class](#java-class)
     - [TAR](#tar)
     - [ZIP](#zip)
+  - [Exploitations summary](#exploitations-summary)
 - [Presentations](#presentations)
 - [Conclusion](#conclusion)
 
@@ -1233,6 +1234,31 @@ that can host 2 different archive files.
 
 After 2 unicoll computations, it gives the 2 colliding files:
 [collision1.zip](examples/collision1.zip) ⟷ [collision2.zip](examples/collision2.zip)
+
+## Exploitations summary
+
+Format   | Generic? | FastColl | UniColl | Shattered | HashClash
+-------- | -------- | -------- | ------- | --------- | ---------
+PDF      | Y        |          | x       |           | x
+JPG      | Y (1)    |          | x       | x (2)     | x
+PNG      | Y/N (3)  |          | x       |           |
+MP4      | Y (4)    |          | x       | x (5)     | x
+PE       | Y        |          |         |           | x
+         |          |          |         |           |
+GIF      | N        | x        |         |           |
+ZIP      | N        |          | x (6)   |           |
+         |          |          |         |           |
+ELF      | N        |          |         |           | x
+TAR      | N        |          |         |           | x
+Mach-O   | N        |          |         |           | x
+Class    | N        |          |         |           | x
+
+1. JPG: has some limitations on data that can be improved to some extend by manipulating scans encoding.
+1. PDF w/ JPG is the Shattered attack, but it's just a pure JPG trick in a PDF document.
+1. PNG: Safari requires PNG to have their `IHDR` chunk in first slot, before any collision block. Doing so prevents a generic prefix, in which case the collision is limited to specific dimensions, color space, BPP, interlacing and filtering.
+1. Atom/Box formats like MP4 may work with the same prefix for different subformats. Some subformats like JPEG2000 or HEIF require extra grooming, but the exploit strategy is the same - it's just that the collision is not possible between sub-formats, only with a pair of prefix for a specific sub-format.
+1. Atom/Box can become Shattered compatible via long 64 bits lengths.
+1. For better compatibility, ZIP needs 2 UniColl for a complete archive, and this collisions depend on both files contents.
 
 # Presentations
 
