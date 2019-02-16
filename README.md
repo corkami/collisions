@@ -30,6 +30,7 @@ This page provide tricks specific to file formats and pre-computed collision pre
     - [MP4 and others](#mp4-and-others)
       - [JPEG2000](#jpeg2000)
     - [PDF](#pdf)
+      - [JPG in PDF](#jpg-in-pdf)
   - [Uncommon strategies](#uncommon-strategies)
     - [MultiColls: multiple collisions chain](#multicolls-multiple-collisions-chain)
     - [Validity](#validity)
@@ -970,6 +971,34 @@ You can define objects directly - including dummy key and values for alignments 
 Don't forget to normalize PDFLaTeX output - with `mutool` for example - if needed:
 PDFLaTeX is hard to get reproducible builds across distributions - you may even want to hook the time on execution to get the exact hash if required.
 
+#### JPG in PDF
+
+You could expect JPG to be only images, but in a PDF and some PDF readers (non browsers, such as Evince and Adobe Reader),
+it can be used as page content just like any other embedded object, that is embedded in a JPEG image.
+
+To store the JPEG data losslessly, store it as grayscale 100%, then either use a picture of single row/column,
+or repeat the data line 8 times (since JPEG blocks are 8x8), and your data is stored losslessly and referenced by the PDF pages.
+
+Examples of SHA-1 colliding 2 PDFs via JPEG page data (a grayscale picture rendering colors) as vector page content:
+
+[If](examples/jpgpage1.pdf) ⟷ [Shattered - the movie](examples/jpgpage2.pdf)
+
+<img alt='2 SHA-1 collidings PDF with image data stored as JPG' src=pics/jpgpage.png width=700/>
+
+*2 SHA-1 colliding PDFs with image data stored as JPG*
+
+It's possible to reference the colliding JPG twice: as a page content, losslessly, which also refers to itself as a lossy image to be displayed.
+Again, the image to be displayed is grayscale, but the page content can render some colors via PDF operators.
+
+The top of the image shows the page content repeated 8 times.
+
+Examples of SHA-1 colliding 2 PDFs via JPEG used as page data and picture to be displayed:
+
+[Skulls & Crossbones](examples/dualjpg1.pdf) ⟷ [Golden Axe](examples/dualjpg2.pdf)
+
+<img alt='2 SHA-1 collidings PDF with JPG used as image and page content' src=pics/dualjpg.png width=700/>
+
+*2 SHA-1 collidings PDF with JPG used as image and page content*
 
 ## Uncommon strategies
 
