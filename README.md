@@ -750,12 +750,24 @@ Examples: [collision1.jp2](examples/collision1.jp2) ⟷ [collision2.jp2](example
 
 <img alt='a PDF file' src=https://raw.githubusercontent.com/corkami/pics/master/binary/PDF.png width=300/>
 
-**collision**
+**about Shattered**
 
 Shattered exploitation was not a PDF trick, but a JPG trick in a PDF.
 
 It only enabled a PDF to contain a JPG-compressed object that could have 2 different contents.
 Both PDFs needed to be totally identical beside.
+
+Note that the documents can be totally normal, and can just clip the collision JPG and display it in difference places, such as multi-page documents.
+
+
+Examples: [the Shattered paper, modified](examples/shattered1.pdf) ⟷ [the Shattered paper, original](examples/shattered2.pdf)
+
+<img alt='the Shattered paper using a colliding JPG in the authors' src=pics/shattereddoc1.png width=350/>
+<img alt='the Shattered paper using a colliding JPG in a figure' src=pics/shattereddoc2.png width=350/>
+
+*the Shattered paper using a colliding JPG in 2 places*
+
+**PDF collisions with MD5**
 
 With MD5 (and other collision patterns), we can do PDF collisions at document level,
 with no restrictions at all on either file!
