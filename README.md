@@ -18,6 +18,7 @@ This page provide tricks specific to file formats and pre-computed collision pre
     - [Shattered (SHA1)](#shattered-sha1)
   - [Chosen-prefix collisions](#chosen-prefix-collisions)
     - [HashClash (MD5)](#hashclash-md5)
+  - [Attacks summary](#attacks-summary)
 - [Exploitations](#exploitations)
   - [Standard strategy](#standard-strategy)
     - [JPG](#jpg)
@@ -40,12 +41,12 @@ This page provide tricks specific to file formats and pre-computed collision pre
   - [Use cases](#use-cases)
     - [Gotta collide 'em all!](#gotta-collide-em-all)
     - [Incriminating files](#incriminating-files)
-- [Failures](#failures)
-  - [ELF](#elf)
-  - [Mach-O](#mach-o)
-  - [Java Class](#java-class)
-  - [TAR](#tar)
-  - [ZIP](#zip)
+  - [Failures](#failures)
+    - [ELF](#elf)
+    - [Mach-O](#mach-o)
+    - [Java Class](#java-class)
+    - [TAR](#tar)
+    - [ZIP](#zip)
 - [Presentations](#presentations)
 - [Conclusion](#conclusion)
 
@@ -446,6 +447,16 @@ Examples: let's collide `yes` and `no`. It took 3 hours on 24 cores.
 1E0:  EF 3C 1C C7-16 5A 1F 83-60 EC 5C FE-CA 17 0C 54  ∩<∟╟▬Z▼â`∞\■╩↨♀T
 1F0:  EB 8E 9D F6-90 A3 CD 08-65 D5 5A 4C-2E C6 BE 54  δÄ¥÷Éú═◘e╒ZL.╞╛T
 ```
+
+
+## Attacks summary
+
+Name      | Hash | Duration | Prefix type | Control near diff
+--------- | ---- | -------- | ----------- | -----------------
+FastColl  | MD5  | 2s       | Identical   | nothing
+UniColl   | MD5  | 7-40min  | Identical   | 4-10 bytes
+HashClash | MD5  | 72h.cpu  | Chosen      | nothing
+Shattered | SHA1 | 6500yr   | Identical   | prefix/suffix
 
 
 # Exploitations
@@ -1084,7 +1095,7 @@ Softwares typically focus on (quick) parsing, not on detailed file analysis.
 *an image showing different previews under different tabs of EnCase Forensic*
 
 
-# Failures
+## Failures
 
 Not all formats can have generic prefixes that can be re-used:
 if some kind of data holder can't be inserted between the magic signature
