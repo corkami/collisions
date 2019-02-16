@@ -53,12 +53,13 @@ This page provide tricks specific to file formats and pre-computed collision pre
 
 # Introduction
 
-This part of the repository is focused on hash collisions exploitation for MD5 and SHA1.
-
 This is a collaboration with [Marc Stevens](https://marc-stevens.nl/research/).
 
-The goal of this page is to explore extensively existing attacks - and show on the way how weak MD5 is (instant collisions of any JPG, PNG, PDF, MP4, PE...) -
-and also explore in detail common file formats to determine how they can be exploited with present or with future attacks.
+This repository is focused on hash collisions exploitation.
+
+The goal is to explore extensively existing attacks - and show on the way how weak MD5 is (instant collisions of any JPG, PNG, PDF, MP4, PE...) -
+and also explore in detail common file formats to determine
+how they can be exploited with present or with future attacks.
 
 Indeed, the same file format trick can be used on several hashes
 (the same JPG tricks were used for [MD5](https://archive.org/stream/pocorgtfo14#page/n49/mode/1up),
@@ -452,12 +453,13 @@ Examples: let's collide `yes` and `no`. It took 3 hours on 24 cores.
 
 ## Attacks summary
 
-Name      | Hash | Duration | Prefix type | Control near diff
---------- | ---- | -------- | ----------- | -----------------
-FastColl  | MD5  | 2s       | Identical   | nothing
-UniColl   | MD5  | 7-40min  | Identical   | 4-10 bytes
-HashClash | MD5  | 72h.cpu  | Chosen      | nothing
-Shattered | SHA1 | 6500yr   | Identical   | prefix/suffix
+Hash | Name      | Date | Duration | Prefix type | Control near diff
+---- | --------- | ---- | -------- | ----------- | -----------------
+MD5  | FastColl  | 2009 | 2s       | Identical   | none
+     | UniColl   | 2012 | 7-40min  | Identical   | 4-10 bytes
+     | HashClash | 2009 | 72h      | Chosen      | none
+     |           |      |          |             |
+SHA1 | Shattered | 2013 | 6500yr   | Identical   | prefix & suffix
 
 
 # Exploitations
