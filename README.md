@@ -496,8 +496,8 @@ With the [script](scripts/jpg.py):
 21:07:35.75>
 ```
 
-<img alt='identical prefix collisions' src=examples/collision1.jpg height=250/>
-<img alt='identical prefix collisions' src=examples/collision2.jpg height=250/>
+Examples:
+<img alt='identical prefix collisions' src=examples/collision1.jpg height=200/> ⟷ <img alt='identical prefix collisions' src=examples/collision2.jpg height=200/>
 
 
 ### PNG
@@ -525,6 +525,7 @@ With the [script](scripts/png.py):
 
 19:27:04.87>
 ```
+Examples:
 
 <img alt='identical prefix collisions' src=examples/collision1.png width=40% /> ⟷
 <img alt='identical prefix collisions' src=examples/collision2.png width=40% />
@@ -540,6 +541,8 @@ In this case, both colliding files must have the same properties.
 Again, UniColl is enough, and of course the computed prefix pair can be reused for any other pair of files with the same properties
 
 Here is a [script](scripts/pngStd.py) to collide any pair of such files that launches UniColl if needed to compute the prefix pair.
+
+Examples:
 
 <img alt='identical prefix collisions' src=examples/0a959025-1.png width=350/> ⟷
 <img alt='identical prefix collisions' src=examples/0a959025-2.png width=350/>
@@ -583,6 +586,8 @@ So in the end, the current GIF limitations for *instant* MD5 collisions are:
 - the images have to be normalized to the same palette - see [`gifsicle --use-colormap web`](https://www.lcdf.org/gifsicle/)
 - the images have to be the same dimensions
 - after 11 minutes, both files will show the same image
+
+Examples:
 
 <img alt='identical prefix collisions' src=examples/collision1.gif width=350/> ⟷
 <img alt='identical prefix collisions' src=examples/collision2.gif width=350/>
@@ -808,34 +813,24 @@ Rather than modifying the structure of the document and fool parsers,
 we'll just use collision blocks directly to produce directly text,
 with alternate reading!
 
-A true cryptographic artistic creation :)
+```
+           V                      V
+  Now he hash MD5,       Now he hath MD5,
+  No enemy cares!        No enemy dares!
+   Only he gave           Only he have
+   the shards.            the shares.
+  Can’t be owned &       Can’t be pwned &
+  his true gold,         his true hold,
+  like One Frail,        like One Grail,
+  sound as fold.         sound as gold.
+           ^                      ^
+```
 
-- [poeMD5 A](examples/poeMD5_A.pdf)
-  ```
-           V
-  Now he hash MD5,
-  No enemy cares!
-   Only he gave
-   the shards.
-  Can’t be owned &
-  his true gold,
-  like One Frail,
-  sound as fold.
-           ^
-  ```
-- [poeMD5 B](examples/poeMD5_B.pdf)
-  ```
-           V
-  Now he hath MD5,
-  No enemy dares!
-   Only he have
-   the shares.
-  Can’t be pwned &
-  his true hold,
-  like One Grail,
-  sound as gold.
-           ^
-  ```
+Examples: [poeMD5 A](examples/poeMD5_A.pdf) ⟷ [poeMD5 B](examples/poeMD5_B.pdf)
+
+<img alt='2 Poems colliding via UniColl' src=pics/poeMD5.png width=500/>
+
+*A true cryptographic artistic creation :)*
 
 (Note I screwed up with Adobe compatibility, but that's my fault, not UniColl's)
 
@@ -1243,12 +1238,12 @@ Format   | Generic? | FastColl | UniColl | Shattered | HashClash
 -------- | -------- | -------- | ------- | --------- | ---------
 PDF      | Y        |          | x       |           | x
 JPG      | Y (1)    |          | x       | x (2)     | x
-PNG      | Y/N (3)  |          | x       |           |
+PNG      | Y/N (3)  |          | x       |           | x
 MP4      | Y (4)    |          | x       | x (5)     | x
 PE       | Y        |          |         |           | x
-         |          |          |         |           |
-GIF      | N        | x        |         |           |
-ZIP      | N        |          | x (6)   |           |
+         |          |          |         |           | 
+GIF      | N        | x        |         |           | x
+ZIP      | N        |          | x (6)   |           | x
          |          |          |         |           |
 ELF      | N        |          |         |           | x
 TAR      | N        |          |         |           | x
@@ -1256,10 +1251,10 @@ Mach-O   | N        |          |         |           | x
 Class    | N        |          |         |           | x
 
 1. JPG: has some limitations on data that can be improved to some extend by manipulating scans encoding.
-1. PDF w/ JPG is the Shattered attack, but it's just a pure JPG trick in a PDF document.
-1. PNG: Safari requires PNG to have their `IHDR` chunk in first slot, before any collision block. Doing so prevents a generic prefix, in which case the collision is limited to specific dimensions, color space, BPP, interlacing and filtering.
+1. PDF w/ JPG is the [initial implementation](http://shattered.io) of the Shattered attack, but it's just a pure JPG trick in a PDF document.
+1. PNG: Safari requires PNG to have their `IHDR` chunk in first slot, before any collision block. Doing so prevents a generic prefix, in which case the collision is limited to specific dimensions, color space, BPP and interlacing. 
 1. Atom/Box formats like MP4 may work with the same prefix for different subformats. Some subformats like JPEG2000 or HEIF require extra grooming, but the exploit strategy is the same - it's just that the collision is not possible between sub-formats, only with a pair of prefix for a specific sub-format.
-1. Atom/Box can become Shattered compatible via long 64 bits lengths.
+1. Atom/Box is Shattered-compatible when using 64bit lengths.
 1. For better compatibility, ZIP needs 2 UniColl for a complete archive, and this collisions depend on both files contents.
 
 # Presentations
