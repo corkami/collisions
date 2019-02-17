@@ -1,0 +1,149 @@
+-->
+<div id='mypage'>
+<span id='dropme'
+  ondrop="event.preventDefault();dropped(event.dataTransfer.files[0]);"
+  ondragover="event.preventDefault();event.stopPropagation();">
+
+<style>
+  body { 
+    /* top left&right bottom*/
+    margin: 10px 20px 0px;
+  }
+
+  p {
+    text-align: justify;
+    text-justify: inter-word;
+  }
+</style>
+
+<h1>This file is a hash pileup and HTML polyglot that collides itself.</h1>
+
+<div style="text-align: right;">
+  by Ange Albertini and Rafa&#322; Hirsz
+</div>
+
+<h2>A polyglot</h2>
+
+<div id='hideme'>
+  This file is a currently an HTML file and a ...<br/><br/>
+  <div style='text-align:center; font-style:italic;'>
+    <div style='font-size:200%;'>
+      [drop me here so that I can parse myself]
+    </div> 
+    (otherwise I can't access my own contents without an 0-day)
+  </div> 
+  <span id='ErrorMsg' style='color:red; font-weight:bold;'></span>
+</div> 
+
+<div id='showme' style='display:none;'>
+
+  <p>This file is an HTML and (currently) a <span id=filetype></span> polyglot.</p>
+
+  <h2>An MD5 pileup</h2>
+
+  <p>It's also a file colliding with a quartet of PE/PDF/MP4/PNG*.</p>
+
+  <p>Maybe you don't have these files, but I can generate them for you:
+    <button id="exportPNG">Save as PNG</button> 
+    <button id="exportPE">Save as PE</button>
+    <button id="exportPDF">Save as PDF</button>
+    <button id="exportMP4">Save as MP4</button>
+  </p>
+
+  <p style='font-size:80%;'>
+    *: note the PNG is not compatible with every reader (OS X preview, Safari)
+    because they enforce a structure that is incompatible with generic hash collisions.
+  </p>
+
+</div> 
+
+</div>
+
+<script language=javascript type="text/javascript"> 
+
+prefixLen = 0x540
+
+prefixPNG = "iVBORw0KGgoAAABYalVNUC89LT0tPS09LT0tPS09LVwrACBNRDUgcGlsZXVwAAArfAAAUE5HIHByZWZpeAAAfCsAAEFsYmVydGluaQAAACt8ICAgU3RldmVucyAgICB8XD0tPS09LT1VK6QEAAAE3GNPTEwAAAAAjAPRVp310yCeSguMrSd2TpmFijSruZo8MXe0qG/7lEHtdynGRhCBd8ZgYX4KottZebKJYetksRdLLmKw8j+aMdZaXi/S7cMSPgwQnLVp5Z43YdcMXY65lIoiq3FKZNwXxJfo6AZpI/Vpy/GwiAjKhgHJaR98ye1iwpKMk8UqoJaxWGIAN48FAtt1hry4T8ID8/mY/rdYxYfgLsvLfKM0vKKhEgQnoQQULAe0VJsuyf0rPwPZEpWpUZCNRCCOxcRE6rCiijPLlLnDEvDq7pDfOqR4zCuPCCBr2AFMIeo5AC9j4wi/huhDumpMxUC3r4+BdVKo09b9v8ludBtrw75YvmVX7o866/mOTkSpEKs+HJPQPWz1NIzbSM8hpKQEKytWtGFTLbcsMivUXljSTl77cdJEwQAV54Fcq64wsw6EdtegAvOIcnOaY1DKj7polcZ9wNK2s5j3gFKG27S1GTGY284oCDB0uTZKZEcz00w5h94H5kyis0dkArJZbN3qsUSdLr19e4Bcy3Jbh8jQNwtIqYmKo2qxk2luDDznBhp3wMcn/bOK0EoWhJlEFxaNs+j+wF19vNWgPYoq9b6bXE1utI6Hov4LrRGKLkU5CUjfogWQPMgX0e2BzW59emMhJrK/wmEU7GpjgW2RX07KCy937vTXPZ9BSPa9RqK8V4B5qLAknsUMOVw43VPf4MskL/qPKs+oq6jaL9bQBAlfYq3RMKgNMbW3/3pb/5nlwwjRDiMb+39pdaWVEWdCwATyFH5IFa869m7+VvovLT0tPS09LT0tPS09LT1cfCAgUEUgPD0+IFBORyAgfHwgICBsZXZlbCAyICAgIHxcPS09AAAAALmDEcL5LTW/UQ1ai5ztUVhl/k7ajJ7rBVGT9ddM0usgC4DJ9AbCFJynP63v4US0/z/f1+eBC/5UfV5IIoNx2j7IpJbiaKoHQEED85nx32+NURmzfuOULD5bkNvxXhGChyAu16yb0nkOfMSOJqQxTtRCvOVJFgPuICDKgFEezHV6Q46DwdfjGCzc4mEgyXHZ9xJX04ZFAVjhyyue+LoIAW/x0NjnVlVxEzuBTYl4+BChlARurRQ5bvdez+lCZ8RzLVaAnf3ZFreaLm+upCSsPeKcxb3H6IwFcVg5Zo/pAtLDtmNCe58ugjHsMfY93zLXQJpe12tvcMr959iqqsrmeyyjE6ICWN1g61x3uKwd/g2kEtuXqUmGRqsTO4jMFv5Yk498fLMZJNVz84wRyFXjIIU3Pkcw55ihArNGSfn3jFaYVY+3+pRozuO0ZDtHWZvZTTNPwyKwyoUD4TbGCjCEJxqyFUfoCDB818YkoqILUJc+qnDHGKU/eu+Ww6QYCR/OCQeUYrLKGBRJDOt0aIoQKbL6H4r4ZT9iIrfGmBF34S8MKx0ksGPaXil+Hxos0kt0M4ilNLo4RWesxVhNR0W+6nMlCWa2EKgeKOZmDbFYH6bZ37oJaqiOs6Zy3dvM0wpoJW6oCp9LGjHDrVMEp7lWBxY+9N5IwgVmluUbVwc5CZYICifiVqKf/jj7AXqo+ffaKudx4RxG0Z29QZKZPyJXsLaYWtJzhSkf2bj2G7ufcB+vdrWCrUNdesws3wpk1lAf2BgXqSz7tPV3"
+prefixPDF = "JVBERi0xLjMKJcK1wrYKCjEgMCBvYmoKPDwvTGVuZ3RoIDIgMCBSPj4Kc3RyZWFtCi09LT0tPS09LT0tPS09XHwgIE1ENSBwaWxldXAgIFx8ACBQREYgcHJlZml4ICB8fCAgQW5nZSAmIE1hcmMAL1wtPS0AAAAAarXnZJbVChnS8kz5JSk0lKpr0XggD5pPzx2cVgKG83YpU497DKn8q8yrjOhsi1x8Pxx7zyCZD1uW1n2GK3oS1o6akO0tqKv2LkbNe+8ZFUwtQL2VHxryXCJejvHLPoaj1LTq3r7L6GLC88eH3KwrNLyjL1X9Dvqxmb+lwRKAUL9uX43D49/b4HPQGS2U4scjXC/t+sSS3IOS1q71hR3hBaLpuuI0tuaYoCejqOkDRUQj/PEhEGEIKeEc2A5v9GwksfbTM3qonYlf/fNIZMjdDUMazqQM6JEpEJ6A5uBU5OCRF0C4bNNWBOVG/scg0kSEGhbauxuOR2Mu4QsHZahL1Yvdtx1//U1E1cipR/UbA57kgcSxZnQBaJphDDUOodo0erauHWCrdjFctguVzuLQZWamifplSgG4WPEgX6oI1S13nfvMgwtxY1xbKqFhl4LervASx8X8OQ59P1M8i9To9T3QLtc1vHnl5kiDfsjOQDDJhOO13uLrgVvgtfKjaY2OFmi/rh9qk0IDeBeO8AM9LkWkngu4UtKl6eZEWgWau2yYCFMuouq0rJx+cieNHl6oknvDKphaeoKnPmWi0M2aIFHDumespDR1K3fu2L/l0K8uxSwVuFNFuTD22WmXEjFi0vYzxBsryY078hXkmakcNRhkcWIkAYvcDWgzla+/6heM1b5J7qNI6X+6Tg+K724HCypWgYxiRLXiA3DxpP3Wa6VP3hMuFCVqvDVHHp5BBo03OZecR7S890nsNTavqDH16q374fvegiwvLT0tPS09LT0tPS09LT1cfCAgTVA0IDw9PiBQREYgfHwgICBsZXZlbCAyICAgIHxcLT0tAAAAAMUX1Ta8H27BUQ1ai5ztUVhl/k7ajJ7rBVGT9ddM0usgC4DJ9AbCFJynP63v4US0/z/f1+eBC95UfV5IIoNx2j7IpJbiaKoHQEED85nx32+NURmzfuOULD5bkNvxXhGChyAu16yb0nkOfMSOJqQxTtRCvOVJlgPuICDKgFEezHV6Q46DwdfjGCzc4mEgyXHZ9xJX04ZFAVjhyyue+LoIAW/x0NjnVlVxEzuBTYl4+BChlARurRS5bvdez+lCZ8RzLVaAnf3ZFreaLm+upCSsPeKcxb3H6IwFcVg5Zo/pAtLDtmNCe58ugjHsMfY93zLXQJpe12tv8Mr959iqqsrmeyyjE6ICWN1g61x3uKwd/g2kEtuXqUmGRqsTO4jMFv5Yk498fLMZJNVz84wRyFXjIIU3PkcwB5mhArNGSfn3jFaYVY+3+pRozuO0ZDtHWZvZTTNPwyKwyoUD4TbGCjCEJxqyFUfoCDB818YkoqILUJc+qnDHGKU/eu2Ww6QYCR/OCQeUYrLKGBRJDOt0aIoQKbL6H4r4ZT9iIrfGmBF34S8MKx0ksGPaXil+Hxos0kt0M4ilNLo2RWesxVhNR0W+6nMlCWa2EKgeKOZmDbFYH6bZ37oJaqiOs6Zy3dvM0wpoJW6oCp9LGjHDrVMEp7lWBxY+9N5IwgFmluUbVwc5CZYICifiVqKf/jj7AXqo+ffaKudx4RxG0Z29QZKZPyJXsLaYWtJzhSkf2bj2G7ufcB+vdrWCrUNdeqws3wpk1lAf2BgXqSz7tPV3"
+prefixMP4 = "AAAAbGZyZWUAAAAAAAAAAC89LT0tPS09LT0tLT0tPVwrICBNRDUgcGlsZXVwICB8fCAgTVA0IHByZWZpeCAgKysgIEFsYmVydGluaSAgIHx8ICAgU3RldmVucyAgICArXD0tPS09LT0tPS09AAAE1GZyZWUAAAAAXO8uLAbXfJ/S8kz5JSk0lKpr0XggD5pPzx2cVgKG83YpU497DKn8q8yrjOhsi1x8Pxx7zyKZD1uW1n2GK3oS1o6akO0tqKv2LkbNe+8ZFUwtQL2VHxryXCJejvHLPoaj1LTq3r7L6GLC88eH3KwrNLyjL1X9Lvqxmb+lwRKAUL9uX43D49/b4HPQGS2U4scjXC/t+sSS3IOS1q71hR3hBaLpuuI0tuaYoCejqOkDRUQj/PEhEGEIJeEc2A5v9GwksfbTM3qonYlf/fNIZMjdDUMazqQM6JEpEJ6A5uBU5OCRF0C4bNNWBOVG/scg0kSEGhbauyOOR2Mu4QsHZahL1Yvdtx1//U1E1cipR/UbA57kgcSxZnQBaJphDDUOodo0erauHWCrdjFctguVzuLQZWamifplTAG4WPEgX6oI1S13nfvMgwtxY1xbKqFhl4LervASx8X8OQ59P1M8i9To9T3QLtc1vHnl5kiDfsjOQDDJhOO13uLqgVvgtfKjaY2OFmi/rh9qk0IDeBeO8AM9LkWkngu4UtKl6eZEWgWau2yYCFMuouq0rJx+cieNHl6oknvDKphafoKnPmWi0M2aIFHDumespDR1K3fu2L/l0K8uxSwVuFNFuTD22WmXEjFi0vYzxBsryY078hXkmakcNRhkcWIkAYu8DWgzla+/6heM1b5J7qNI6X+6Tg+K724HCypWgYxiRLXiA3DxpP3Wa6VP3hMuFCVqvDVHHp5BBo03OZecR7Tc90nsNTavqDH16q374fvegiwvLT0tPS09LT0tPS09LT1cfCAgTVA0IDw9PiBQREYgfHwgICBsZXZlbCAyICAgIHxcLT0tAAAAAMUX1Ta8H27BUQ1ai5ztUVhl/k7ajJ7rBVGT9ddM0usgC4DJ9AbCFJynP63v4US0/z/f1+eBC95UfV5IIoNx2j7IpJbiaKoHQEED85nx32+NURmzfuOULD5bkNvxXhGChyAu16yb0nkOfMSOJqQxTtRCvOVJlgPuICDKgFEezHV6Q46DwdfjGCzc4mEgyXHZ9xJX04ZFAVjhyyue+LoIAW/x0NjnVlVxEzuBTYl4+BChlARurRS5bvdez+lCZ8RzLVaAnf3ZFreaLm+upCSsPeKcxb3H6IwFcVg5Zo/pAtLDtmNCe58ugjHsMfY93zLXQJpe12tv8Mr959iqqsrmeyyjE6ICWN1g61x3uKwd/g2kEtuXqUmGRqsTO4jMFv5Yk498fLMZJNVz84wRyFXjIIU3PkcwB5mhArNGSfn3jFaYVY+3+pRozuO0ZDtHWZvZTTNPwyKwyoUD4TbGCjCEJxqyFUfoCDB818YkoqILUJc+qnDHGKU/eu2Ww6QYCR/OCQeUYrLKGBRJDOt0aIoQKbL6H4r4ZT9iIrfGmBF34S8MKx0ksGPaXil+Hxos0kt0M4ilNLo2RWesxVhNR0W+6nMlCWa2EKgeKOZmDbFYH6bZ37oJaqiOs6Zy3dvM0wpoJW6oCp9LGjHDrVMEp7lWBxY+9N5IwgFmluUbVwc5CZYICifiVqKf/jj7AXqo+ffaKudx4RxG0Z29QZKZPyJXsLaYWtJzhSkf2bj2G7ufcB+vdrWCrUNdeqws3wpk1lAf2BgXqSz7tPV3"
+prefixPE =  "TVo9LT0tPS09LT0tPS09XHwAAE1ENSBwaWxldXAAAHx8AAAAUEUgcHJlZml4AAB8Ky0tLS0tLS0tLS0tYAUAAHwgIEFsYmVydGluaSAgIHx8ICAgU3RldmVucyAgIAB8fAAgICAyMDE5ICAgICAgL1wtPS0AAAAAGbBhUTL+jLWeSguMrSd2TpmFijSruZo8MXe0qG/7lEHtdynGRhCBd8ZgYX4KottZebKJYedksRdLLmKw8j+aMdZaXi/S7cMSPgwQnLVp5Z43YdcMXY65lIoiq3FKZNwXxJfo6AZpI/Vpy/GwiAjKhgHJaR98yu1iwpKMk8UqoJaxWGIAN48FAtt1hry4T8ID8/mY/rdYxYfgLsvLfKM0vKKhEgQnoQQULAe0VJsuyf0rPwPZEpmpUZCNRCCOxcRE6rCiijPLlLnDEvDq7pDfOqR4zCuPCCBr2AFMIeo5AC9j4wi/huhDumpMxUC3r4+BdVKo09f9v8ludBtrw75YvmVX7o866/mOTkSpEKs+HJPQPWz1NIzbSM8hpKQEKytWtGFTLbcsMivUXljSTl77cdJEwQAl54Fcq64wsw6EdtegAvOIcnOaY1DKj7polcZ9wNK2s5j3gFKG27S1GTGY284oCDB0uTZKZEcz00w5h94H5kyis0dcArJZbN3qsUSdLr19e4Bcy3Jbh8jQNwtIqYmKo2qxk2luDDznBhp3wMcn/bOK0EoWhJlEFxaNs+j+wF19vNWgPZoq9b6bXE1utI6Hov4LrRGKLkU5CUjfogWQPMgX0e2BzW59emMhJrK/wmEU7GpjgW2RX07KCy937vTXPZ9BSHa+RqK8V4B5qLAknsUMOVw43VPf4MskL/qPKs+oq6jaL9bQBAlfYq3RMKgNMbW3/3pb/5nlwwjRDiMb+39pdaWWEWdCwATyFH5IFa869m7+VvovLT0tPS09LT0tPS09LT1cfCAgUEUgPD0+IFBORyAgfHwgICBsZXZlbCAyICAgIHxcPS09AAAAALmDEcL5LTW/UQ1ai5ztUVhl/k7ajJ7rBVGT9ddM0usgC4DJ9AbCFJynP63v4US0/z/f1+eBC/5UfV5IIoNx2j7IpJbiaKoHQEED85nx32+NURmzfuOULD5bkNvxXhGChyAu16yb0nkOfMSOJqQxTtRCvOVJFgPuICDKgFEezHV6Q46DwdfjGCzc4mEgyXHZ9xJX04ZFAVjhyyue+LoIAW/x0NjnVlVxEzuBTYl4+BChlARurRQ5bvdez+lCZ8RzLVaAnf3ZFreaLm+upCSsPeKcxb3H6IwFcVg5Zo/pAtLDtmNCe58ugjHsMfY93zLXQJpe12tvcMr959iqqsrmeyyjE6ICWN1g61x3uKwd/g2kEtuXqUmGRqsTO4jMFv5Yk498fLMZJNVz84wRyFXjIIU3Pkcw55ihArNGSfn3jFaYVY+3+pRozuO0ZDtHWZvZTTNPwyKwyoUD4TbGCjCEJxqyFUfoCDB818YkoqILUJc+qnDHGKU/eu+Ww6QYCR/OCQeUYrLKGBRJDOt0aIoQKbL6H4r4ZT9iIrfGmBF34S8MKx0ksGPaXil+Hxos0kt0M4ilNLo4RWesxVhNR0W+6nMlCWa2EKgeKOZmDbFYH6bZ37oJaqiOs6Zy3dvM0wpoJW6oCp9LGjHDrVMEp7lWBxY+9N5IwgVmluUbVwc5CZYICifiVqKf/jj7AXqo+ffaKudx4RxG0Z29QZKZPyJXsLaYWtJzhSkf2bj2G7ufcB+vdrWCrUNdesws3wpk1lAf2BgXqSz7tPV3"
+
+var contents = "";
+
+function dropped(f){
+
+  function setFileType(ft){
+    document.getElementById('filetype').textContent = ft;
+
+    document.getElementById('dropme').ondrop = function(){};
+    document.getElementById('dropme').ondragover = function(){};
+    document.getElementById('showme').style.display = "";
+    document.getElementById('hideme').style.display = "none";
+  }
+
+  r = new FileReader();
+  r.readAsArrayBuffer(f);
+
+  r.onload = function() {
+    fileContents = new Uint8Array(r.result);
+    prefix = String.fromCharCode.apply(null, fileContents.slice(0, prefixLen))
+    //console.log(btoa(prefix))
+
+    if (btoa(prefix) == prefixPNG){
+      setFileType("PNG");
+    }
+    else if (btoa(prefix) == prefixPE){
+      setFileType("PE");
+    } else if (btoa(prefix) == prefixPDF){
+      setFileType("PDF");
+    } else if (btoa(prefix) == prefixMP4){
+      setFileType("MP4");
+    }
+    else {
+      document.getElementById('ErrorMsg').textContent = "Unknown file!";
+    }
+  };
+}
+
+function Save(prefix, ext){
+  
+  function download(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 200);
+  }
+
+  const blob = new Blob([
+    Uint8Array.from(atob(prefix), c => c.charCodeAt(0)),
+    fileContents.slice(prefixLen)
+  ], {type:"application/octet-stream"});
+  download(blob, window.location.pathname.split("/").pop() + ext);
+}
+
+// necessary to clean up the elements of the outer file
+document.documentElement.innerHTML = document.getElementById('mypage').innerHTML;
+
+document.title = 'An MD5 pileup and HTML polyglot'
+
+document.getElementById('exportPNG').addEventListener('click', () => {
+  Save(prefixPNG, ".png");
+});
+document.getElementById('exportPE').addEventListener('click', () => {
+  Save(prefixPE, ".ex");
+});
+document.getElementById('exportMP4').addEventListener('click', () => {
+  Save(prefixMP4, ".mp4");
+});
+document.getElementById('exportPDF').addEventListener('click', () => {
+  Save(prefixPDF, ".pdf");
+});
+
+</script>
+<!--

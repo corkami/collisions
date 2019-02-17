@@ -51,11 +51,11 @@ This page provide tricks specific to file formats and pre-computed collision pre
     - [ZIP](#zip)
   - [Exploitations summary](#exploitations-summary)
 - [Presentations](#presentations)
+- [Credits](#credits)
 - [Conclusion](#conclusion)
 
-# Introduction
 
-This is a collaboration with [Marc Stevens](https://marc-stevens.nl/research/).
+# Introduction
 
 This repository is focused on hash collisions exploitation.
 
@@ -70,6 +70,7 @@ as long as the collisions follow the same byte patterns.
 
 This document is **not** about new attacks (the most recent one was documented in 2012),
 but about new forms of exploitations of existing attacks.
+
 
 # Status
 
@@ -333,6 +334,7 @@ bc 00 00 18 b0 00 00 10 00 00 00 0c b8 00 00 10
 Examples: [PoC||GTFO 0x18](https://github.com/angea/pocorgtfo#0x18) is using the computed SHA1 prefixes,
 re-using the image directly from PDFLaTeX source (see [article 18:10](https://archive.org/stream/pocorgtfo18#page/n62/mode/1up)),
 but also checking the value of the prefixes via JavaScript in the HTML page (the file is polyglot, ZIP HTML and PDF).
+
 
 ## Chosen-prefix collisions
 
@@ -1117,7 +1119,6 @@ The first collisions can be Identical or Chosen Prefix, the next ones have to be
 You can call them multi-collisions, I prefer *pileups* - it's shorter :)
 
 
-
 #### PE - PNG - MP4 - PDF
 
 Combining all previously acquired knowledge,
@@ -1135,11 +1136,19 @@ This script is generic and instant:
 Examples: [commodore.pdf](examples/pileup.pdf) ⟷ [diagram.png](examples/pileup.png) ⟷ [kidmo.mp4](examples/pileup.mp4) ⟷ [sumatra18.exe](examples/pileup.exe)
 
 
+Since you may only distribute a single file
+and it's impossible to guess the other prefix values from it,
+a solution is to embed all prefixes of the collision in JavaScript code
+and insert it in your PoCs,
+turning your files into [HTML polyglots](examples/polyglot.html) to easily share the related colliding files.
+
+<img alt='HTML payload to generate extra colliding files' src=pics/polyglot.png width=600/>
 
 
 ## Use cases
 
 Better discard MD5 altogether, because file introspection is just too time-consuming and too risky!
+
 
 ### Gotta collide 'em all!
 
@@ -1239,7 +1248,6 @@ There's no central structure to the whole file. So no global header or comment o
 A trick would be to start a dummy file of variable length, but the length is always at the same offset, which is not compatible with UniColl, which means only Chosen Prefix collisions is useful here.
 
 
-
 ### ZIP
 
 **TL;DR** There's no generic re-usable collision for ZIP.
@@ -1316,6 +1324,7 @@ that can host 2 different archive files.
 After 2 unicoll computations, it gives the 2 colliding files:
 [collision1.zip](examples/collision1.zip) ⟷ [collision2.zip](examples/collision2.zip)
 
+
 ## Exploitations summary
 
 Format   | Generic? | FastColl | UniColl | Shattered | HashClash
@@ -1341,12 +1350,24 @@ Class    | N        |          |         |           | x
 1. Atom/Box is Shattered-compatible when using 64bit lengths.
 1. For better compatibility, ZIP needs 2 UniColl for a complete archive, and this collisions depend on both files contents.
 
+
+
 # Presentations
 
 Exploiting Hash Collisions (2017):
 - [slides](https://speakerdeck.com/ange/exploiting-hash-collisions)
 - [video](https://www.youtube.com/watch?v=Y-oJWEYKVLA)
   [![Exploiting hash collisions youtube video](https://img.youtube.com/vi/Y-oJWEYKVLA/0.jpg)](https://www.youtube.com/watch?v=Y-oJWEYKVLA)
+
+
+# Credits
+
+All this was possible thanks to [Marc Stevens](https://marc-stevens.nl/research/),
+not only for his cryptographic contributions, but also for his permanent help and suggestions!
+
+Thanks also to Philippe Teuwen for his extensive feedback for file formats in general.
+
+Thanks to Rafał Hirsz for his permanent help on JavaScript.
 
 
 # Conclusion
