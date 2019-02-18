@@ -1374,7 +1374,7 @@ Class    | N        |          |         |           | x
 Exploiting Hash Collisions at BlackAlps, in 2017:
 - [slides](https://speakerdeck.com/ange/exploiting-hash-collisions)
 
-  [<img alt='Black Alps 2017 slides' src=pics/blackalps17.png width=350/>
+  [<img alt='Black Alps 2017 slides' src=pics/blackalps17.png width=350/>](https://speakerdeck.com/ange/exploiting-hash-collisions)
 
 - [video](https://www.youtube.com/watch?v=Y-oJWEYKVLA)
 
