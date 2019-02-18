@@ -1,4 +1,4 @@
-**TL;DR** getting an MD5 collision of these 2 images is now(\*) [trivial](scripts/png.py) and instant.
+**TL;DR** getting an MD5 collision of these two images is now(\*) [trivial](scripts/png.py) and instant.
 
 [![MD5 page on Wikipedia](examples/tldr-1.jpg)](https://en.wikipedia.org/wiki/MD5) ⟷
 <a href=http://gunshowcomic.com/648><img src=examples/tldr-2.jpg height=400 alt='On Fire / This is fine'></a>
@@ -79,13 +79,13 @@ Current status - as of December 2018 - of known attacks:
   - it's still even [not practical](https://eprint.iacr.org/2008/089.pdf) with MD2.
   - works for simpler hashes(\*) <!-- Thanks Sven! -->
 
-- get 2 different files with the same MD5: **instant**
+- get two different files with the same MD5: **instant**
   - examples: [1](examples/single-ipc1.bin) ⟷ [2](examples/single-ipc2.bin)
 
-- make 2 arbitrary files get the same MD5: **a few hours** (72 hours.core)
+- make two arbitrary files get the same MD5: **a few hours** (72 hours.core)
   - examples: [1](examples/single-cpc1.bin) ⟷ [2](examples/single-cpc2.bin)
 
-- make 2 arbitrary files of specific file formats (PNG, JPG, PE...) get the same MD5: **instant**
+- make two arbitrary files of specific file formats (PNG, JPG, PE...) get the same MD5: **instant**
   - read below
 
 - get two different files with the same SHA1: 6500 years.core
@@ -106,7 +106,7 @@ Current status - as of December 2018 - of known attacks:
 
 MD5 and SHA1 work with blocks of 64 bytes.
 
-If 2 contents A & B have the same hash, then appending the same contents C to both will keep the same hash.
+If two contents A & B have the same hash, then appending the same contents C to both will keep the same hash.
 ``` text
 hash(A) = hash(B) -> hash(A + C) = hash(B + C)
 ```
@@ -143,7 +143,7 @@ After this file content `A`, just append another file content `B`.
 Since file formats usually define a terminator that will make parsers stop after it,
 `A` will terminate parsing, which will make the appended content `B` ignored.
 
-So typically at least 2 comments are needed:
+So typically at least two comments are needed - often three:
 1. alignment
 2. hide collision blocks
 3. hide one file content (for re-usable collisions)
@@ -151,7 +151,7 @@ So typically at least 2 comments are needed:
 
 These common properties of file formats make it possible - they are not typically seen as weaknesses, but they can be detected or normalized out:
 - dummy chunks - used as comments
-- more than 1 comment
+- more than one comment
 - huge comments (lengths: 64b for MP4, 32b for PNG -> trivial collisions. 16b for JPG, 8b for GIF -> no generic collision for GIF, limited for JPG)
 - store any data in a comment (UTF8 could be enforced)
 - store anything after the terminator (usually used only for malicious purposes)
@@ -180,7 +180,7 @@ Both files are almost identical (their content have only a few bits of differenc
 
 **Exploitation**:
 
-Bundle 2 contents, then either:
+Bundle two contents, then either:
 - Data exploit: run code that checks for differences and displays one or the other (typically trivial since differences are known in advance).
 - Structure exploit:  exploit file structure (typically, the length of a comment) to hide one content or show the other (depends on the file format and its parsers).
 
@@ -203,7 +203,7 @@ will show either A or B.
 Final version in 2009.
 
 - time: a few seconds of computation
-- space: 2 blocks
+- space: two blocks
 - differences: no control before, no control after.
     FastColl difference mask:
     ```
@@ -258,7 +258,7 @@ Other examples, with an identical prefix: [1](examples/fastcoll1.bin) ⟷ [2](ex
 Documented in [2012](https://www.cwi.nl/system/files/PhD-Thesis-Marc-Stevens-Attacks-on-Hash-Functions-and-Applications.pdf#page=199), implemented in [2017](https://github.com/cr-marcstevens/hashclash/blob/95c2619a8078990056beb7aaa59104021714ee3c/scripts/poc_no.sh)
 
 [UniColl](https://github.com/cr-marcstevens/hashclash#create-you-own-identical-prefix-collision) lets you control a few bytes in the collision blocks,
-before and after the first difference, which makes it an identical-prefix collision with some controllable differences, almost like a chosen prefix collision.
+before and after the first difference, which makes it an identical-prefix collision with some controllable differences, almost like a chosen-prefix collision.
 This is very handy, and even better the difference can be very predictable:
 in the case of `m2+= 2^8` (a.k.a. `N=1` / `m2 9` in HashClash [poc_no.sh](https://github.com/cr-marcstevens/hashclash/blob/master/scripts/poc_no.sh#L30) script),
 the difference is +1 on the 9th byte, which makes it very exploitable,
@@ -266,7 +266,7 @@ as you can even think about the collision in your head:
 the 9th character of that sentence will be replaced with the next one: `0` replaced by `1`, `a` replaced by `b`..
 
 - time: a few minutes (depends on the amount of byte you want to control )
-- space: 2 blocks
+- space: two blocks
 - differences:
    ```
    .. .. .. .. DD .. .. .. ..
@@ -297,10 +297,11 @@ Examples with `N=1` and 20 bytes of set text in the collision blocks:
 70:  9F D2 0C 00-86 C8 ED DE-85 7F 03 7B-05 28 D7 0F  ƒ╥♀ å╚φ▐à⌂♥{♣(╫☼
 ```
 
-UniColl has less control than chosen prefix, but it's much faster especially since it takes only 2 blocks.
+UniColl has less control than a true chosen-prefix collision,
+but it's much faster especially since it takes only two blocks.
 
 It was used in the [Google CTF 2018](https://github.com/google/google-ctf/tree/master/2018/finals/crypto-hrefin),
-where the frequency of a certificate serial changes and limitations on the lengths prevented the use of chosen prefix collisions.
+where the frequency of a certificate serial changes and limitations on the lengths prevented the use of chosen-prefix collisions.
 
 
 ### [Shattered](http://shattered.io) (SHA1)
@@ -308,7 +309,7 @@ where the frequency of a certificate serial changes and limitations on the lengt
 Documented in [2013](https://marc-stevens.nl/research/papers/EC13-S.pdf), computed in [2017](http://shattered.io).
 
 - time: 6500 years.CPU and 110 year.GPU
-- space: 2 blocks
+- space: two blocks
 - differences:
   ```
   .. .. .. DD ?? ?? ?? ??
@@ -344,25 +345,25 @@ They allow to collide any content. They don't exist for SHA-1 yet.
 | :----:        |:-:| :----:        |
 | Collision *A* | ≠ | Collision *B* |
 
-1. take 2 arbitrary prefixes
+1. take two arbitrary prefixes
 2. pad the shortest to be as long as the longest. both are padded to the next block - minus 12 bytes
   - these 12 bytes of random data will be added on both sides to randomize the birthday search
 3. X near-collision blocks will be computed and appended.
 
    The fewer blocks, the longer the computation.
 
-   Ex: [400 kHours for 1 block](https://www.win.tue.nl/hashclash/SingleBlock/). 72 hours.cores for 9 blocks with [HashClash](https://github.com/cr-marcstevens/hashclash).
+   Ex: [400 kHours for one block](https://www.win.tue.nl/hashclash/SingleBlock/). 72 hours.cores for nine blocks with [HashClash](https://github.com/cr-marcstevens/hashclash).
 
 <img alt='chosen-prefix collisions' src=pics/chosen.png width=400/>
 
-Chosen prefix collisions are almighty, but they can take a long time just for a pair of files.
+Chosen-prefix collisions are almighty, but they can take a long time just for a pair of files.
 
 
 ### [HashClash](https://github.com/cr-marcstevens/hashclash) (MD5)
 
 Final version in [2009](https://www.win.tue.nl/hashclash/ChosenPrefixCollisions/).
 
-Examples: let's collide `yes` and `no`. It took 3 hours on 24 cores.
+Examples: let's collide `yes` and `no`. It took three hours on 24 cores.
 
 ```
 'yes' prefix:
@@ -462,17 +463,17 @@ SHA1 | Shattered | 2013 | 6500yr   | Identical   | prefix & suffix
 
 # Exploitations
 
-Identical prefix collisions is usually seen as (very) limited, but chosen prefix is time consuming.
+Identical prefix collisions is usually seen as (very) limited, but chosen-prefix is time consuming.
 
-Another approach is to craft re-usable prefixes via either identical-prefix attack such as UniColl - or chosen prefix to overcome some limitations - but re-use that prefix pair in combinations with 2 payloads like a classic identical prefix attack.
+Another approach is to craft re-usable prefixes via either identical-prefix attack such as UniColl - or chosen-prefix to overcome some limitations - but re-use that prefix pair in combinations with two payloads like a classic identical prefix attack.
 
-Once the prefix pair has been computed, it makes colliding 2 contents instant:
+Once the prefix pair has been computed, it makes colliding two contents instant:
 it's just a matter of massaging file data (according to specific file formats) so that it fits the file formats specifications and the precomputed prefix requirements.
 
 
 ## Standard strategy
 
-Classic collisions of 2 valid files with the same file type.
+Classic collisions of two valid files with the same file type.
 
 
 ### JPG
@@ -482,10 +483,10 @@ Classic collisions of 2 valid files with the same file type.
 Theoretical limitations and workarounds:
 - the *Application* segment should in theory right after the *Start of Image* marker.
   In practice, this is not necessary, so our collision can be generic: the only limitation is the size of the smallest image.
-- a comment's length is stored on 2 bytes, so the amount it can store is limited to it's limited to 65536 bytes (something like a 400x400 photo)
+- a comment's length is stored on two bytes, so the amount it can store is limited to it's limited to 65536 bytes (something like a 400x400 photo)
   To jump over another image, its *Entropy Coded Segment* needs to be split to scans smaller than this, either by storing the image as progressive (easy, but limited), either by using *JPEGTran* and custom scans definition.
 
-So an MD5 collision of 2 arbitrary JPGs is *instant*, and needs no chosen-prefix collision, just UniColl.
+So an MD5 collision of two arbitrary JPGs is *instant*, and needs no chosen-prefix collision, just UniColl.
 
 With the [script](scripts/jpg.py):
 ```
@@ -555,11 +556,11 @@ Theoretical limitations and workarounds:
   However, that chunk can actually be after a comment block (in the vast majority of readers), so we can put the collision data before the header,
   which enables to collide any pair of PNG with a single precomputation.
 
-Since a PNG chunk has a length on 4 bytes, there's no need to modify the structure of either file: we can jump over a whole image in one go.
+Since a PNG chunk has a length on four bytes, there's no need to modify the structure of either file: we can jump over a whole image in one go.
 
 We can insert as many discarded chunks as we want, so we can add one for alignment, then one which length will be altered by a UniColl. so the length will be `00` `75` and `01` `75`.
 
-So an MD5 collision of 2 arbitrary PNG images is *instant*, with no prerequisite (no computation, just some minor file changes), and needs no chosen-prefix collision, just UniColl.
+So an MD5 collision of two arbitrary PNG images is *instant*, with no prerequisite (no computation, just some minor file changes), and needs no chosen-prefix collision, just UniColl.
 
 With the [script](scripts/png.py):
 ```
@@ -617,7 +618,7 @@ Now the problem is that we can't jump over a whole image like PNG or over a big 
 A possible workaround is to massage the compressed data or to chunk the image in tiny areas like in the case of the GIF Hashquine, but this is not optimal.
 
 Another idea that works generically is that the image data is also stored using this `length data` sequence structure:
-so if we take 2 GIFs with no animation, we only have to:
+so if we take two GIFs with no animation, we only have to:
 - normalize the palette
 - set the first frame duration to the maximum
 - craft a comment that will jump to the start of the first frame data, so that the comment will sled over the image data as a comment,
@@ -649,13 +650,13 @@ The Portable Executable has a peculiar structure:
 - the old DOS header is almost useless, and points to the next structure, the PE header.
   The DOS headers has no other role. DOS headers can be exchanged between executables.
 - the DOS header has to be at offset 0, and has a fixed length of a full block, and the pointer is at the end of the structure,
-  beyond UniColl's reach: so only Chosen Prefix collision is useful to collide PE files this way.
+  beyond UniColl's reach: so only chosen-prefix collision is useful to collide PE files this way.
 - The PE header and what follows defines the whole file.
 
 So the strategy is:
 1. the PE header can be moved down to leave room for collision blocks after the DOS header.
-2. The DOS header can be exploited (via chosen prefix collisions) to point to 2 different offsets, where 2 different PE headers will be moved.
-3. The sections can be put next to each other, after the `DOS/Collisions/Header1/Header2` structure. You just need to apply a delta to the offsets of the 2 section tables.
+2. The DOS header can be exploited (via chosen-prefix collisions) to point to two different offsets, where two different PE headers will be moved.
+3. The sections can be put next to each other, after the `DOS/Collisions/Header1/Header2` structure. You just need to apply a delta to the offsets of the two section tables.
 
 This means that it's possible to instantly collide any pair of PE executables. Even if they use different subsystems or architecture.
 
@@ -756,7 +757,7 @@ Examples: [collision1.jp2](examples/collision1.jp2) ⟷ [collision2.jp2](example
 
 Shattered exploitation was not a PDF trick, but a JPG trick in a PDF.
 
-It only enabled a PDF to contain a JPG-compressed object that could have 2 different contents.
+It only enabled a PDF to contain a JPG-compressed object that could have two different contents.
 Both PDFs needed to be totally identical beside.
 
 Note that the documents can be totally normal, and can just clip the collision JPG and display it in difference places, such as multi-page documents.
@@ -767,7 +768,7 @@ Examples: [the Shattered paper, modified](examples/shattered1.pdf) ⟷ [the Shat
 <img alt='the Shattered paper using a colliding JPG in the authors' src=pics/shattereddoc1.png width=350/>
 <img alt='the Shattered paper using a colliding JPG in a figure' src=pics/shattereddoc2.png width=350/>
 
-*the Shattered paper using a colliding JPG in 2 places*
+*the Shattered paper using a colliding JPG in two places*
 
 **PDF collisions with MD5**
 
@@ -814,10 +815,10 @@ Tricks:
 - Storing unused objects in a PDF is tolerated.
 - Skipping any object numbers is also OK. There's even an official way to skip numbers in the `XREF` table.
 
-So storing 2 document trees in the same file is OK.
+So storing two document trees in the same file is OK.
 We just need to make the root object refer to either root object of both documents.
 
-So we just need to take 2 documents,
+So we just need to take two documents,
 renumber objects and references so that there is no overlap,
 craft a collision so that the element number referenced as Root object can be changed while keeping the same hash value,
 which is a perfect fit for UniColl with `N=1`, and adjust the `XREF` table accordingly.
@@ -860,7 +861,7 @@ PDF can store foreign data in two ways:
   endobj
   ```
 - as a stream object, in which case any data is possible, but since we're inside an object, we can't alter the whole PDF structure,
-  so it requires a chosen prefix collision to modify the structure outside the containing stream object.
+  so it requires a chosen-prefix collision to modify the structure outside the containing stream object.
 
 **colliding text**
 
@@ -895,7 +896,7 @@ Examples: [poeMD5 A](examples/poeMD5_A.pdf) ⟷ [poeMD5 B](examples/poeMD5_B.pdf
 
 **colliding document structure**
 
-Whether you use UniColl as inline comment or Chosen Prefix in a dummy stream object, the strategy is similar:
+Whether you use UniColl as inline comment or chosen-prefix in a dummy stream object, the strategy is similar:
 shuffle objects numbers around, then make Root object point to different objects, so unlike Shattered, this means instant collision of any arbitrary pair of PDF, at document level.
 
 A useful trick is that [`mutool clean`](https://mupdf.com/docs/manual-mutool-clean.html) output is reliably predictable,
@@ -905,9 +906,9 @@ so using fake dictionary entries such as `/MD5_is /REALLY_dead_now__` is perfect
 However it won't keep comments in dictionaries (so no inline-comment trick)
 
 An easy way to do the object-shuffling operation without hassle is just to merge both PDF files
-via `mutool merge` then split the `/Pages` object in 2.
+via `mutool merge` then split the `/Pages` object in two.
 
-To make room for this object, just merge in front of the 2 documents a dummy PDF.
+To make room for this object, just merge in front of the two documents a dummy PDF.
 
 Optionally, create a fake reference to the dangling array
 to prevent garbage collection from deleting the second set of pages.
@@ -915,7 +916,7 @@ to prevent garbage collection from deleting the second set of pages.
 
 **Example**:
 with this [script](scripts/pdf.py),
-it takes [less than a second](examples/pdf.log) to collide the 2 public PDF papers like Spectre and Meltdown:
+it takes [less than a second](examples/pdf.log) to collide the two public PDF papers like Spectre and Meltdown:
 
 Examples: [spectre.pdf](examples/collision1.pdf) ⟷ [meltdown.pdf](examples/collision2.pdf)
 
@@ -949,7 +950,8 @@ You can define objects directly - including dummy key and values for alignments 
     % cool alignment padding
     /MD5_is /REALLY_dead_now__
 
-    % the first reference number should be on offset 0x49, so 2 will be changed to 3 by UniColl
+    % the first reference number should be on offset 0x49,
+    % so the '2' object number will be changed to '3' by UniColl
     /Pages 2 0 R
 
     % now padding so that the collision blocks (ends at 0xC0) are covered
@@ -993,7 +995,7 @@ it can be used as page content just like any other embedded object, that is embe
 To store the JPEG data losslessly, store it as grayscale 100%, then either use a picture of single row/column,
 or repeat the data line 8 times (since JPEG blocks are 8x8), and your data is stored losslessly and referenced by the PDF pages.
 
-Examples of SHA-1 colliding 2 PDFs via JPEG page data (a grayscale picture rendering colors) as vector page content:
+Examples of SHA-1 colliding two PDFs via JPEG page data (a grayscale picture rendering colors) as vector page content:
 
 [If](examples/jpgpage1.pdf) ⟷ [Shattered - the movie](examples/jpgpage2.pdf)
 
@@ -1006,7 +1008,7 @@ Again, the image to be displayed is grayscale, but the page content can render s
 
 The top of the image shows the page content repeated 8 times.
 
-Examples of SHA-1 colliding 2 PDFs via JPEG used as page data and picture to be displayed:
+Examples of SHA-1 colliding two PDFs via JPEG used as page data and picture to be displayed:
 
 [Skulls & Crossbones](examples/dualjpg1.pdf) ⟷ [Golden Axe](examples/dualjpg2.pdf)
 
@@ -1016,12 +1018,12 @@ Examples of SHA-1 colliding 2 PDFs via JPEG used as page data and picture to be 
 
 ## Uncommon strategies
 
-Collisions are usually about 2 valid files of the same type.
+Collisions are usually about two valid files of the same type.
 
 
 ### MultiColls: multiple collisions chain
-Nothing prevents to chain several collision blocks, and have more than 2 contents with the same hash value.
-An example of that are Hashquines - that shows their own MD5 value. The [PoCGTFO 14](https://github.com/angea/pocorgtfo#0x14) file contains 609 FastColl collisions, to do that through 2 file types in the same file.
+Nothing prevents to chain several collision blocks, and have more than two contents with the same hash value.
+An example of that are Hashquines - that shows their own MD5 value. The [PoCGTFO 14](https://github.com/angea/pocorgtfo#0x14) file contains 609 FastColl collisions, to do that through two file types in the same file.
 
 
 ### Validity
@@ -1029,7 +1031,7 @@ An example of that are Hashquines - that shows their own MD5 value. The [PoCGTFO
 A different strategy would be to kill the file type to bypass scanning as a corrupted file.
 Just overwriting the magic signature will be enough. Appending both files (as valid or invalid) with a format that doesn't need to be at offset 0 (archive, like ZIP/RAR/...) would reveal another file type.
 
-This enables polyglot collisions without using a Chosen prefix collision:
+This enables polyglot collisions without using a chosen-prefix collision:
 1. use UniColl to enable or disable a magic signature, for example a PNG:
 2. append a ZIP archive
 
@@ -1050,7 +1052,7 @@ Attack scenario:
 2. get it whitelisted
 3. send `evil.exe`, which has the same MD5.
 
-In these cases, a Chosen Prefix collision is required
+In these cases, a chosen-prefix collision is required
 if both file formats need to start at offset 0.
 
 Some examples of polycoll layouts:
@@ -1080,7 +1082,7 @@ Examples: [fastcoll.exe](examples/jpg-pe.exe) ⟷ [Marc.jpg](examples/jpg-pe.jpg
 #### PDF - PE
 
 Merging a PDF with a dummy file with `mutool` is a good generic way to reorder objects
-and then get the first 2 objects discardable (dummy page and content),
+and then get the first two objects discardable (dummy page and content),
 which is a perfect fit for a hosting `stream` object of unknown length as `1 0`,
 and its length referenced further (after collision blocks) in the second object.
 
@@ -1109,12 +1111,12 @@ Examples: [Hello.pdf](examples/png-pdf.pdf) ⟷ [1x1.png](examples/png-pdf.png)
 ### PileUps (multi-collision)
 
 
-Cryptographic collisions are not limited to 2 files!
+Cryptographic collisions are not limited to two files!
 
 As demonstrated in the [Nostradamus](https://www.win.tue.nl/hashclash/Nostradamus/) experiment in 2008,
-chaining collisions makes it possible to collide more than 2 files.
+chaining collisions makes it possible to collide more than two files.
 
-The first collisions can be Identical or Chosen Prefix, the next ones have to be Chosen Prefix.
+The first collisions can be identical or chosen-prefix, the next ones have to be chosen-prefix.
 
 You can call them multi-collisions, I prefer *pileups* - it's shorter :)
 
@@ -1122,7 +1124,7 @@ You can call them multi-collisions, I prefer *pileups* - it's shorter :)
 #### PE - PNG - MP4 - PDF
 
 Combining all previously acquired knowledge,
-I used 3 Chosen Prefix collisions to craft 4 different prefixes for different file types:
+I used 3 chosen-prefix collisions to craft 4 different prefixes for different file types:
 document (PDF), video (MP4), executable (PE) and image (PNG).
 
 ![diagram of a PE/PNG/MP4/PDF pileup](pics/pileup-diagram.png)
@@ -1158,7 +1160,7 @@ From a strict parsing perspective,
 all your files will show the same content,
 and the evil images would be revealed as a file with the same MD5 as previously collected.
 
-Let's take 2 files:
+Let's take two files:
 
 <img alt='MS 08-067' src=pics/trinity.png width=300/> ⟷
 <img alt='MS 08-067' src=pics/javascript.png width=300/>
@@ -1194,7 +1196,7 @@ and the standard headers that are critical and specific to each file,
 then generic collisions are not possible.
 
 Of course, one might still turn the old files into a new one,
-and even use code to branch out to 2 different payloads,
+and even use code to branch out to two different payloads,
 but it's more like porting payloads than colliding file structure.
 
 
@@ -1237,7 +1239,7 @@ Instant MD5 re-usable collisions of Java Class should be possible, but require c
 
 ### TAR
 
-**TL;DR** No re-usable collision for TAR files, no other strategy than Chosen Prefix.
+**TL;DR** No re-usable collision for TAR files, no other strategy than chosen-prefix.
 
 <img alt='a TAR file' src=https://raw.githubusercontent.com/corkami/pics/master/binary/TAR.png width=600/>
 
@@ -1245,13 +1247,13 @@ Tape Archives are a sequence of concatenated header and file contents, all align
 
 There's no central structure to the whole file. So no global header or comment of any kind to abuse.
 
-A trick would be to start a dummy file of variable length, but the length is always at the same offset, which is not compatible with UniColl, which means only Chosen Prefix collisions is useful here.
+A trick would be to start a dummy file of variable length, but the length is always at the same offset, which is not compatible with UniColl, which means only chosen-prefix collisions is useful here.
 
 
 ### ZIP
 
 **TL;DR** There's no generic re-usable collision for ZIP.
-It should be possible to collide 2 files in 2h.core (36 times faster than Chosen Prefix)
+It should be possible to collide two files in 2h.core (36 times faster than chosen-prefix)
 
 <img alt='a ZIP file' src=https://raw.githubusercontent.com/corkami/pics/master/binary/ZIP.png width=600/>
 
@@ -1269,7 +1271,7 @@ Because of this required order, there's no generic prefix that could help for an
 
 Another approach could be to just merge both archives, with their merged layers, and using UniColl - but with N=2, which introduces a difference on the 4th byte - to kill the magic signature of the `End of Central Directory`.
 
-This means one could collide 2 arbitrary ZIP with a single UniColl and 24 bytes of set prefix.
+This means one could collide two arbitrary ZIP with a single UniColl and 24 bytes of set prefix.
 
 
 A typical End of Central Directory, which is 22 bytes if the comment is empty:
@@ -1301,7 +1303,7 @@ If we use this as prefix (padd the prefix to 16 bits) for UniColl and `N=2`, the
 70: c59c 028e a913 f6af 0036 c93f 5092 a628  .........6.?P..(
 ```
 
-This is not generic at all, but much faster than Chosen-Prefix collision:
+This is not generic at all, but much faster than chosen-prefix collision:
 ```
 real 12m23.993s
 user 112m24.072s
@@ -1309,7 +1311,7 @@ sys 2m0.194s
 ```
 
 A problem is that some parsers still parse ZIP files upside-down even if they should be parsed bottom-up:
-a way to make sure that both files are properly parsed is to chain 2 UniColl blocks,
+a way to make sure that both files are properly parsed is to chain two UniColl blocks,
 to enable/disable each `End of Central Directory`.
 
 To prevent ZIP parsers from complaining about unused space,
@@ -1319,9 +1321,9 @@ file comments in `Central Directory` and archive comments in `End of Central Dir
 ![diagram of ZIP collision](pics/zip.png)
 
 **Example**: here is an [assembly source](scripts/zip.asm) that describes the structure of a dual ZIP,
-that can host 2 different archive files.
+that can host two different archive files.
 
-After 2 unicoll computations, it gives the 2 colliding files:
+After two unicoll computations, it gives the two colliding files:
 [collision1.zip](examples/collision1.zip) ⟷ [collision2.zip](examples/collision2.zip)
 
 
@@ -1348,7 +1350,7 @@ Class    | N        |          |         |           | x
 1. PNG: Safari requires PNG to have their `IHDR` chunk in first slot, before any collision block. Doing so prevents a generic prefix, in which case the collision is limited to specific dimensions, color space, BPP and interlacing.
 1. Atom/Box formats like MP4 may work with the same prefix for different subformats. Some subformats like JPEG2000 or HEIF require extra grooming, but the exploit strategy is the same - it's just that the collision is not possible between sub-formats, only with a pair of prefix for a specific sub-format.
 1. Atom/Box is Shattered-compatible when using 64bit lengths.
-1. For better compatibility, ZIP needs 2 UniColl for a complete archive, and this collisions depend on both files contents.
+1. For better compatibility, ZIP needs two UniColl for a complete archive, and this collisions depend on both files contents.
 
 
 
