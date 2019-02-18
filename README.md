@@ -483,10 +483,25 @@ Classic collisions of two valid files with the same file type.
 Theoretical limitations and workarounds:
 - the *Application* segment should in theory right after the *Start of Image* marker.
   In practice, this is not necessary, so our collision can be generic: the only limitation is the size of the smallest image.
-- a comment's length is stored on two bytes, so the amount it can store is limited to it's limited to 65536 bytes (something like a 400x400 photo)
-  To jump over another image, its *Entropy Coded Segment* needs to be split to scans smaller than this, either by storing the image as progressive (easy, but limited), either by using *JPEGTran* and custom scans definition.
+- a comment's length is stored on two bytes, so the amount it can store is limited to it's limited to 65536 bytes (roughly the size of a 400x400 photo)
+- rather than jumping over a complete JPG file, one can split that file in its segments, and add jump trampolines between segments
 
-So an MD5 collision of two arbitrary JPGs is *instant*, and needs no chosen-prefix collision, just UniColl.
+  <img alt='comments over each image segments' src=pics/jpgcom1.png width=500/>
+
+  *comments over each image segments*
+
+  <img alt='how comments trampoline work' src=pics/jpgcom2.png width=500/>
+
+  *how comments trampoline work*
+
+- while most of a JPG structure is made of segments that are all limited to 65536 bytes in size,
+the actual compressed data is stored in the *Entropy Coded Segment* which doesn't respect its limitations:
+its size is unkown in advance and grows beyond that limit.
+It grows with the size of the image, making most of the file size in a baseline (non progressive) image.
+To make the whole image fit into 64kb chunks, the easy way is to first try to save the image as progressive (which any software can do, and splits the ECS in typically up to six scans). The more advanced way is to use *JPEGTran* with its 'wizard' `--scans` command line parameter and define custom scans.
+
+There's no other restriction besides the scans segments,
+so an MD5 collision of two arbitrary JPGs is *instant*, and needs no chosen-prefix collision, just UniColl.
 
 With the [script](scripts/jpg.py):
 ```
