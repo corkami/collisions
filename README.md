@@ -1371,9 +1371,13 @@ Class    | N        |          |         |           | x
 
 # Presentations
 
-Exploiting Hash Collisions (2017):
+Exploiting Hash Collisions at BlackAlps, in 2017:
 - [slides](https://speakerdeck.com/ange/exploiting-hash-collisions)
+
+  [<img alt='Black Alps 2017 slides' src=pics/blackalps17.png width=350/>
+
 - [video](https://www.youtube.com/watch?v=Y-oJWEYKVLA)
+
   [![Exploiting hash collisions youtube video](https://img.youtube.com/vi/Y-oJWEYKVLA/0.jpg)](https://www.youtube.com/watch?v=Y-oJWEYKVLA)
 
 
