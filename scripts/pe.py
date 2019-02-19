@@ -30,12 +30,12 @@ def getPEhdr(d):
     sys.exit()
 
   NumDiffOff = 0x74 if bits == 32 else 0x84
-  NumDD = struct.unpack("l", peHDR[NumDiffOff:NumDiffOff+4])[0]
+  NumDD = struct.unpack("i", peHDR[NumDiffOff:NumDiffOff+4])[0]
 
   SecTblOff = NumDiffOff + 4 + NumDD * 2 * 4
 
   # get the offset of the first section
-  SectsStart = struct.unpack("l", peHDR[SecTblOff+0x14:SecTblOff+0x14+4])[0]
+  SectsStart = struct.unpack("i", peHDR[SecTblOff+0x14:SecTblOff+0x14+4])[0]
 
   PElen = SecTblOff + SecCount * 0x28
 
@@ -45,10 +45,10 @@ def getPEhdr(d):
 def relocateSections(d, SecTblOff, SecCount, delta):
   for i in range(SecCount):
     offset = SecTblOff + i*0x28 + 0x14
-    PhysOffset = struct.unpack("l", d[offset:offset+4])[0]
+    PhysOffset = struct.unpack("i", d[offset:offset+4])[0]
     d = "".join([
       d[:offset],
-      struct.pack("l", PhysOffset + delta),
+      struct.pack("i", PhysOffset + delta),
       d[offset+4:]
       ])
   return d
@@ -95,7 +95,7 @@ if HdrLen2 > SECTIONSOFF - HEADER2OFF:
 #SizeOfHeader increased
 d2 = "".join([
   d2[:PEoff2 + 0x54],
-  struct.pack("l", SECTIONSOFF),
+  struct.pack("i", SECTIONSOFF),
   d2[PEoff2 + 0x54 + 4:]
   ])
 

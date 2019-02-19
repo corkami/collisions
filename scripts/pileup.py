@@ -128,12 +128,12 @@ def getPEhdr(d):
     sys.exit()
 
   NumDiffOff = 0x74 if bits == 32 else 0x84
-  NumDD = struct.unpack("l", peHDR[NumDiffOff:NumDiffOff+4])[0]
+  NumDD = struct.unpack("i", peHDR[NumDiffOff:NumDiffOff+4])[0]
 
   SecTblOff = NumDiffOff + 4 + NumDD * 2 * 4
 
   # get the offset of the first section
-  SectsStart = struct.unpack("l", peHDR[SecTblOff+0x14:SecTblOff+0x14+4])[0]
+  SectsStart = struct.unpack("i", peHDR[SecTblOff+0x14:SecTblOff+0x14+4])[0]
 
   PElen = SecTblOff + SecCount * 0x28
 
@@ -143,8 +143,8 @@ def getPEhdr(d):
 def relocateSections(d, SecTblOff, SecCount, delta):
   for i in range(SecCount):
     offset = SecTblOff + i*0x28 + 0x14
-    PhysOffset = struct.unpack("l", d[offset:offset+4])[0]
-    d = setDWORD(d, offset, struct.pack("l", PhysOffset + delta) )
+    PhysOffset = struct.unpack("i", d[offset:offset+4])[0]
+    d = setDWORD(d, offset, struct.pack("i", PhysOffset + delta) )
   return d
 
 
@@ -162,8 +162,8 @@ SECTIONEXTRA = 0x00 # amount of stuff to copy before sections start in case (for
 
 
 if len(sys.argv) == 1:
-  print("PDF-PE MD5 collider")
-  print("Usage: pdf-pe.py <file.pdf> <file.exe> <file.png> <file.mp4>")
+  print("MD5 pileup collider")
+  print("Usage: pileup.py <file.pdf> <file.exe> <file.png> <file.mp4>")
   sys.exit()
 
 with open(sys.argv[2], "rb") as f:
@@ -244,7 +244,7 @@ with open("pileup-png.bin", "rb") as f:
 
 # MP4 free atom ###############################################################
 
-cleaned = setDWORD(cleaned, 0x540,struct.pack(">L", lenPEPNG + 0x20))
+cleaned = setDWORD(cleaned, 0x540,struct.pack(">I", lenPEPNG + 0x20))
 cleaned = setDWORD(cleaned, 0x544, "free")
 
 
@@ -252,15 +252,15 @@ cleaned = setDWORD(cleaned, 0x544, "free")
 
 cleaned = prefixPNG + cleaned[0x540:]
 # crc of collision chunk
-cleaned = setDWORD(cleaned, 0x550, struct.pack(">L", zlib.crc32(cleaned[0x70:0x550]) & 0xffffffff))
+cleaned = setDWORD(cleaned, 0x550, struct.pack(">I", zlib.crc32(cleaned[0x70:0x550]) & 0xffffffff))
 
 # aNGE chunk
-cleaned = setDWORD(cleaned, 0x554, struct.pack(">L", lenPE + 4))
+cleaned = setDWORD(cleaned, 0x554, struct.pack(">I", lenPE + 4))
 cleaned = setDWORD(cleaned, 0x558, "aNGE")
 cleaned = setDWORD(
   cleaned,
   0x560 + lenPE,
-  struct.pack(">L", zlib.crc32(cleaned[0x558:0x560 + lenPE]) & 0xffffffff))
+  struct.pack(">I", zlib.crc32(cleaned[0x558:0x560 + lenPE]) & 0xffffffff))
 
 
 with open("collision.pdf", "wb") as f:

@@ -32,9 +32,9 @@ peHDR = Exe[:JPGSTART].strip("\0")
 peHDR = peHDR[peHDR.find("PE\0\0"):]
 
 NumSec = struct.unpack("h", peHDR[0x6:0x6+2])[0]
-BaseOfCode = struct.unpack("l", peHDR[0x2c:0x2c+4])[0]
-FileAlig = struct.unpack("l", peHDR[0x3c:0x3c+4])[0]
-NumDir = struct.unpack("l", peHDR[0x74:0x74+4])[0]
+BaseOfCode = struct.unpack("i", peHDR[0x2c:0x2c+4])[0]
+FileAlig = struct.unpack("i", peHDR[0x3c:0x3c+4])[0]
+NumDir = struct.unpack("i", peHDR[0x74:0x74+4])[0]
 
 print "%s :" % fnEXE
 print " # Sections: %i" % NumSec
@@ -56,10 +56,10 @@ TableOff = 0x78 + NumDir * 8
 
 for i in range(NumSec):
   offset = TableOff + i*0x28 + 0x14
-  PhysOffset = struct.unpack("l", peHDR[offset:offset+4])[0]
+  PhysOffset = struct.unpack("i", peHDR[offset:offset+4])[0]
   peHDR = "".join([
     peHDR[:offset],
-    struct.pack("l", PhysOffset + Delta),
+    struct.pack("i", PhysOffset + Delta),
     peHDR[offset+4:]
     ])
   print " %i: %08xh" % (i + 1, PhysOffset + Delta)
