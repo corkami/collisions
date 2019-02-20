@@ -9,6 +9,10 @@ Don't play with fire, don't rely on MD5.
 This page provide tricks specific to file formats and pre-computed collision prefixes to make collision **instant**.
 `git clone`. Run Script. Done.
 
+# Hash collisions and exploitations
+
+By Ange Albertini and Marc Stevens.
+
 - [Introduction](#introduction)
 - [Status](#status)
 - [Attacks](#attacks)
@@ -50,14 +54,12 @@ This page provide tricks specific to file formats and pre-computed collision pre
     - [TAR](#tar)
     - [ZIP](#zip)
   - [Exploitations summary](#exploitations-summary)
-- [Presentations](#presentations)
 - [Credits](#credits)
+- [References](#references)
 - [Conclusion](#conclusion)
 
 
 # Introduction
-
-This repository is focused on hash collisions exploitation.
 
 The goal is to explore extensively existing attacks - and show on the way how weak MD5 is (instant collisions of any JPG, PNG, PDF, MP4, PE...) -
 and also explore in detail common file formats to determine
@@ -1368,17 +1370,35 @@ Class    | N        |          |         |           | x
 1. For better compatibility, ZIP needs two UniColl for a complete archive, and this collisions depend on both files contents.
 
 
+# References
 
-# Presentations
+Papers:
 
-Exploiting Hash Collisions at BlackAlps, in 2017:
-- [slides](https://speakerdeck.com/ange/exploiting-hash-collisions)
+- 2004
+  - [MD5 To Be Considered Harmful Someday](https://eprint.iacr.org/2004/357.pdf) - Dan Kaminsky
+  - [Practical Attacks on Digital Signatures Using MD5 Message Digest](https://eprint.iacr.org/2004/356.pdf) - Ondredj Mikle 
+- 2005:
+  - [A Note on Practical Value of Single Hash Collisions for Special File Formats](papers/Illies_NIST_05.pdf) - Max Gebhardt, Georg Illies, Werner Schindler
+- 2014:
+  - [Malicious Hashing: Eve’s Variant of SHA-1](https://malicioussha1.github.io/) - Ange Albertini, Jean-Philippe Aumasson, Maria Eichlseder, Florian Mendel, Martin Schläffer
+- 2017:
+  - [The first collision for full SHA-1](http://shattered.io) - Marc Stevens, Elie Bursztein, Pierre Karpman, Ange Albertini, Yarik Markov
+  - [Postscript that shows its own MD5](https://archive.org/stream/pocorgtfo14#page/n45/mode/1up) by Gregor "Greg" Kopf
+  - [A PDF That Shows Its Own MD5](https://archive.org/stream/pocorgtfo14#page/n49/mode/1up) by Mako
+  - [This GIF shows its own MD5!](https://archive.org/stream/pocorgtfo14#page/n52/mode/1up) by Kristoffer "spq" Janke
+  - [This PDF is an NES ROM that prints its own MD5 hash!](https://archive.org/stream/pocorgtfo14#page/n55/mode/1up) by Evan Sultanik, Evan Teran
+- 2018:
+  - [Easy SHA-1 Colliding PDFs with PDFLaTeX.](https://archive.org/stream/pocorgtfo18#page/n62/mode/1up) by Ange Albertini
 
-  [<img alt='Black Alps 2017 slides' src=pics/blackalps17.png width=350/>](https://speakerdeck.com/ange/exploiting-hash-collisions)
-
-- [video](https://www.youtube.com/watch?v=Y-oJWEYKVLA)
-
-  [![Exploiting hash collisions youtube video](https://img.youtube.com/vi/Y-oJWEYKVLA/0.jpg)](https://www.youtube.com/watch?v=Y-oJWEYKVLA)
+Presentations:
+- 2017 Exploiting Hash Collisions at BlackAlps:
+  - [slides](https://speakerdeck.com/ange/exploiting-hash-collisions)
+  
+    [<img alt='Black Alps 2017 slides' src=pics/blackalps17.png width=350/>](https://speakerdeck.com/ange/exploiting-hash-collisions)
+  
+  - [video](https://www.youtube.com/watch?v=Y-oJWEYKVLA)
+  
+    [![Exploiting hash collisions youtube video](https://img.youtube.com/vi/Y-oJWEYKVLA/0.jpg)](https://www.youtube.com/watch?v=Y-oJWEYKVLA)
 
 
 # Credits
