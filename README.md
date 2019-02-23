@@ -54,8 +54,8 @@ By Ange Albertini and Marc Stevens.
     - [TAR](#tar)
     - [ZIP](#zip)
   - [Exploitations summary](#exploitations-summary)
-- [Credits](#credits)
 - [References](#references)
+- [Credits](#credits)
 - [Conclusion](#conclusion)
 
 
