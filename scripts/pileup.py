@@ -217,6 +217,7 @@ stage1 = template % locals()
 deltaPDF = stage1.find("stream\n") + len("stream\n")
 
 buffer = "\0" * (PEOFFSET - deltaPDF + len("2 0 R") - len("%i" % lenBuffer)) + buffer
+lenBuffer += PEOFFSET - deltaPDF + 2 # +2 for the 2 carriage returns in the stream template
 with open("hacked.pdf", "wb") as f:
   f.write(template % locals())
   f.write(dm)
@@ -244,7 +245,7 @@ with open("pileup-png.bin", "rb") as f:
 
 # MP4 free atom ###############################################################
 
-cleaned = setDWORD(cleaned, 0x540,struct.pack(">I", lenPEPNG + 0x20))
+cleaned = setDWORD(cleaned, 0x540,struct.pack(">L", lenPEPNG + 0x20))
 cleaned = setDWORD(cleaned, 0x544, "free")
 
 
@@ -252,15 +253,15 @@ cleaned = setDWORD(cleaned, 0x544, "free")
 
 cleaned = prefixPNG + cleaned[0x540:]
 # crc of collision chunk
-cleaned = setDWORD(cleaned, 0x550, struct.pack(">I", zlib.crc32(cleaned[0x70:0x550]) & 0xffffffff))
+cleaned = setDWORD(cleaned, 0x550, struct.pack(">L", zlib.crc32(cleaned[0x70:0x550]) & 0xffffffff))
 
 # aNGE chunk
-cleaned = setDWORD(cleaned, 0x554, struct.pack(">I", lenPE + 4))
+cleaned = setDWORD(cleaned, 0x554, struct.pack(">L", lenPE + 4))
 cleaned = setDWORD(cleaned, 0x558, "aNGE")
 cleaned = setDWORD(
   cleaned,
   0x560 + lenPE,
-  struct.pack(">I", zlib.crc32(cleaned[0x558:0x560 + lenPE]) & 0xffffffff))
+  struct.pack(">L", zlib.crc32(cleaned[0x558:0x560 + lenPE]) & 0xffffffff))
 
 
 with open("collision.pdf", "wb") as f:
