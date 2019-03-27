@@ -12,8 +12,8 @@ def comment_start(size):
 def comment(size, s=""):
   return comment_start(size) + s + "\0" * (size - 2 - len(s))
 
-def comments(s):
-  return comment(len(s), s)
+def comments(s, delta=0):
+  return comment(len(s) + delta, s)
 
 fn1, fn2 = sys.argv[1:3]
 with open(fn1, "rb") as f:
@@ -68,8 +68,8 @@ suffix = "".join([
         comments(
           "\xff\xfe" +
           # +4 to reach the next intra-block
-          struct.pack(">H", len(c) + 4 + 4)
-          ),
+          struct.pack(">H", len(c) + 4 + 4),
+          delta=2),
         "\xff\xda",
         c
       ]) for c in c1[1:]
