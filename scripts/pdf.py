@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 
 # script to craft MD5 collisions of 2 PDFs via mutool and UniColl
-# Ange Albertini 2018
+# Ange Albertini 2018-2019
 
 # uses mutool from https://mupdf.com/index.html
 
 import os
 import sys
 import hashlib
+
+
+MUTOOL = "mutool.exe"
 
 def EnclosedString(d, starts, ends):
   off = d.find(starts) + len(starts)
@@ -21,15 +24,54 @@ def getCount(d):
 def procreate(l): # :p
   return " 0 R ".join(l) + " 0 R"
 
+def adjustPDF(contents):
+  """dumb [start]xref fix: fixes old-school xref with no holes, with hardcoded \\n"""
+  startXREF = contents.find("\nxref\n0 ") + 1
+  endXREF = contents.find(" \n\n", startXREF) + 1
+  origXref = contents[startXREF:endXREF]
+  objCount = int(origXref.splitlines()[1].split(" ")[1])
+  print "object count: %i" % objCount
+
+  xrefLines = [
+    "xref",
+    "0 %i" % objCount,
+    # mutool declare its first xref like this
+    "0000000000 00001 f "
+    ]
+
+  i = 1
+  while i < objCount:
+    # doesn't support comments at the end of object declarations
+    off = contents.find("\n%i 0 obj\n" % i) + 1
+    xrefLines.append("%010i 00000 n " % (off))
+    i += 1
+
+  xref = "\n".join(xrefLines)
+
+  # XREF length should be unchanged
+  try:
+    assert len(xref) == len(origXref)
+  except AssertionError:
+    print "<:", `origXref`
+    print ">:", `xref`
+
+  contents = contents[:startXREF] + xref + contents[endXREF:]
+
+  startStartXref = contents.find("\nstartxref\n", endXREF) + len("\nstartxref\n")
+  endStartXref = contents.find("\n%%%%EOF", startStartXref)
+  contents = contents[:startStartXref] + "%i" % startXREF + contents[endStartXref:]
+
+  return contents
+
 
 if len(sys.argv) == 1:
   print("PDF MD5 collider")
   print("Usage: pdf.py <file1.pdf> <file2.pdf>")
   sys.exit()
 
-os.system('mutool merge -o first.pdf %s' % sys.argv[1])
-os.system('mutool merge -o second.pdf %s' % sys.argv[2])
-os.system('mutool merge -o merged.pdf dummy.pdf %s %s' % (sys.argv[1], sys.argv[2]))
+os.system(MUTOOL + ' merge -o first.pdf %s' % sys.argv[1])
+os.system(MUTOOL + ' merge -o second.pdf %s' % sys.argv[2])
+os.system(MUTOOL + ' merge -o merged.pdf dummy.pdf %s %s' % (sys.argv[1], sys.argv[2]))
 
 with open("first.pdf", "rb") as f:
   d1 = f.read()
@@ -75,7 +117,8 @@ endobj
 <</Type/Pages/Count %(COUNT1)i/Kids[%(KIDS1)s]>>
 endobj
 
-4 0 obj %% overwritten - was a fake page to fool merging
+%% overwritten - was a fake page to fool merging
+4 0 obj
 << >>
 endobj
 
@@ -85,17 +128,19 @@ KIDS1 = procreate(pages[:getCount(d1)])
 
 KIDS2 = procreate(pages[getCount(d1):])
 
+contents = template % locals()
+
+# adjust parents for the first set of pages
+contents += dm[dm.find("5 0 obj"):].replace("/Parent 2 0 R", "/Parent 3 0 R", COUNT1)
+
+# not necessary (will be fixed by mutool anyway) but avoids warnings
+contents = adjustPDF(contents)
 
 with open("hacked.pdf", "wb") as f:
-  f.write(template % locals())
-  # adjust parents for the first set of pages
-  f.write(dm[dm.find("5 0 obj"):].replace("/Parent 2 0 R", "/Parent 3 0 R", COUNT1))
+  f.write(contents)
 
 # let's adjust offsets - -g to get rid of object 4 by garbage collecting
-# (yes, errors will appear because we modified objects without adjusting XREF)
-print
-print "KEEP CALM and IGNORE THE NEXT ERRORS"
-os.system('mutool clean -gggg hacked.pdf cleaned.pdf')
+os.system(MUTOOL + ' clean -gggg hacked.pdf cleaned.pdf')
 
 with open("cleaned.pdf", "rb") as f:
   cleaned = f.read()
@@ -133,10 +178,10 @@ assert md5 == hashlib.md5(file2).hexdigest()
 
 # to prove the files should be 100% valid
 print
-os.system('mutool info -X collision1.pdf')
+os.system(MUTOOL + ' info -X collision1.pdf')
 print
 print
-os.system('mutool info -X collision2.pdf')
+os.system(MUTOOL + ' info -X collision2.pdf')
 
 print
 print "MD5: %s" % md5
