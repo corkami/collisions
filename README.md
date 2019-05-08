@@ -1369,6 +1369,9 @@ Class    | N        |          |         |           | x
 1. Atom/Box is Shattered-compatible when using 64bit lengths.
 1. For better compatibility, ZIP needs two UniColl for a complete archive, and this collisions depend on both files contents.
 
+## Test files
+
+[Here](examples/free) are free (copyright-free, PII-free) test colliding pairs.
 
 # References
 
