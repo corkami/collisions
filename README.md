@@ -651,6 +651,9 @@ So in the end, the current GIF limitations for *instant* MD5 collisions are:
 - the images have to be the same dimensions
 - after 11 minutes, both files will show the same image
 
+An easy shortcut to normalize still GIF images is to make them animation frames of the same image,
+then we can use a [script](scripts/gif.py) to re-use or compute FastColl blocks to make a file pair that shows each of them.
+
 Examples:
 
 <img alt='identical prefix collisions' src=examples/collision1.gif width=350/> ⟷
