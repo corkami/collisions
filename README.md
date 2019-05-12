@@ -688,22 +688,6 @@ Here is a [script](scripts/pe.py) to generate instant MD5 collisions of Windows 
 
 <img alt='collision of fastcoll.exe (CLI) and tweakPNG(GUI)' src=pics/pe.png width=500/>
 
-**Runtime R6002 - floating point not loaded**:
-
-MSVC libraries check sections for permissions.
-This check can be [patched out](http://www.manhunter.ru/underground/65_runtime_error_r6002_floating_point_not_loaded.html): patch this
-``` x86
-C1E81F shr   eax,01F
-F7D0   not   eax
-83E001 and   eax,1
-```
-to set `eax` to 1 instead.
-
-If you apply collisions on packed files,
-(such as UPX-ed files, to prevent specific PDF keywords like `endstream` to be visible in cleartext),
-the offsets will change, and this may cause the packer to fail to restore the right attributes.
-So you may want to patch out that code before UPX-ing the executable and colliding it.
-
 ### MP4 and others
 
 This format's container is a sequence of `Length Type Value` chunks called Atoms.
