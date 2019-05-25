@@ -1416,3 +1416,5 @@ Thanks to Rafał Hirsz for his permanent help on JavaScript.
 Unless you actively check for malformations or collisions blocks in files, don't use MD5!
 
 It's not a cryptographic hash, it's a toy function!
+
+<!-- pandoc -s -f gfm -t html README.md -o README.html -->
