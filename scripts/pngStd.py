@@ -58,12 +58,12 @@ if not glob.glob("%s-1.bin" % hash):
   # Note: make sure poc_no.sh is unmodified (ie, N=1)
   os.system("../hashclash/scripts/poc_no.sh prefix")
 
-  shutil.copyfile("collision1.bin", "%s-1.bin" % hash)
-  shutil.copyfile("collision2.bin", "%s-2.bin" % hash)
+  shutil.copyfile("collision1.bin", "png1-%s.bin" % hash)
+  shutil.copyfile("collision2.bin", "png2-%s.bin" % hash)
 
-with open("%s-1.bin" % hash, "rb") as f:
+with open("png1-%s.bin" % hash, "rb") as f:
   block1 = f.read()
-with open("%s-2.bin" % hash, "rb") as f:
+with open("png2-%s.bin" % hash, "rb") as f:
   block2 = f.read()
 
 assert len(block1) == 0xC0
