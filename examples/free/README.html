@@ -24,10 +24,17 @@
 <li>JPG images, UniColl <a href="md5-1.jpg" class="uri">md5-1.jpg</a> / <a href="md5-2.jpg" class="uri">md5-2.jpg</a></li>
 <li>PDF documents, UniColl <a href="md5-1.pdf" class="uri">md5-1.pdf</a> / <a href="md5-2.pdf" class="uri">md5-2.pdf</a></li>
 <li>PNG images, UniColl <a href="md5-1.png" class="uri">md5-1.png</a> / <a href="md5-2.png" class="uri">md5-2.png</a></li>
+<li>MP4, UniColl</li>
+<li>generic, 32b length (LTV) <a href="md5-1.mp4" class="uri">md5-1.mp4</a> / <a href="md5-2.mp4" class="uri">md5-2.mp4</a></li>
+<li>generic, 64b length (TLV) <a href="md5-l1.mp4" class="uri">md5-l1.mp4</a> / <a href="md5-l2.mp4" class="uri">md5-l2.mp4</a></li>
+<li>specific <a href="md5-s1.mp4" class="uri">md5-s1.mp4</a> / <a href="md5-s2.mp4" class="uri">md5-s2.mp4</a></li>
 </ul>
 <p>SHA1</p>
 <ul>
 <li>JPG in PDF, Shattered <a href="sha1-1.pdf" class="uri">sha1-1.pdf</a> / <a href="sha1-2.pdf" class="uri">sha1-2.pdf</a></li>
 </ul>
+<!--
+ffmpeg -i md5-1.png -c:v libx264 -tune stillimage -crf 22 -framerate 1/5 -c:a copy no.mp4 -map_metadata -1
+-->
 </body>
 </html>
