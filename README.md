@@ -54,6 +54,7 @@ By Ange Albertini and Marc Stevens.
     - [TAR](#tar)
     - [ZIP](#zip)
   - [Exploitations summary](#exploitations-summary)
+  - [Test files](#test-files)
 - [References](#references)
 - [Credits](#credits)
 - [Conclusion](#conclusion)
@@ -1366,7 +1367,7 @@ Class    | N        |          |         |           | x
 
 ## Test files
 
-[Here](examples/free) are free (copyright-free, PII-free) test colliding pairs.
+[Here](examples/free/README.md) are free (copyright-free, PII-free) test colliding pairs.
 
 # References
 
