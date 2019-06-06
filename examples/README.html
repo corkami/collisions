@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="collisions-examples">Collisions examples</h1>
+<h2 id="md5">MD5</h2>
+<h3 id="fastcoll">FastColl</h3>
+<p>single frame GIF: <a href="collision1.gif" class="uri">collision1.gif</a> / <a href="collision2.gif" class="uri">collision2.gif</a></p>
+<h3 id="unicoll">UniColl</h3>
+<p>JPG: <a href="collision1.jpg" class="uri">collision1.jpg</a> / <a href="collision2.jpg" class="uri">collision2.jpg</a> - <a href="tldr-1.jpg" class="uri">tldr-1.jpg</a> / <a href="tldr-2.jpg" class="uri">tldr-2.jpg</a></p>
+<p>PDF: <a href="collision1.pdf" class="uri">collision1.pdf</a> / <a href="collision2.pdf" class="uri">collision2.pdf</a></p>
+<p>PNG:</p>
+<ul>
+<li>generic headers (not OS X compatible): <a href="collision1.png" class="uri">collision1.png</a> / <a href="collision2.png" class="uri">collision2.png</a></li>
+<li>specific headers (same metadata): <a href="0a959025-1.png" class="uri">0a959025-1.png</a> / <a href="0a959025-2.png" class="uri">0a959025-2.png</a> - <a href="aac2423a-1.png" class="uri">aac2423a-1.png</a> / <a href="aac2423a-2.png" class="uri">aac2423a-2.png</a></li>
+</ul>
+<p>JP2: <a href="collision1.jp2" class="uri">collision1.jp2</a> / <a href="collision2.jp2" class="uri">collision2.jp2</a></p>
+<p>MP4:</p>
+<ul>
+<li>generic header, 32b length (LTV): <a href="collision1.mp4" class="uri">collision1.mp4</a> / <a href="collision2.mp4" class="uri">collision2.mp4</a></li>
+<li>generic header, 64b length (TLV): <a href="collisionl1.mp4" class="uri">collisionl1.mp4</a> / <a href="collisionl2.mp4" class="uri">collisionl2.mp4</a>
+<ul>
+<li>specific header: <a href="collisions1.mp4" class="uri">collisions1.mp4</a> / <a href="collisions2.mp4" class="uri">collisions2.mp4</a></li>
+</ul></li>
+</ul>
+<p>Strategies:</p>
+<ul>
+<li>Good/bad contents (gotta catch 'em all): <a href="gcea1.png" class="uri">gcea1.png</a> / <a href="gcea2.png" class="uri">gcea2.png</a></li>
+<li>Valid/Invalid: <a href="png-valid.png" class="uri">png-valid.png</a> / <a href="png-invalid.png" class="uri">png-invalid.png</a></li>
+</ul>
+<h4 id="multiple-unicoll">Multiple UniColl</h4>
+<p>poeMD5 (not Adobe compatible by accident): <a href="poeMD5_A.pdf" class="uri">poeMD5_A.pdf</a> / <a href="poeMD5_B.pdf" class="uri">poeMD5_B.pdf</a></p>
+<p>ZIP: <a href="collision1.zip" class="uri">collision1.zip</a> / <a href="collision2.zip" class="uri">collision2.zip</a></p>
+<h3 id="hashclash">HashClash</h3>
+<p>PE: <a href="collision1.exe" class="uri">collision1.exe</a> / <a href="collision2.exe" class="uri">collision2.exe</a></p>
+<h4 id="polycolls">polycolls</h4>
+<ul>
+<li>JPG / PE: <a href="jpg-pe.exe" class="uri">jpg-pe.exe</a> / <a href="jpg-pe.jpg" class="uri">jpg-pe.jpg</a></li>
+<li>PE / PDF: <a href="pepdf.exe" class="uri">pepdf.exe</a> / <a href="pepdf.pdf" class="uri">pepdf.pdf</a></li>
+<li>PNG / PDF: <a href="png-pdf.pdf" class="uri">png-pdf.pdf</a> / <a href="png-pdf.png" class="uri">png-pdf.png</a></li>
+<li>PE / MP4 / PDF / PNG: <a href="pileup.exe" class="uri">pileup.exe</a> / <a href="pileup.mp4" class="uri">pileup.mp4</a> / <a href="pileup.pdf" class="uri">pileup.pdf</a> / <a href="pileup.png" class="uri">pileup.png</a></li>
+</ul>
+<h2 id="plain-collisions">plain collisions</h2>
+<p>FastColl: <a href="fastcoll1.bin" class="uri">fastcoll1.bin</a> / <a href="fastcoll2.bin" class="uri">fastcoll2.bin</a></p>
+<p>HashClash 9 blocks <a href="cpc1.bin" class="uri">cpc1.bin</a> / <a href="cpc2.bin" class="uri">cpc2.bin</a> - 1 block <a href="single-cpc1.bin" class="uri">single-cpc1.bin</a> / <a href="single-cpc2.bin" class="uri">single-cpc2.bin</a></p>
+<p>Single IPC: <a href="single-ipc1.bin" class="uri">single-ipc1.bin</a> / <a href="single-ipc2.bin" class="uri">single-ipc2.bin</a></p>
+<h2 id="sha1-shattered">SHA1 (Shattered)</h2>
+<p>JPGs in PDF:</p>
+<ul>
+<li>multiple clipped images: <a href="shattered1.pdf" class="uri">shattered1.pdf</a> / <a href="shattered2.pdf" class="uri">shattered2.pdf</a></li>
+</ul>
+<p>JPG as page contents (desktop only, not browser):</p>
+<ul>
+<li>as page content: <a href="jpgpage1.pdf" class="uri">jpgpage1.pdf</a> / <a href="jpgpage2.pdf" class="uri">jpgpage2.pdf</a></li>
+<li>as image and page content: <a href="dualjpg1.pdf" class="uri">dualjpg1.pdf</a> / <a href="dualjpg2.pdf" class="uri">dualjpg2.pdf</a></li>
+</ul>
+<h1 id="others">others</h1>
+<ul>
+<li>prefix-switching payload for HTML polyglot <a href="polyglot.html" class="uri">polyglot.html</a></li>
+<li>JPG file with 20 custom scans <a href="20scans.jpg" class="uri">20scans.jpg</a></li>
+</ul>
+</body>
+</html>
