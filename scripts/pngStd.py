@@ -32,7 +32,7 @@ hash = hashlib.sha256(d1[:0x21]).hexdigest()[:8]
 
 print "Header hash: %s" % hash
 
-if not glob.glob("%s-1.bin" % hash):
+if not glob.glob("png1-%s.bin" % hash):
   print "Not found! Launching computation..."
 
   # make the complete prefix
