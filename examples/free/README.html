@@ -16,28 +16,36 @@
   <![endif]-->
 </head>
 <body>
-<p>Copyright-free, PII free collision PoCs</p>
-<p>MD5</p>
+<p>Copyright-free, PII-free collision PoCs</p>
+<h1 id="md5">MD5</h1>
+<h2 id="fastcoll">FastColl</h2>
 <ul>
-<li>PE executables, HashClash <a href="md5-1.exe" class="uri">md5-1.exe</a> / <a href="md5-2.exe" class="uri">md5-2.exe</a></li>
-<li>GIF images, FastColl <a href="md5-1.gif" class="uri">md5-1.gif</a> / <a href="md5-2.gif" class="uri">md5-2.gif</a></li>
-<li>JPG images, UniColl <a href="md5-1.jpg" class="uri">md5-1.jpg</a> / <a href="md5-2.jpg" class="uri">md5-2.jpg</a></li>
-<li>PDF documents, UniColl <a href="md5-1.pdf" class="uri">md5-1.pdf</a> / <a href="md5-2.pdf" class="uri">md5-2.pdf</a></li>
-<li>PNG images, UniColl
+<li>GIF images <a href="md5-1.gif" class="uri">md5-1.gif</a> / <a href="md5-2.gif" class="uri">md5-2.gif</a></li>
+</ul>
+<h2 id="unicoll">UniColl</h2>
+<ul>
+<li><p>JPG images <a href="md5-1.jpg" class="uri">md5-1.jpg</a> / <a href="md5-2.jpg" class="uri">md5-2.jpg</a></p></li>
+<li><p>PDF documents <a href="md5-1.pdf" class="uri">md5-1.pdf</a> / <a href="md5-2.pdf" class="uri">md5-2.pdf</a></p></li>
+<li><p>PNG images</p>
 <ul>
 <li>generic header, not 100% compatible <a href="md5-1.png" class="uri">md5-1.png</a> / <a href="md5-2.png" class="uri">md5-2.png</a></li>
 <li>specific header, common dimensions/colorspace <a href="md5-s1.png" class="uri">md5-s1.png</a> / <a href="md5-s2.png" class="uri">md5-s2.png</a></li>
 </ul></li>
-<li>MP4, UniColl
+<li><p>MP4</p>
 <ul>
 <li>generic header, 32b length (LTV) <a href="md5-1.mp4" class="uri">md5-1.mp4</a> / <a href="md5-2.mp4" class="uri">md5-2.mp4</a></li>
 <li>generic header, 64b length (TLV) <a href="md5-l1.mp4" class="uri">md5-l1.mp4</a> / <a href="md5-l2.mp4" class="uri">md5-l2.mp4</a></li>
 <li>specific header <a href="md5-s1.mp4" class="uri">md5-s1.mp4</a> / <a href="md5-s2.mp4" class="uri">md5-s2.mp4</a></li>
 </ul></li>
+<li><p>ZIP <a href="md5-1.zip" class="uri">md5-1.zip</a> / <a href="md5-2.zip" class="uri">md5-2.zip</a></p></li>
 </ul>
-<p>SHA1</p>
+<h2 id="hashclash">HashClash</h2>
 <ul>
-<li>JPG in PDF, Shattered <a href="sha1-1.pdf" class="uri">sha1-1.pdf</a> / <a href="sha1-2.pdf" class="uri">sha1-2.pdf</a></li>
+<li>PE executables <a href="md5-1.exe" class="uri">md5-1.exe</a> / <a href="md5-2.exe" class="uri">md5-2.exe</a></li>
+</ul>
+<h1 id="sha1-shattered">SHA1 (Shattered)</h1>
+<ul>
+<li>JPG in PDF <a href="sha1-1.pdf" class="uri">sha1-1.pdf</a> / <a href="sha1-2.pdf" class="uri">sha1-2.pdf</a></li>
 </ul>
 <!--
 ffmpeg -i md5-1.png -c:v libx264 -tune stillimage -crf 22 -framerate 1/5 -c:a copy no.mp4 -map_metadata -1
