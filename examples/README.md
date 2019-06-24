@@ -3,7 +3,7 @@
 ## MD5
 
 ### FastColl
-single frame GIF: [collision1.gif](collision1.gif) / [collision2.gif](collision2.gif)
+single frame GIF: [collision1.gif](collision1.gif) / [collision2.gif](collision2.gif) ([recording](gifFastColl.svg))
 
 ### UniColl
 
@@ -12,8 +12,8 @@ JPG: [collision1.jpg](collision1.jpg) / [collision2.jpg](collision2.jpg) - [tldr
 PDF: [collision1.pdf](collision1.pdf) / [collision2.pdf](collision2.pdf)
 
 PNG:
-- generic headers (not OS X compatible): [collision1.png](collision1.png) / [collision2.png](collision2.png)
-- specific headers (same metadata): [0a959025-1.png](0a959025-1.png) / [0a959025-2.png](0a959025-2.png) - [aac2423a-1.png](aac2423a-1.png) / [aac2423a-2.png](aac2423a-2.png)
+- generic headers (not OS X compatible): [collision1.png](collision1.png) / [collision2.png](collision2.png) ([recording](pngGen.svg))
+- specific headers (same metadata): [0a959025-1.png](0a959025-1.png) / [0a959025-2.png](0a959025-2.png) - [aac2423a-1.png](aac2423a-1.png) / [aac2423a-2.png](aac2423a-2.png) (recordings: [1-with UniColl](pngUniColl.svg) / [2-precomputed](pngSpec.svg))
 
 JP2: [collision1.jp2](collision1.jp2) / [collision2.jp2](collision2.jp2)
 
