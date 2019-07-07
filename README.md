@@ -1399,6 +1399,24 @@ Presentations:
   
     [![Exploiting hash collisions youtube video](https://img.youtube.com/vi/Y-oJWEYKVLA/0.jpg)](https://www.youtube.com/watch?v=Y-oJWEYKVLA)
 
+- 2019 KILL MD5 at Pass the Salt:
+  - [slides](https://speakerdeck.com/ange/kill-md5)
+
+    [<img alt='KILL MD5 slides' src=pics/KILLMD5.png width=350/>](https://speakerdeck.com/ange/kill-md5)
+  - [video](https://passthesalt.ubicast.tv/videos/kill-md5-demystifying-hash-collisions/)
+
+    [![Kill MD5 video](https://img.youtube.com/vi/4-uXMKk9Ttg/0.jpg)](https://passthesalt.ubicast.tv/videos/kill-md5-demystifying-hash-collisions/)
+
+
+Workshop:
+- 2019 CollTris
+
+  - [slides](https://speakerdeck.com/ange/colltris)
+
+    [<img width=350 src=pics/CollTris.png />](https://speakerdeck.com/ange/colltris)
+
+  - [materials](workshop/README.md)
+
 
 # Credits
 
