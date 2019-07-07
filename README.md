@@ -453,6 +453,8 @@ Examples: let's collide `yes` and `no`. It took three hours on 24 cores.
 1F0:  EB 8E 9D F6-90 A3 CD 08-65 D5 5A 4C-2E C6 BE 54  δÄ¥÷Éú═◘e╒ZL.╞╛T
 ```
 
+Here is a [log](examples/cpc.log) of the whole operation.
+
 ## Attacks summary
 
 Hash | Name      | Date | Duration | Prefix type | Control near diff
@@ -593,6 +595,9 @@ Examples:
 
 *2 MD5-colliding PNGs with different properties*
 
+Here is a [recording](examples/pngGen.svg) of the whole operation.
+
+![a recording of a universal (abusive) PNG collision](examples/pngGen.svg)
 
 #### incompatibility
 
@@ -616,6 +621,14 @@ Examples:
 
 *2 pairs of MD5-colliding PNGs with identical properties for maximum compatibility*
 
+
+Here is a [recording](examples/pngUniColl.svg) of the whole operation when UniColl is invoked,
+
+![a recording of PNG UniColl collision](examples/pngUniColl.svg)
+
+and [another one](examples/pngSpec.svg) when the prefix has been already computed.
+
+![a recording of pre-computed PNG collision](examples/pngSpec.svg)
 ### GIF
 
 <img alt='a GIF file' src=https://raw.githubusercontent.com/corkami/pics/master/binary/GIF.png width=500/>
@@ -662,6 +675,9 @@ Examples:
 
 *2 MD5-colliding GIFs - pics by [KidMoGraph](https://www.kidmograph.com/)*
 
+Here is a [recording](examples/gifFastColl.svg) of the whole operation.
+
+![a recording of a GIF FastColl collision](examples/gifFastColl.svg)
 
 ### Portable Executable
 
