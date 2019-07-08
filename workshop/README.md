@@ -1,5 +1,10 @@
 # Workshop materials
 
+[slides](https://speakerdeck.com/ange/colltris)
+
+[<img width=350 src=../pics/CollTris.png />](https://speakerdeck.com/ange/colltris)
+
+
 ## start files
 - PNG pictures: <img width=20 src=yes.png /> [yes.png](yes.png) / <img width=20 src=no.png /> [no.png](no.png)
 - GIF animation: <img width=20 src=yesno.gif />[yesno.gif](yesno.gif)
