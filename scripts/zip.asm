@@ -8,11 +8,12 @@
 BITS 32
 %include "zip.inc"
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Replace File 1 and 2 values.
 
 ; reminder: incbin "<file>", <start>, <size>
+
 
 ; File 1
 
@@ -30,47 +31,44 @@ file1.compression equ COMP_STORED
 file1.decsize     equ file1.compsize
 file1.CRC32       equ 0x7d14dddd
 
+                                                          ; File 2
 
+                                                          %macro file2.name 0
+                                                              db 'bye.txt'
+                                                          %endmacro
 
-; File 2
+                                                          %macro file2.content 0
+                                                          %%start:
+                                                            db 'Bye World!', 0ah
+                                                          file2.compsize equ $ - %%start
+                                                          %endmacro
 
-%macro file2.name 0
-    db 'bye.txt'
-%endmacro
+                                                          file2.compression equ COMP_STORED
+                                                          file2.decsize     equ file2.compsize
+                                                          file2.CRC32       equ 0xcedb178e
 
-%macro file2.content 0
-%%start:
-  db 'Bye World!', 0ah
-file2.compsize equ $ - %%start
-%endmacro
+                                                          ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-file2.compression equ COMP_STORED
-file2.decsize     equ file2.compsize
-file2.CRC32       equ 0xcedb178e
+                                                          file2:
+                                                          istruc filerecord
+                                                            at filerecord.frSignature,        db "PK", 3, 4
+                                                            at filerecord.frVersion,          dw 0ah
+                                                            at filerecord.frCompression,      dw file2.compression
+                                                            at filerecord.frCrc,              dd file2.CRC32
+                                                            at filerecord.frCompressedSize,   dd file2.compsize
+                                                            at filerecord.frUncompressedSize, dd file2.decsize
+                                                            at filerecord.frFileNameLength,   dw lfhname2.len
+                                                            at filerecord.frExtraFieldLength, dw extra2.len
+                                                          iend
 
+                                                          lfhname2:
+                                                            file2.name
+                                                          lfhname2.len equ $ - lfhname2
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-                                                            file2:
-                                                            istruc filerecord
-                                                              at filerecord.frSignature,        db "PK", 3, 4
-                                                              at filerecord.frVersion,          dw 0ah
-                                                              at filerecord.frCompression,      dw file2.compression
-                                                              at filerecord.frCrc,              dd file2.CRC32
-                                                              at filerecord.frCompressedSize,   dd file2.compsize
-                                                              at filerecord.frUncompressedSize, dd file2.decsize
-                                                              at filerecord.frFileNameLength,   dw lfhname2.len
-                                                              at filerecord.frExtraFieldLength, dw extra2.len
-                                                            iend
-
-                                                            lfhname2:
-                                                              file2.name
-                                                            lfhname2.len equ $ - lfhname2
-
-                                                            extra2:
-                                                              field2:
-                                                                .id dw 0
-                                                                .len dw extra2.len - 4
+                                                          extra2:
+                                                            field2:
+                                                              .id dw 0
+                                                              .len dw extra2.len - 4
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -94,11 +92,11 @@ extra1:
   field1:
     .id dw 0
     .len dw extra1.len - 4
-                                                              extra2.len equ $ - extra2
+                                                            extra2.len equ $ - extra2
 
-                                                            data2:
-                                                              file2.content
-                                                            data2.len equ $ - data2
+                                                          data2:
+                                                            file2.content
+                                                          data2.len equ $ - data2
 
                                                           ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -162,30 +160,30 @@ istruc endlocator
 iend
 
 EoCD1com:
-  db 0, 'M' ; to align prefix to 4 for UniColl collision blocks
+  db 0, 'M' ; 4-padding for UniColl, truncating comment
 
-  times 104 times 40h db 0 ; end of collision blocks
-                                                            align 40h, db 0 ; to align EoCD 2 for 2nd collision
+  times 104 db 0 ; end of collision blocks
+                                                             align 40h, db 0 ; to align EoCD 2 for 2nd collision
 
-                                                            cdcom2.len equ $ - cdcom2
+                                                             cdcom2.len equ $ - cdcom2
 
-                                                          CD2.len equ $ - CD2
+                                                           CD2.len equ $ - CD2
 
-                                                          ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                                                           ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-                                                            EoCD2:
-                                                            istruc endlocator
-                                                              at endlocator.elSignature,          db "PK", 5, 0x86 ; 0x06/0x86
-                                                              at endlocator.elEntriesInDirectory, db 1
-                                                              at endlocator.elDirectorySize,      dd CD2.len
-                                                              at endlocator.elDirectoryOffset,    dd CD2
-                                                              at endlocator.elCommentLength,      dw EoCD2com.len
-                                                            iend
+                                                           EoCD2:
+                                                           istruc endlocator
+                                                             at endlocator.elSignature,          db "PK", 5, 0x86 ; 0x06/0x86 because of UniColl
+                                                             at endlocator.elEntriesInDirectory, db 1
+                                                             at endlocator.elDirectorySize,      dd CD2.len
+                                                             at endlocator.elDirectoryOffset,    dd CD2
+                                                             at endlocator.elCommentLength,      dw EoCD2com.len
+                                                           iend
 
-                                                            EoCD2com:
-                                                              db 0, 'M' ; to align prefix to 4 for UniColl collision blocks
+                                                           EoCD2com:
+                                                             db 0, 'M' ; 4-padding for UniColl, truncating comment
 
-                                                              times 104 times 40h db 0 ; end of collision blocks
+                                                             times 104 db 0 ; end of collision blocks
 
-                                                            EoCD2com.len equ $ - EoCD2com
+                                                           EoCD2com.len equ $ - EoCD2com
 EoCD1com.len equ $ - EoCD1com
