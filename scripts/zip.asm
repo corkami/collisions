@@ -160,11 +160,15 @@ istruc endlocator
 iend
 
 EoCD1com:
-  db 0, 'M' ; 4-padding for UniColl, truncating comment
+  db 0 ; truncating
 
-  times 104 db 0 ; end of collision blocks
-                                                             align 40h, db 0 ; to align EoCD 2 for 2nd collision
+  align 4, db 'M' ; UniColl prefix
 
+  align 40h, db 0 ; end of first collision block
+  
+  ; second collision block
+  db 0
+  align 40h, db 0
                                                              cdcom2.len equ $ - cdcom2
 
                                                            CD2.len equ $ - CD2
@@ -181,9 +185,15 @@ EoCD1com:
                                                            iend
 
                                                            EoCD2com:
-                                                             db 0, 'M' ; 4-padding for UniColl, truncating comment
+                                                             db 0 ; truncating
+                                                             
+                                                             align 4, db 'M' ; Unicoll prefix
 
-                                                             times 104 db 0 ; end of collision blocks
+                                                             align 40h, db 0 ; end of first collision block
+                                                             
+                                                             ; second collision block
+                                                             db 0
+                                                             align 40h, db 0
 
                                                            EoCD2com.len equ $ - EoCD2com
 EoCD1com.len equ $ - EoCD1com
