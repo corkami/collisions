@@ -117,6 +117,7 @@ extra1:
                                                             .len equ $ - cdname2
 
                                                             cdcom2:
+                                                              db 0 ; truncating
   extra1.len equ $ - extra1
 
 data1:
@@ -141,8 +142,8 @@ CD1:
   cdname1.len equ $ - cdname1
 
   cdcom1:
-
-  align 40h, db 0 ; to align EoCD1 for first collision
+    db 0 ; truncating
+    align 40h, db 0 ; to align EoCD1 for first collision
 
   cdcom1.len equ $ - cdcom1
 
