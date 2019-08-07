@@ -154,6 +154,7 @@ CD1.len equ $ - CD1
 EoCD1:
 istruc endlocator
   at endlocator.elSignature,          db "PK", 5, 0x06
+  at endlocator.elEntriesOnDisk,      db 1
   at endlocator.elEntriesInDirectory, db 1
   at endlocator.elDirectorySize,      dd CD1.len
   at endlocator.elDirectoryOffset,    dd CD1
@@ -179,6 +180,7 @@ EoCD1com:
                                                            EoCD2:
                                                            istruc endlocator
                                                              at endlocator.elSignature,          db "PK", 5, 0x86 ; 0x06/0x86 because of UniColl
+                                                             at endlocator.elEntriesOnDisk,      db 1
                                                              at endlocator.elEntriesInDirectory, db 1
                                                              at endlocator.elDirectorySize,      dd CD2.len
                                                              at endlocator.elDirectoryOffset,    dd CD2
