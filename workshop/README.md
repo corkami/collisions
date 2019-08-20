@@ -10,7 +10,7 @@
 - GIF animation: <img width=20 src=yesno.gif />[yesno.gif](yesno.gif)
 
 ## references
-- simple PNG chunk reader/writer: [png.py](png.py)
+- simple PNG chunk reader/writer: [minipng.py](minipng.py)
   - resulting 'merged' image: <img width=20 src=final.png />[final.png](final.png)
 - simplified Kaitai grammar for abusive PNG files (starting with a dummy chunk): [png_simple.ksy](png_simple.ksy)
 
