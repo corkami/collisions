@@ -53,8 +53,8 @@ with open(fyes, "rb") as f:
 # SPOILER
 # (not entirely correct but in the right direction)
 final = [
-    ["aNGE", 0x33*"\0"], 
-    ["mARC", 0x75*"\0"], 
+    ["aLIG", 0x33*"\0"], 
+    ["cOLL", 0x71*"\0"], 
     ] + no + yes
 with open("final.png", "wb") as f:
     f.write(make(final))
