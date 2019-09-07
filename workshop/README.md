@@ -14,4 +14,6 @@
   - resulting 'merged' image: <img width=20 src=final.png />[final.png](final.png)
 - simplified Kaitai grammar for abusive PNG files (starting with a dummy chunk): [png_simple.ksy](png_simple.ksy)
 
+- tiny PNG colliding files: <img width=40 src=tiny1.png /> Ken Silverman' [most interesting](http://web.archive.org/web/20070905115613/http://www.jonof.id.au/forum/index.php?topic=934.15#msg5809) / <img width=40 src=tiny2.png /> 3x1 R,G,B => [tiny1.png](tiny1.png) / [tiny2.png](tiny2.png)
+
 <!-- pandoc -s -f gfm -t html README.md -o README.html -->
