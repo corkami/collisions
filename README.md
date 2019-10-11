@@ -1,3 +1,5 @@
+<!-- pandoc -s -f gfm -t html README.md -o README.html -->
+
 **TL;DR** getting an MD5 collision of these two images is now(\*) [trivial](scripts/png.py) and instant.
 
 [![MD5 page on Wikipedia](examples/tldr-1.jpg)](https://en.wikipedia.org/wiki/MD5) ⟷
@@ -302,9 +304,6 @@ Examples with `N=1` and 20 bytes of set text in the collision blocks:
 
 UniColl has less control than a true chosen-prefix collision,
 but it's much faster especially since it takes only two blocks.
-
-It was used in the [Google CTF 2018](https://github.com/google/google-ctf/tree/master/2018/finals/crypto-hrefin),
-where the frequency of a certificate serial changes and limitations on the lengths prevented the use of chosen-prefix collisions.
 
 
 ### [Shattered](http://shattered.io) (SHA1)
@@ -1434,6 +1433,15 @@ Workshop:
   - [materials](workshop/README.md)
 
 
+CTF tasks:
+- [Prudentialv2](https://ctftime.org/task/3453), from the *Boston Key Party CTF 2017*.
+- [HREFIN](https://ctftime.org/task/6965), from the *Google CTF 2018*.
+- [Looking glass](https://ctftime.org/task/9271) from the *Dragon Sector Teaser CTF 2019*.
+
+<!-- - [Not my digest](https://ctftime.org/task/4784) from *Hack.lu CTF 2017*: not related to collisions, but solved by Marc himself :p -->
+A common challenge for such CTF tasks is to not give a too big advantage or handicap based on the amount of computing power each playaer has access to.
+
+
 # Credits
 
 All this was possible thanks to [Marc Stevens](https://marc-stevens.nl/research/),
@@ -1451,5 +1459,3 @@ Thanks to Rafał Hirsz for his permanent help on JavaScript.
 Unless you actively check for malformations or collisions blocks in files, don't use MD5!
 
 It's not a cryptographic hash, it's a toy function!
-
-<!-- pandoc -s -f gfm -t html README.md -o README.html -->

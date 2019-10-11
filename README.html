@@ -81,6 +81,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <![endif]-->
 </head>
 <body>
+<!-- pandoc -s -f gfm -t html README.md -o README.html -->
+
 <p><strong>TL;DR</strong> getting an MD5 collision of these two images is now(*) <a href="scripts/png.py">trivial</a> and instant.</p>
 <p><a href="https://en.wikipedia.org/wiki/MD5"><img src="examples/tldr-1.jpg" alt="MD5 page on Wikipedia" /></a> ⟷ <a href=http://gunshowcomic.com/648><img src=examples/tldr-2.jpg height=400 alt='On Fire / This is fine'></a></p>
 <p>Don't play with fire, don't rely on MD5.</p>
@@ -370,7 +372,6 @@ SHA256: e27cf3073c704d0665da42d597d4d20131013204eecb6372a5bd60aeddd5d670
 70:  9F D2 0C 00-86 C8 ED DE-85 7F 03 7B-05 28 D7 0F  ƒ╥♀ å╚φ▐à⌂♥{♣(╫☼
 </code></pre>
 <p>UniColl has less control than a true chosen-prefix collision, but it's much faster especially since it takes only two blocks.</p>
-<p>It was used in the <a href="https://github.com/google/google-ctf/tree/master/2018/finals/crypto-hrefin">Google CTF 2018</a>, where the frequency of a certificate serial changes and limitations on the lengths prevented the use of chosen-prefix collisions.</p>
 <h3 id="shattered-sha1"><a href="http://shattered.io">Shattered</a> (SHA1)</h3>
 <p>Documented in <a href="https://marc-stevens.nl/research/papers/EC13-S.pdf">2013</a>, computed in <a href="http://shattered.io">2017</a>.</p>
 <ul>
@@ -1204,7 +1205,7 @@ sys 2m0.194s
 <li>For better compatibility, ZIP needs two UniColl for a complete archive, and this collisions depend on both files contents.</li>
 </ol>
 <h2 id="test-files">Test files</h2>
-<p><a href="examples/free/README.html">Here</a> are free (copyright-free, PII-free) test colliding pairs.</p>
+<p><a href="examples/free/README.md">Here</a> are free (copyright-free, PII-free) test colliding pairs.</p>
 <h1 id="references">References</h1>
 <p>Papers:</p>
 <ul>
@@ -1257,9 +1258,18 @@ sys 2m0.194s
 <ul>
 <li><p><a href="https://speakerdeck.com/ange/colltris">slides</a></p>
 <p><a href="https://speakerdeck.com/ange/colltris"><img width=350 src=pics/CollTris.png /></a></p></li>
-<li><p><a href="workshop/README.html">materials</a></p></li>
+<li><p><a href="workshop/README.md">materials</a></p></li>
 </ul></li>
 </ul>
+<p>CTF tasks:</p>
+<ul>
+<li><a href="https://ctftime.org/task/3453">Prudentialv2</a>, from the <em>Boston Key Party CTF 2017</em>.</li>
+<li><a href="https://ctftime.org/task/6965">HREFIN</a>, from the <em>Google CTF 2018</em>.</li>
+<li><a href="https://ctftime.org/task/9271">Looking glass</a> from the <em>Dragon Sector Teaser CTF 2019</em>.</li>
+</ul>
+<!-- - [Not my digest](https://ctftime.org/task/4784) from *Hack.lu CTF 2017*: not related to collisions, but solved by Marc himself :p -->
+
+<p>A common challenge for such CTF tasks is to not give a too big advantage or handicap based on the amount of computing power each playaer has access to.</p>
 <h1 id="credits">Credits</h1>
 <p>All this was possible thanks to <a href="https://marc-stevens.nl/research/">Marc Stevens</a>, not only for his cryptographic contributions, but also for his permanent help and suggestions!</p>
 <p>Thanks also to Philippe Teuwen for his extensive feedback for file formats in general.</p>
@@ -1268,6 +1278,5 @@ sys 2m0.194s
 <p><strong>Kill MD5!</strong></p>
 <p>Unless you actively check for malformations or collisions blocks in files, don't use MD5!</p>
 <p>It's not a cryptographic hash, it's a toy function!</p>
-<!-- pandoc -s -f gfm -t html README.md -o README.html -->
 </body>
 </html>
