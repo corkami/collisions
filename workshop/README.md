@@ -6,6 +6,7 @@
 
 [<img width=350 src=../pics/CollTris.png />](https://speakerdeck.com/ange/colltris)
 
+## Computed [prefixes](prefixes/)
 
 ## Start files
 
