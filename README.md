@@ -158,9 +158,13 @@ These common properties of file formats make it possible - they are not typicall
 - dummy chunks - used as comments
 - more than one comment
 - huge comments (lengths: 64b for MP4, 32b for PNG -> trivial collisions. 16b for JPG, 8b for GIF -> no generic collision for GIF, limited for JPG)
-- store any data in a comment (UTF8 could be enforced)
-- store anything after the terminator (usually used only for malicious purposes)
-- no integrity check. CRC32 in PNG are usually ignored, which would prevent PNG re-usable collisions otherwise.
+- store any data in a comment (ASCII or UTF8 could be enforced)
+- store anything after the terminator (usually used only for malicious purposes) -
+can be avoided by using two comments finishing at the same offsets.
+- no integrity check. CRC32 in PNG are usually ignored.
+However they can be all correct since the collision blocks declare chunks of different lengths -
+so even if the chunk datas starts differently,
+the chunk lengths are different
 - flat structure: [ASN.1](https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One) defines parent structure with the length of all the enclosed substructures,
   which prevents these constructs: you'd need to abuse a length, but also the length of the parent.
 - put a comment before the header - this makes generic re-usable collisions possible.
@@ -568,11 +572,11 @@ Result:
 <img alt='a PNG file' src=https://raw.githubusercontent.com/corkami/pics/master/binary/PNG.png width=500/>
 
 Theoretical limitations and workarounds:
-- PNG uses CRC32 at the end of its chunks, which would prevent the use of collision blocks, but in practice they're ignored.
+- PNG uses CRC32 at the end of its chunks, but in practice they're ignored. They can be correct but it's not required.
 - the image meta data (dimensions, color space...) are stored in the `IHDR` chunk,
   which should in theory be right after the signature (ie, before any potential comment),
   so it would mean that we can only precompute collisions of images with the same meta data.
-  However, that chunk can actually be after a comment block (in the vast majority of readers), so we can put the collision data before the header,
+  However, that chunk can actually be after a comment block (in the vast majority of readers, except Apple ones), so we can put the collision data before the header,
   which enables to collide any pair of PNG with a single precomputation.
 
 Since a PNG chunk has a length on four bytes, there's no need to modify the structure of either file: we can jump over a whole image in one go.
@@ -1375,7 +1379,7 @@ Class    | N        |          |         |           | x
 
 1. JPG: has some limitations on data that can be improved to some extend by manipulating scans encoding.
 1. PDF w/ JPG is the [initial implementation](http://shattered.io) of the Shattered attack, but it's just a pure JPG trick in a PDF document.
-1. PNG: Safari requires PNG to have their `IHDR` chunk in first slot, before any collision block. Doing so prevents a generic prefix, in which case the collision is limited to specific dimensions, color space, BPP and interlacing.
+1. PNG: Safari/Preview requires PNG to have their `IHDR` chunk in first slot, before any collision block. Doing so prevents a generic prefix, in which case the collision is limited to specific dimensions, color space, BPP and interlacing.
 1. Atom/Box formats like MP4 may work with the same prefix for different subformats. Some subformats like JPEG2000 or HEIF require extra grooming, but the exploit strategy is the same - it's just that the collision is not possible between sub-formats, only with a pair of prefix for a specific sub-format.
 1. Atom/Box is Shattered-compatible when using 64bit lengths.
 1. For better compatibility, ZIP needs two UniColl for a complete archive, and this collisions depend on both files contents.

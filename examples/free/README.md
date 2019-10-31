@@ -1,3 +1,5 @@
+<!-- pandoc -s -f gfm -t html README.md -o README.html -->
+
 Copyright-free, PII-free collision PoCs
 
 # MD5
@@ -11,8 +13,11 @@ Copyright-free, PII-free collision PoCs
 - JPG images [md5-1.jpg](md5-1.jpg) / [md5-2.jpg](md5-2.jpg)
 - PDF documents [md5-1.pdf](md5-1.pdf) / [md5-2.pdf](md5-2.pdf)
 - PNG images
-  - generic header, not 100% compatible [md5-1.png](md5-1.png) / [md5-2.png](md5-2.png)
-  - specific header, common dimensions/colorspace [md5-s1.png](md5-s1.png) / [md5-s2.png](md5-s2.png)
+   - generic header, not 100% compatible
+     - appended data [md5-1.png](md5-1.png) / [md5-2.png](md5-2.png)
+     - appended data w/ correct CRCs [md5-crc1.png](md5-crc1.png) / [md5-crc2.png](md5-crc2.png)
+     - synchronized comments [md5-sync1.png](md5-sync1.png) / [md5-sync2.png](md5-sync2.png)
+   - specific header w/ common dimensions/colorspace [md5-s1.png](md5-s1.png) / [md5-s2.png]( md5-s2.png)
 - MP4
   - generic header, 32b length (LTV) [md5-1.mp4](md5-1.mp4) / [md5-2.mp4](md5-2.mp4)
   - generic header, 64b length (TLV) [md5-l1.mp4](md5-l1.mp4) / [md5-l2.mp4](md5-l2.mp4)
