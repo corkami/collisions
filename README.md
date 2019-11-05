@@ -8,7 +8,7 @@
 Don't play with fire, don't rely on MD5.
 
 (\*) Colliding any pair of files has been possible for many years, but it takes several hours each time, with no shortcut.
-This page provide tricks specific to file formats and pre-computed collision prefixes to make collision **instant**.
+This page provide tricks specific to file formats and precomputed collision prefixes to make collision **instant**.
 `git clone`. Run Script. Done.
 
 # Hash collisions and exploitations
@@ -163,7 +163,7 @@ These common properties of file formats make it possible - they are not typicall
 can be avoided by using two comments finishing at the same offsets.
 - no integrity check. CRC32 in PNG are usually ignored.
 However they can be all correct since the collision blocks declare chunks of different lengths -
-so even if the chunk datas starts differently,
+so even if the chunk's data starts differently,
 the chunk lengths are different
 - flat structure: [ASN.1](https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One) defines parent structure with the length of all the enclosed substructures,
   which prevents these constructs: you'd need to abuse a length, but also the length of the parent.
@@ -458,6 +458,7 @@ Examples: let's collide `yes` and `no`. It took three hours on 24 cores.
 
 Here is a [log](examples/cpc.log) of the whole operation.
 
+
 ## Attacks summary
 
 Hash | Name      | Date | Duration | Prefix type | Control near diff
@@ -504,7 +505,7 @@ Theoretical limitations and workarounds:
 
 - while most of a JPG structure is made of segments that are all limited to 65536 bytes in size,
 the actual compressed data is stored in the *Entropy Coded Segment* which doesn't respect its limitations:
-its size is unkown in advance and grows beyond that limit.
+its size is unknown in advance and grows beyond that limit.
 It grows with the size of the image, making most of the file size in a baseline (non progressive) image.
 To make the whole image fit into 64kb chunks, the easy way is to first try to save the image as progressive (which any software can do, and splits the ECS in typically up to six scans). The more advanced way is to use *JPEGTran* with its 'wizard' `--scans` command line parameter and define custom scans.
 
@@ -528,7 +529,7 @@ Examples:
 *2 MD5-colliding JPGs*
 
 Here's an example of *JPEGTran* scans definition
-to turn [a 1944x2508 RGB image](pics/pocorgtfo14.png) into a 100% JPG with 20 scans in which they all fit in 64 kb.
+to turn [a 1944x2508 RGB image](pics/pocorgtfo14.png) into a 100% JPG with 20 scans in which they all fit in 64kb.
 
 ```
 // <component>: <minbyte>-<maxbyte>, <minbit>, <maxbit>;
@@ -566,8 +567,8 @@ Result:
 
 *a 1944x2508 RGB image as a 100% JPG with 20 scans*
 
-### PNG
 
+### PNG
 
 <img alt='a PNG file' src=https://raw.githubusercontent.com/corkami/pics/master/binary/PNG.png width=500/>
 
@@ -631,7 +632,8 @@ Here is a [recording](examples/pngUniColl.svg) of the whole operation when UniCo
 
 and [another one](examples/pngSpec.svg) when the prefix has been already computed.
 
-![a recording of pre-computed PNG collision](examples/pngSpec.svg)
+![a recording of precomputed PNG collision](examples/pngSpec.svg)
+
 ### GIF
 
 <img alt='a GIF file' src=https://raw.githubusercontent.com/corkami/pics/master/binary/GIF.png width=500/>
@@ -649,7 +651,8 @@ So at least, even if we can't have a generic prefix, we can collide any pair of 
 
 Now the problem is that we can't jump over a whole image like PNG or over a big structure like JPG.
 
-A possible workaround is to massage the compressed data or to chunk the image in tiny areas like in the case of the GIF Hashquine, but this is not optimal.
+A possible workaround is to massage the compressed data or to chunk the image in tiny areas like in the case of the GIF hashquine,
+but this is not optimal.
 
 Another idea that works generically is that the image data is also stored using this `length data` sequence structure:
 so if we take two GIFs with no animation, we only have to:
@@ -1023,7 +1026,7 @@ Examples of SHA-1 colliding two PDFs via JPEG page data (a grayscale picture ren
 
 [If](examples/jpgpage1.pdf) ⟷ [Shattered - the movie](examples/jpgpage2.pdf)
 
-<img alt='2 SHA-1 collidings PDF with image data stored as JPG' src=pics/jpgpage.png width=700/>
+<img alt='2 SHA-1 colliding PDFs with image data stored as JPG' src=pics/jpgpage.png width=700/>
 
 *2 SHA-1 colliding PDFs with image data stored as JPG*
 
@@ -1038,7 +1041,7 @@ Examples of SHA-1 colliding two PDFs via JPEG used as page data and picture to b
 
 <img alt='2 SHA-1 collidings PDF with JPG used as image and page content' src=pics/dualjpg.png width=700/>
 
-*2 SHA-1 collidings PDF with JPG used as image and page content*
+*2 SHA-1 colliding PDFs with JPG used as image and page content*
 
 ## Uncommon strategies
 
@@ -1046,14 +1049,20 @@ Collisions are usually about two valid files of the same type.
 
 
 ### MultiColls: multiple collisions chain
-Nothing prevents to chain several collision blocks, and have more than two contents with the same hash value.
-An example of that are Hashquines - that shows their own MD5 value. The [PoCGTFO 14](https://github.com/angea/pocorgtfo#0x14) file contains 609 FastColl collisions, to do that through two file types in the same file.
+
+Nothing prevents to chain several collision blocks,
+and have more than two contents with the same hash value.
+An example of that are *hashquines* - that shows their own MD5 value.
+The [PoCGTFO 14](https://github.com/angea/pocorgtfo#0x14) file contains 609 FastColl collisions,
+to do that through two file types in the same file.
 
 
 ### Validity
 
 A different strategy would be to kill the file type to bypass scanning as a corrupted file.
-Just overwriting the magic signature will be enough. Appending both files (as valid or invalid) with a format that doesn't need to be at offset 0 (archive, like ZIP/RAR/...) would reveal another file type.
+Just overwriting the magic signature will be enough.
+Appending both files (as valid or invalid) with a format
+that doesn't need to be at offset 0 (archive, like ZIP/RAR/...) would reveal another file type.
 
 This enables polyglot collisions without using a chosen-prefix collision:
 1. use UniColl to enable or disable a magic signature, for example a PNG:
@@ -1103,6 +1112,7 @@ Once again, the collision is [instant](scripts/jpgpe.py)
 
 Examples: [fastcoll.exe](examples/jpg-pe.exe) ⟷ [Marc.jpg](examples/jpg-pe.jpg)
 
+
 #### PDF - PE
 
 Merging a PDF with a dummy file with `mutool` is a good generic way to reorder objects
@@ -1124,12 +1134,12 @@ Examples: [Poster.pdf](examples/pepdf.pdf) ⟷ [Sumatra.exe](examples/pepdf.exe)
 
 *a PDF viewer showing a PDF (itself showing a PDF) with the same MD5*
 
+
 #### PDF - PNG
 
 Similarly, it's possible to collide for example arbitrary PDF and PNG files with no restriction on either side. This is instant, re-usable and generic.
 
 Examples: [Hello.pdf](examples/png-pdf.pdf) ⟷ [1x1.png](examples/png-pdf.png)
-
 
 
 ### PileUps (multi-collision)
@@ -1260,7 +1270,7 @@ Right from the start magic are located the versions (which can be troublesome)
 but the constant pool count which is quite specific to each file,
 so no universal collisions for all files.
 
-However, many files still have a common version and we can pad the shortest constant pool to the longuest count.
+However, many files still have a common version and we can pad the shortest constant pool to the longest count.
 First, insert a *UTF8 literal* to align information,
 then declare another one with its length abused by a UniColl (the length is stored on 16 bytes as big endian).
 
@@ -1312,7 +1322,7 @@ A typical End of Central Directory, which is 22 bytes if the comment is empty:
 10: 0000 0000 0000                           ......
 ```
 
-If we use this as prefix (padd the prefix to 16 bits) for UniColl and `N=2`, the difference is on the 4th byte, killing the magic `.P .K 05 06` by changing it predictably to `.P .K 05 86`
+If we use this as prefix (pad the prefix to 16 bits) for UniColl and `N=2`, the difference is on the 4th byte, killing the magic `.P .K 05 06` by changing it predictably to `.P .K 05 86`
 ```
 00: 504b 0506 0000 0000 0000 0000 0000 0000  PK..............
 10: 0000 0000 0000 2121 eb66 cf9d db01 83bb  ......!!.f......
@@ -1355,7 +1365,7 @@ file comments in `Central Directory` and archive comments in `End of Central Dir
 **Example**: here is an [assembly source](scripts/zip.asm) that describes the structure of a dual ZIP,
 that can host two different archive files.
 
-After two unicoll computations, it gives the two colliding files:
+After two Unicoll computations, it gives the two colliding files:
 [collision1.zip](examples/collision1.zip) ⟷ [collision2.zip](examples/collision2.zip)
 
 
@@ -1416,7 +1426,7 @@ Presentations:
   
   - [video](https://www.youtube.com/watch?v=Y-oJWEYKVLA)
   
-    [![Exploiting hash collisions youtube video](https://img.youtube.com/vi/Y-oJWEYKVLA/0.jpg)](https://www.youtube.com/watch?v=Y-oJWEYKVLA)
+    [![Exploiting hash collisions Youtube video](https://img.youtube.com/vi/Y-oJWEYKVLA/0.jpg)](https://www.youtube.com/watch?v=Y-oJWEYKVLA)
 
 - 2019 KILL MD5 at Pass the Salt:
   - [slides](https://speakerdeck.com/ange/kill-md5)
@@ -1443,7 +1453,7 @@ CTF tasks:
 - [Looking glass](https://ctftime.org/task/9271) from the *Dragon Sector Teaser CTF 2019*.
 
 <!-- - [Not my digest](https://ctftime.org/task/4784) from *Hack.lu CTF 2017*: not related to collisions, but solved by Marc himself :p -->
-A common challenge for such CTF tasks is to not give a too big advantage or handicap based on the amount of computing power each playaer has access to.
+A common challenge for such CTF tasks is to not give a too big advantage or handicap based on the amount of computing power each player has access to.
 
 
 # Credits
