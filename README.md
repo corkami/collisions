@@ -261,6 +261,9 @@ Other examples, with an identical prefix: [1](examples/fastcoll1.bin) ⟷ [2](ex
 
 **Variant**: there is a [single-block MD5 collision](https://marc-stevens.nl/research/md5-1block-collision/) but it takes five weeks of computation.
 
+Here is a [recording](examples/fastcoll.svg) of a FastColl computation without any prefix
+and [another one](examples/fastcoll-prefix.svg) with a prefix.
+
 
 ### [UniColl](unicoll.md) (MD5)
 
