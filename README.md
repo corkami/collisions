@@ -312,6 +312,8 @@ Examples with `N=1` and 20 bytes of set text in the collision blocks:
 UniColl has less control than a true chosen-prefix collision,
 but it's much faster especially since it takes only two blocks.
 
+Here is a [recording](examples/unicoll.svg) of a UniColl computation.
+
 
 ### [Shattered](http://shattered.io) (SHA1)
 
