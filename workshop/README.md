@@ -28,10 +28,11 @@
 
 ## Captures
 
+- collisions: [FastColl](../examples/fastcoll.svg) / [UniColl](../examples/unicoll.svg) / [HashClashCPC (log)](../examples/cpc.html)
+
 - precomputed collisions: [generic PNG](../examples/pngGen.svg) / [specific header PNG](../examples/pngSpec.svg)
 
-- computations: [FastColl](../examples/gifFastColl.svg) / [UniColl](../examples/pngUniColl.svg)
-
+- collisions: [GIF w/ FastColl](../examples/gifFastColl.svg) / [PNG w/ UniColl](../examples/pngUniColl.svg)
 
 
 ## External links
