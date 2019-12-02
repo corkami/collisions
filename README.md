@@ -456,7 +456,7 @@ Examples: let's collide `yes` and `no`. It took three hours on 24 cores.
 1F0:  EB 8E 9D F6-90 A3 CD 08-65 D5 5A 4C-2E C6 BE 54  δÄ¥÷Éú═◘e╒ZL.╞╛T
 ```
 
-Here is a [log](examples/cpc.log) of the whole operation.
+Here is a [log](examples/cpc.html) of the whole operation.
 
 
 ## Attacks summary
