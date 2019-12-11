@@ -1424,7 +1424,7 @@ Papers:
   - [Easy SHA-1 Colliding PDFs with PDFLaTeX.](https://archive.org/stream/pocorgtfo18#page/n62/mode/1up) by Ange Albertini
 
 Presentations:
-- 2017 Exploiting Hash Collisions at BlackAlps:
+- 2017 Exploiting Hash Collisions at Black Alps:
   - [slides](https://speakerdeck.com/ange/exploiting-hash-collisions)
   
     [<img alt='Black Alps 2017 slides' src=pics/blackalps17.png width=350/>](https://speakerdeck.com/ange/exploiting-hash-collisions)
@@ -1442,14 +1442,24 @@ Presentations:
     [![Kill MD5 video](https://img.youtube.com/vi/4-uXMKk9Ttg/0.jpg)](https://passthesalt.ubicast.tv/videos/kill-md5-demystifying-hash-collisions/)
 
 
-Workshop:
-- 2019 CollTris
-
+Workshop (CollTris):
   - [slides](https://speakerdeck.com/ange/colltris)
 
     [<img width=350 src=pics/CollTris.png />](https://speakerdeck.com/ange/colltris)
 
+  - [video](https://www.youtube.com/watch?v=BcwrMnGVyBI)
+
+    [<img width=350 src=pics/recording.jpg />](https://www.youtube.com/watch?v=BcwrMnGVyBI)
+
   - [materials](workshop/README.md)
+
+  - sessions
+    - 2019/07/02 150p, Pass The Salt
+    - 2019/07/24 199p, Google
+    - 2019/08/19 208p, Google
+    - 2019/10/23 222p, Hack.lu
+    - 2019/11/07 225p, Black Alps
+    - 2019/12/03 229p, Google
 
 
 CTF tasks:

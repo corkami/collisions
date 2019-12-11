@@ -8,12 +8,14 @@
 
 [<img width=350 src=../pics/CollTris.png />](https://speakerdeck.com/ange/colltris)
 
+[Video](https://www.youtube.com/watch?v=BcwrMnGVyBI) (Youtube)
 
-## Computed [prefixes](prefixes/)
+[<img width=350 src=../pics/recording.jpg />](https://www.youtube.com/watch?v=BcwrMnGVyBI)
 
 
 ## Start files
 
+- precomputed [prefixes](prefixes/README.md)
 - PNG pictures: <img width=20 src=yes.png /> [yes.png](yes.png) / <img width=20 src=no.png /> [no.png](no.png)
 - GIF animation: <img width=20 src=yesno.gif />[yesno.gif](yesno.gif)
 
