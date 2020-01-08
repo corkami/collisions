@@ -1,0 +1,44 @@
+\pdfminorversion=3
+
+\begingroup
+  \pdfcompresslevel=0\relax
+  \immediate\pdfximage width 100pt {merged.jpg}
+  \immediate\pdfobj{65535}
+  \immediate\pdfobj{65535}
+  \immediate\pdfobj{/XObject}
+  \immediate\pdfobj{/Image}
+  \immediate\pdfobj{/DCTDecode}
+  \immediate\pdfobj{/DeviceGray}
+  \immediate\pdfobj{123456789}
+
+\endgroup
+
+\edef \collided{\pdfrefximage\the\pdflastximage}
+
+\documentclass{article}
+
+
+\title{A pdf\LaTeX{} file with SHA1 collision}
+\author{Ange Albertini
+	\and 
+	Marc Stevens
+	}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+Hello world!
+
+\section{Colliding image}
+
+\collided
+
+\subsection{Another instance}
+
+\collided
+
+\end{document}
