@@ -699,12 +699,12 @@ Here is a [recording](examples/gifFastColl.svg) of the whole operation.
 GZIP specs v4.3: [RFC 1952](https://datatracker.ietf.org/doc/html/rfc1952) (1996).
 
 - a Gzip file is made of one or more 'members' (gzip streams) concatenated. They will be all decompressed and their uncompressed content appended to each other - even if the stream's content is empty.
-- these streams can be separated with zeroes. Any non-null byte will be checked for the signature `1F 8B`. If not matching, the parsing will stop, which can be used to forcibly stop parsing between two payloads.
-- The optional `filename` and `file comment` are null-terminated whereas the `Extra field` is size-specified, therefore abusable. It's made of one or more, with an ID and its own length, but subfield are not enforced - very few are officially defined.
+- these streams can be separated with zeroes. Zeroes will be just skipped, except at file start. Any non-null byte will be checked for the signature `1F 8B`. If not matching the signature, the parsing will stop, which can be used to forcibly stop parsing between two payloads. Another strategy is to add one extra empty member at the end of the file, and make parsing of both payloads finish there.
+- The optional `filename` and `file comment` are null-terminated whereas the `Extra field` is size16-defined, therefore abusable. It's made of one or more subfield(s), with an ID and its own sublength, but subfield are not enforced - very few are officially defined.
 
 Therefore an empty gzip file with an extra field is a perfect parasite host.
 
-After the header comes the compressed body, its CRC32 and its uncompressed size (not enforced). Therefore an empty data body with it's null CRC32 and size make a generic postwrap, which can even be shared by different members headers.
+After the header come the compressed body, its CRC32 and its uncompressed size (not enforced). Therefore an empty data body with its null CRC32 and size make a generic postwrap, which can even be shared by different member headers.
 
 The last double word of the file might be used to show the uncompressed size of the archive, but it's not enforced (gzip doesn't add the uncompressed sizes either).
 
