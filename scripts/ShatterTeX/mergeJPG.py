@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # apply sha1 mask
 
@@ -14,10 +14,10 @@ def apply_mask(d1):
   for i,j in enumerate(MASK):
     d[64 * 2 + i - DELTA] = chr( ord(d[64 * 2 + i - DELTA]) ^ j)
     d[64 * 3 + i - DELTA] = chr( ord(d[64 * 3 + i - DELTA]) ^ j)
-  return "".join(d)
+  return b"".join(d)
 
 # PDF exact template
-template="""%%PDF-1.3
+template = b"""%%PDF-1.3
 %%\xe2\xe3\xcf\xd3
 
 
@@ -101,7 +101,7 @@ data1, data2 = (r[2:] for r in [r0, r1])
 # build the common blocks
 
 
-block0 = "".join([
+block0 = b"".join([
   # start of image
   "\xff\xd8",
 
@@ -125,19 +125,19 @@ maxlen, minlen = (lengths[0], lengths[1]) if (lengths[0] > lengths[1]) else (len
 # split the first image over Start Of Scan intervals
 # (typically the biggest 'segments')
 chunks1 = (data1).split("\xff\xda")
-print "Image 1: %i SOS segments found" % (len(chunks1))
-print "max", max(len(i) for i in chunks1)
-print "all", " ".join("%i" % len(i) for i in chunks1)
+print("Image 1: %i SOS segments found" % (len(chunks1)))
+print("max", max(len(i) for i in chunks1))
+print("all", " ".join("%i" % len(i) for i in chunks1))
 
 # build the file suffix
-suffix = "".join([
+suffix = b"".join([
   # finish the smaller comment segment
-  "\0" * (minlen - 0x7f - 2),
+  b"\0" * (minlen - 0x7f - 2),
 
   # *declare* an intermediate comment, starting after the smallest
   # covering the end of the biggest, and the first image data
   "\xff\xfe", struct.pack(">H", maxlen - minlen + len(chunks1[0]) - 2 + 4),
-  "\0" * (maxlen - minlen - 4),
+  b"\0" * (maxlen - minlen - 4),
 
   #the first image header
   chunks1[0]
@@ -146,33 +146,33 @@ suffix = "".join([
 
 # creating a tiny intra-block comment to host a 'bouncing' comment segment
 for c in chunks1[1:]:
-  suffix = "".join([
+  suffix = b"".join([
     suffix,
     # a 6 character comment
-    "\xff\xfe",
-      "\x00\x06",
+    b"\xff\xfe",
+      b"\x00\x06",
         # an inner comment jumping over the next chunk
-        "\xff\xfe",
+        b"\xff\xfe",
           struct.pack(">H", (len(c) if len(c) < 0xfff0 else 0xBADD) + 4 + 4),  # +4 to reach the next intra-block
-    "\xff\xda",
+    b"\xff\xda",
       c,
   ])
 
-suffix = "".join([
+suffix = b"".join([
   suffix,
-  "ANGE",
+  b"ANGE",
   data2
 ])
 
 # let's revert fake SoS to comments
-suffix = suffix.replace("\xff\xda","\xff\xfe", nbcomments)
+suffix = suffix.replace(b"\xff\xda", b"\xff\xfe", nbcomments)
 
 #now we have the length of the image
 imglen = len(block0) + len(suffix)
 
 # now we can generate our colliding files prefix (incomplete PDF)
 with open("prefix.pd_", "wb") as f:
-  hex = "".join([block0, suffix])
+  hex = b"".join([block0, suffix])
   contents = template % globals()
   whole_file = contents[:0xAD] + computation[0xAD:0xBD] + contents[0xBD:]
   f.write(whole_file)

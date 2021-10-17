@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # copies the first 8 objects of a Shattered-PDF and adjust XREF
 import sys
@@ -25,39 +25,39 @@ with open(sys.argv[1], "rb") as f:
 with open("prefix.pd_", "rb") as f:
   sha = f.read()
 
-sha = sha[:sha.find("9 0 obj")]
+sha = sha[:sha.find(b"9 0 obj")]
 
-iTEX = tex.find("8 0 obj")
+iTEX = tex.find(b"8 0 obj")
 
 # in my PDF TeX, object 8 was followed by object 11 ?!
-iTEX = tex.find("endobj", iTEX) + 6
+iTEX = tex.find(b"endobj", iTEX) + 6
 
 assert iTEX >= len(sha)
 
-out = sha + (iTEX - len(sha)) * "\n" + tex[iTEX:]
+out = sha + (iTEX - len(sha)) * b"\n" + tex[iTEX:]
 
 # now we fix XREF for the eight first object, and not changing anything else
 
-iXREF = out.rfind("\nxref\n") + 6
-iXREFend = out.rfind("\ntrailer\n")
+iXREF = out.rfind(b"\nxref\n") + 6
+iXREFend = out.rfind(b"\ntrailer\n")
 
 #from the XREF on, it's usually text file
 xLines = out[iXREF:iXREFend].splitlines()
 
 for i in range(8):
-  offset = out.find("\n%i 0 obj" % (i + 1)) + 1
-  xLines[i + 2] = "%010i 00000 n " % offset
+  offset = out.find(b"\n%i 0 obj" % (i + 1)) + 1
+  xLines[i + 2] = b"%010i 00000 n " % offset
 
 out1 = out[:iXREF] + "\n".join(xLines) + out[iXREFend:]
 
 
 # add comment in the header
-comment = comment.replace("\n", "")
-comment = comment.replace("\r", "")
+comment = comment.replace(b"\n", b"")
+comment = comment.replace(b"\r", b"")
 
 assert len(comment) % 16 == 0
 
-assert out1[0x140:0x140 + len(comment)] == "\0" * len(comment)
+assert out1[0x140:0x140 + len(comment)] == b"\0" * len(comment)
 
 out1 = out1[:0x140] + comment + out1[0x140 + len(comment):]
 
@@ -81,7 +81,7 @@ mask = [
 for i,j in enumerate(blocks):
   blocks[i] = chr(ord(j) ^ mask[i % 64])
 
-out2 = out1[:64 * BLOCK_START] + "".join(blocks) + out1[64*BLOCK_END:]
+out2 = out1[:64 * BLOCK_START] + b"".join(blocks) + out1[64*BLOCK_END:]
 
 assert hashlib.sha1(out1).digest() == hashlib.sha1(out2).digest()
 

@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # a script to collide arbitrary Windows Executables with MD5
 
-# Ange Albertini 2018
+# Ange Albertini 2018-2021
 
 # takes 2 PE,
 # gets both PE headers+DD+sections
@@ -26,7 +26,7 @@ def getPEhdr(d):
   elif Machine == 0x8664:
     bits = 64
   if bits is None:
-    print "ERROR: unknown arch"
+    print("ERROR: unknown arch")
     sys.exit()
 
   NumDiffOff = 0x74 if bits == 32 else 0x84
@@ -46,7 +46,7 @@ def relocateSections(d, SecTblOff, SecCount, delta):
   for i in range(SecCount):
     offset = SecTblOff + i*0x28 + 0x14
     PhysOffset = struct.unpack("i", d[offset:offset+4])[0]
-    d = "".join([
+    d = b"".join([
       d[:offset],
       struct.pack("i", PhysOffset + delta),
       d[offset+4:]
@@ -85,15 +85,15 @@ PEoff1, HdrLen1, NumSec1, SecTblOff1, SectsStart1 = getPEhdr(d1)
 PEoff2, HdrLen2, NumSec2, SecTblOff2, SectsStart2 = getPEhdr(d2)
 
 if HdrLen1 > HEADER2OFF - HEADER1OFF:
-  print "ERROR: PE header 1 is too big"
+  print("ERROR: PE header 1 is too big")
   sys.exit()
 
 if HdrLen2 > SECTIONSOFF - HEADER2OFF:
-  print "ERROR: PE header 2 is too big"
+  print("ERROR: PE header 2 is too big")
   sys.exit()
 
 #SizeOfHeader increased
-d2 = "".join([
+d2 = b"".join([
   d2[:PEoff2 + 0x54],
   struct.pack("i", SECTIONSOFF),
   d2[PEoff2 + 0x54 + 4:]
@@ -108,7 +108,7 @@ OffSec2 = len(Sections1) + SECTIONSOFF
 
 d2 = relocateSections(d2, SecTblOff2, NumSec2, OffSec2 - SectsStart2)
 
-suffix = "".join([
+suffix = b"".join([
   d1[PEoff1:PEoff1+HdrLen1],
     (HEADER2OFF - (HEADER1OFF + HdrLen1)) * "\0",
   d2[PEoff2:PEoff2+HdrLen2],
@@ -126,5 +126,5 @@ md5 = hashlib.md5(prefix1 + suffix).hexdigest()
 
 assert md5 == hashlib.md5(prefix2 + suffix).hexdigest()
 
-print "Success!"
-print "Common MD5: %s" % md5
+print("Success!")
+print("Common MD5: %s" % md5)

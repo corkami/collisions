@@ -1,9 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # a script to collide 2 PNGs via MD5
 # with optimal structure and either:
 # - correct CRCs with appended data
 # - with synched comments and incorrect CRCs
+
+# Ange Albertini 2018-2021
 
 import sys
 import struct
@@ -15,7 +17,7 @@ with open(fn1, "rb") as f:
 with open(fn2, "rb") as f:
   d2 = f.read()
 
-PNGSIG = "\x89PNG\r\n\x1a\n"
+PNGSIG = b"\x89PNG\r\n\x1a\n"
 assert d1.startswith(PNGSIG)
 assert d2.startswith(PNGSIG)
 
@@ -26,7 +28,7 @@ with open("png1.bin", "rb") as f:
 with open("png2.bin", "rb") as f:
   blockL = f.read()
 
-ascii_art = """
+ascii_art = b"""
 vvvv
 /==============\\
 |*            *|
@@ -43,7 +45,7 @@ vvvv
 | in 2018-2019 |
 |*            *|
 \\==============/
-""".replace("\n", "").replace("\r","")
+""".replace(b"\n", b"").replace(b"\r",b"")
 
 assert len(ascii_art) == 0x100 - 3*4 # 1 chunk declaration + crc
 
@@ -72,31 +74,31 @@ _crc32 = lambda d:(crc32(d) % 0x100000000)
 
 suffix = struct.pack(">I", _crc32(blockS[0x4b:0xc0]))
 
-suffix += "".join([
+suffix += b"".join([
   # sKIP chunk
     struct.pack(">I", skipLen),
-    "sKIP",
+    b"sKIP",
       # it will cover all data chunks of d2,
       # and the 0x100 buffer
   ascii_art,
-  "\xDE\xAD\xBE\xEF", # fake CRC for cOLL chunk
+  b"\xDE\xAD\xBE\xEF", # fake CRC for cOLL chunk
 
       d2[8:],
       # long cOLL CRC
-    "\x5E\xAF\x00\x0D", # fake CRC for sKIP chunk
+    b"\x5E\xAF\x00\x0D", # fake CRC for sKIP chunk
 
     # first image chunk
     d1[8:],
     ])
 
 with open("collision1.png", "wb") as f:
-  f.write("".join([
+  f.write(b"".join([
     blockS,
     suffix
     ]))
 
 with open("collision2.png", "wb") as f:
-  f.write("".join([
+  f.write(b"".join([
     blockL,
     suffix
     ]))
@@ -110,9 +112,9 @@ with open("collision2.png", "wb") as f:
 # short cOLL CRC
 suffix = struct.pack(">I", _crc32(blockS[0x4b:0xC0]))
 
-suffix += "".join([
+suffix += b"".join([
   struct.pack(">I", skipLen),
-  "sKIP",
+  b"sKIP",
   # it will cover all data chunks of d2,
   # and the 0x100 buffer
   ascii_art
@@ -130,13 +132,13 @@ suffix += struct.pack(">I", _crc32((blockS+suffix)[0xc8:0xc8 + 4 + skipLen]))
 suffix += d1[8:]
 
 with open("collision-crc1.png", "wb") as f:
-  f.write("".join([
+  f.write(b"".join([
     blockS,
     suffix
     ]))
 
 with open("collision-crc2.png", "wb") as f:
-  f.write("".join([
+  f.write(b"".join([
     blockL,
     suffix
     ]))
@@ -163,39 +165,39 @@ Cc{         Cc{         Cc{
 IEND        IEND        IEND
 """
 
-suffix2 = "".join([
-  "CRco",
+suffix2 = b"".join([
+  b"CRco",
 
 # EndA of collision
 
   struct.pack(">I", 0x100 + len(d1[8:-3*4])),
-  "sKIa",
+  b"sKIa",
     # it will cover all data chunks of d2,
     # and the 0x100 buffer
       ascii_art,
-      "^^^^",
+      b"^^^^",
 # EndB of collision
 
       d1[8:-3*4],
       struct.pack(">I", 4*3 + len(d2[8:-3*4])),
-      "sKIb",
-    "crAA",
+      b"sKIb",
+    b"crAA",
         d2[8:-3*4],
           struct.pack(">I", 0),
-          "sKIc",
-      "crBC", # for both sKIb and sKIc - hard to be correct for both
+          b"sKIc",
+      b"crBC", # for both sKIb and sKIc - hard to be correct for both
 
   d1[-3*4:],
 ])
 
 with open("collision-sync1.png", "wb") as f:
-  f.write("".join([
+  f.write(b"".join([
     blockS,
     suffix2
     ]))
 
 with open("collision-sync2.png", "wb") as f:
-  f.write("".join([
+  f.write(b"".join([
     blockL,
     suffix2
     ]))

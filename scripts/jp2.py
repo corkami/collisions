@@ -1,18 +1,19 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # script to collide JPEG2000 files
-# Ange Albertini, December 2018
 
 # as JP2 seems to enforce some atoms, a generic "atom/box" prefix starting with a `free` atom can't work.
 # it needs a specific prefix that starts like a jp2 file.
 # besides, the logic is the same as MP4. just no need to relocate anything.
+
+# Ange Albertini 2018-2021
 
 import struct
 import sys
 import hashlib
 
 def isValid(d):
-  return d.startswith("\0\0\0\x0CjP  ") and d[0x10:0x18] == "ftypjp2 "
+  return d.startswith(b"\0\0\0\x0CjP  ") and d[0x10:0x18] == b"ftypjp2 "
 
 fn1, fn2 = sys.argv[1:3]
 
@@ -31,10 +32,10 @@ d2 = d2[0x20:]
 l1 = len(d1)
 l2 = len(d2)
 
-suffix = "".join([
-  struct.pack(">I", 0x100 + 8), "free",
-  "\0" * (0x100 - 8),
-  struct.pack(">I", 8 + l1), "free",
+suffix = b"".join([
+  struct.pack(">I", 0x100 + 8),b "free",
+  b"\0" * (0x100 - 8),
+  struct.pack(">I", 8 + l1), b"free",
   d1,
   d2,
   ])
@@ -50,7 +51,7 @@ col2 = prefix2 + suffix
 md5 = hashlib.md5(col1).hexdigest()
 
 if md5 == hashlib.md5(col2).hexdigest():
-  print "md5: %s" % md5
+  print("md5: %s" % md5)
 
   with open("collision1.jp2", "wb") as f:
     f.write(col1)

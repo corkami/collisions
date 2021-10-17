@@ -1,16 +1,17 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # a JPG image collider
-# Ange albertini 2018
+
+# Ange albertini 2018-2021
 
 import sys
 import struct
 
 def comment_start(size):
-  return "\xff\xfe" + struct.pack(">H", size)
+  return b"\xff\xfe" + struct.pack(">H", size)
 
 def comment(size, s=""):
-  return comment_start(size) + s + "\0" * (size - 2 - len(s))
+  return comment_start(size) + s + b"\0" * (size - 2 - len(s))
 
 def comments(s, delta=0):
   return comment(len(s) + delta, s)
@@ -30,11 +31,11 @@ with open("jpg2.bin", "rb") as f:
 c1 = d1[2:].split("\xff\xda")
 
 if max(len(i) for i in c1) >= 65536 - 8:
-  print "ERROR: The first image file has a segment that is too big!",
-  print "Maybe save it as progressive or reduce its size/scans."
+  print("ERROR: The first image file has a segment that is too big!" +
+    "Maybe save it as progressive or reduce its size/scans.")
   sys.exit()
 
-ascii_art = "".join("""
+ascii_art = b"".join(b"""
 ^^^^^^^^^^^^
 /==============\\
 |* JPG image  *|
@@ -54,7 +55,7 @@ vvvvvvvvvvvvvvvv""".splitlines())
 
 suffix = "".join([
   # fake comment to jump over the first image chunk (typically small)
-  "\xff\xfe",
+  b"\xff\xfe",
     struct.pack(">H", 0x100 + len(c1[0]) - 2 + 4),
     ascii_art, # made to fit 
 
@@ -62,32 +63,32 @@ suffix = "".join([
   c1[0],
 
   # creating a tiny intra-block comment to host a trampoline comment segment
-  "".join([
-      "".join([
+  b"".join([
+      b"".join([
         # a comment over another comment declaration
         comments(
-          "\xff\xfe" +
+          b"\xff\xfe" +
           # +4 to reach the next intra-block
           struct.pack(">H", len(c) + 4 + 4),
           delta=2),
-        "\xff\xda",
+        b"\xff\xda",
         c
       ]) for c in c1[1:]
     ]),
 
-    "ANGE", # because we land 4 bytes too far
+    b"ANGE", # because we land 4 bytes too far
 
   d2[2:]
 ])
 
 with open("collision1.jpg", "wb") as f:
-  f.write("".join([
+  f.write(b"".join([
     block1,
     suffix
   ]))
 
 with open("collision2.jpg", "wb") as f:
-  f.write("".join([
+  f.write(b"".join([
     block2,
     suffix
   ]))

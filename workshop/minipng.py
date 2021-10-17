@@ -1,11 +1,13 @@
+#!/usr/bin/env python3
+
 # png chunks reader/writer
 
-# Ange Albertini, BSD Licence, 2011-2019
+# Ange Albertini, BSD Licence, 2011-2021
 
 import struct
 import binascii
 
-_MAGIC = "\x89PNG\x0d\x0a\x1a\x0a"
+_MAGIC = b"\x89PNG\x0d\x0a\x1a\x0a"
 
 _crc32 = lambda d:(binascii.crc32(d) % 0x100000000)
 
@@ -22,7 +24,7 @@ def read(f):
 
         chunks += [[t, d]]
 
-        if t == "IEND":
+        if t == b"IEND":
             return chunks
 
     raise(BaseException("Invalid image"))
@@ -39,7 +41,7 @@ def make(chunks):
             d,
             struct.pack(">I", _crc32(t + d))
             ]
-    return "".join(s)
+    return b"".join(s)
 
 
 fno = "no.png"
@@ -53,8 +55,8 @@ with open(fyes, "rb") as f:
 # SPOILER
 # (not entirely correct but in the right direction)
 final = [
-    ["aLIG", 0x33*"\0"], 
-    ["cOLL", 0x71*"\0"], 
+    [b"aLIG", 0x33*b"\0"], 
+    [b"cOLL", 0x71*b"\0"], 
     ] + no + yes
 with open("final.png", "wb") as f:
     f.write(make(final))

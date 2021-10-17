@@ -1,7 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # script to craft MD5 collisions of a PDF and a PE
-# Ange Albertini 2019
+
+# Ange Albertini 2019-2021
 
 import os
 import sys
@@ -64,7 +65,7 @@ def getPEhdr(d):
   elif Machine == 0x8664:
     bits = 64
   if bits is None:
-    print "ERROR: unknown arch"
+    print("ERROR: unknown arch")
     sys.exit()
 
   NumDiffOff = 0x74 if bits == 32 else 0x84
@@ -84,7 +85,7 @@ def relocateSections(d, SecTblOff, SecCount, delta):
   for i in range(SecCount):
     offset = SecTblOff + i*0x28 + 0x14
     PhysOffset = struct.unpack("i", d[offset:offset+4])[0]
-    d = "".join([
+    d = b"".join([
       d[:offset],
       struct.pack("i", PhysOffset + delta),
       d[offset+4:]
@@ -114,7 +115,7 @@ if len(sys.argv) == 1:
 with open(sys.argv[2], "rb") as f:
   pe = f.read()
 
-assert pe.startswith("MZ")
+assert pe.startswith(b"MZ")
 
 PEoff, HdrLen, NumSec, SecTblOff, SectsStart = getPEhdr(pe)
 lenPE = len(pe[PEoff:])
@@ -126,30 +127,30 @@ with open("merged.pdf", "rb") as f:
 
 count = getCount(dm) - 1
 
-kids = EnclosedString(dm, "/Kids[", "]")
+kids = EnclosedString(dm, b"/Kids[", b"]")
 
 # we skip the first dummy that should be 4 0 R because of the `mutool merge`
-assert kids.startswith("4 0 R ")
+assert kids.startswith(b"4 0 R ")
 kids = kids[6:]
 
-dm = dm[dm.find("5 0 obj"):]
-dm = dm.replace("/Parent 2 0 R", "/Parent 4 0 R")
-dm = dm.replace("/Root 1 0 R", "/Root 3 0 R")
+dm = dm[dm.find(b"5 0 obj"):]
+dm = dm.replace(b"/Parent 2 0 R", b"/Parent 4 0 R")
+dm = dm.replace("/Root 1 0 R", b"/Root 3 0 R")
 
 pe = relocateSections(pe, SecTblOff, NumSec, ALIGN - SectsStart)
 Sections = pe[SectsStart - SECTIONEXTRA:]
 
-pe = "".join([
+pe = b"".join([
   pe[PEoff:PEoff+HdrLen],
-    (ALIGN - HdrLen - PEOFFSET - SECTIONEXTRA) * "\0",
+    (ALIGN - HdrLen - PEOFFSET - SECTIONEXTRA) * b"\0",
   Sections,
   ])
 
 # we need to align the PE header
 stage1 = template % locals()
-deltaPDF = stage1.find("stream\n") + len("stream\n")
+deltaPDF = stage1.find(b"stream\n") + len(b"stream\n")
 
-pe = "\0" * (PEOFFSET - deltaPDF + len("2 0 R") - len("%i" % lenPE)) + pe
+pe = b"\0" * (PEOFFSET - deltaPDF + len(b"2 0 R") - len(b"%i" % lenPE)) + pe
 lenPE = len(pe) 
 
 with open("hacked.pdf", "wb") as f:
@@ -160,8 +161,8 @@ with open("hacked.pdf", "wb") as f:
 # the direct length reference added by mutool will be replaced by a reference to object 2 via the prefix
 
 # (yes, errors will appear because we modified objects without adjusting XREF)
-print
-print "KEEP CALM and IGNORE THE NEXT ERRORS"
+print()
+print("KEEP CALM and IGNORE THE NEXT ERRORS")
 os.system('mutool clean hacked.pdf cleaned.pdf')
 
 with open("cleaned.pdf", "rb") as f:
@@ -195,10 +196,10 @@ md5 = hashlib.md5(file1).hexdigest()
 assert md5 == hashlib.md5(file2).hexdigest()
 
 # to prove the files should be 100% valid
-print
+print()
 os.system('mutool info -X collision1.pdf')
-print
+print()
 
-print
-print "MD5: %s" % md5
-print "Success!"
+print()
+print("MD5: %s" % md5)
+print("Success!")

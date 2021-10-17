@@ -1,7 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # script to craft MD5 collisions of 2 PDFs via mutool and UniColl
-# Ange Albertini 2018-2019
+
+# Ange Albertini 2018-2021
 
 # uses mutool from https://mupdf.com/index.html
 
@@ -30,7 +31,7 @@ def adjustPDF(contents):
   endXREF = contents.find(" \n\n", startXREF) + 1
   origXref = contents[startXREF:endXREF]
   objCount = int(origXref.splitlines()[1].split(" ")[1])
-  print "object count: %i" % objCount
+  print("object count: %i" % objCount)
 
   xrefLines = [
     "xref",
@@ -52,8 +53,8 @@ def adjustPDF(contents):
   try:
     assert len(xref) == len(origXref)
   except AssertionError:
-    print "<:", `origXref`
-    print ">:", `xref`
+    print("<:", repr(origXref))
+    print(">:", repr(xref))
 
   contents = contents[:startXREF] + xref + contents[endXREF:]
 
@@ -177,12 +178,12 @@ md5 = hashlib.md5(file1).hexdigest()
 assert md5 == hashlib.md5(file2).hexdigest()
 
 # to prove the files should be 100% valid
-print
+print()
 os.system(MUTOOL + ' info -X collision1.pdf')
-print
-print
+print()
+print()
 os.system(MUTOOL + ' info -X collision2.pdf')
 
-print
-print "MD5: %s" % md5
-print "Success!"
+print()
+print("MD5: %s" % md5)
+print("Success!")

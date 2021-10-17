@@ -1,10 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # script to craft MD5 pileups (multi-collisions) of
 # a PDF document, a PE executable, a PNG image and an MP4 video
 
-# Ange Albertini 2019
-
+# Ange Albertini 2019-2021
 
 import os
 import sys
@@ -56,9 +55,9 @@ def relocateMP4(d, delta):
     dprint(" offset count: %i" % offcount)
     offset += 4 * 3
     offsets = struct.unpack(">%iI" % offcount, d[offset:offset + offcount * 4])
-    dprint(" offsets (old): %s" % `list(offsets)`) 
+    dprint(" offsets (old): %s" % repr(list(offsets))) 
     offsets = [i + delta for i in offsets]
-    dprint(" (new) offsets: %s" % `offsets`)
+    dprint(" (new) offsets: %s" % repr(offsets))
 
     d = d[:offset] + struct.pack(">%iI" % offcount, *offsets) + d[offset+offcount*4:]
 
@@ -124,7 +123,7 @@ def getPEhdr(d):
   elif Machine == 0x8664:
     bits = 64
   if bits is None:
-    print "ERROR: unknown arch"
+    print("ERROR: unknown arch")
     sys.exit()
 
   NumDiffOff = 0x74 if bits == 32 else 0x84
@@ -173,7 +172,7 @@ with open(sys.argv[3], "rb") as f:
 with open(sys.argv[4], "rb") as f:
   mp4 = f.read()
 
-assert pe.startswith("MZ")
+assert pe.startswith(b"MZ")
 
 PEoff, HdrLen, NumSec, SecTblOff, SectsStart = getPEhdr(pe)
 lenPE = len(pe[PEoff:])
@@ -185,20 +184,20 @@ with open("merged.pdf", "rb") as f:
 
 count = getCount(dm) - 1
 
-kids = EnclosedString(dm, "/Kids[", "]")
+kids = EnclosedString(dm, b"/Kids[", b"]")
 
 # we skip the first dummy that should be 4 0 R because of the `mutool merge`
-assert kids.startswith("4 0 R ")
+assert kids.startswith(b"4 0 R ")
 kids = kids[6:]
 
-dm = dm[dm.find("5 0 obj"):]
-dm = dm.replace("/Parent 2 0 R", "/Parent 4 0 R")
-dm = dm.replace("/Root 1 0 R", "/Root 3 0 R")
+dm = dm[dm.find(b"5 0 obj"):]
+dm = dm.replace(b"/Parent 2 0 R", b"/Parent 4 0 R")
+dm = dm.replace(b"/Root 1 0 R", b"/Root 3 0 R")
 
 pe = relocateSections(pe, SecTblOff, NumSec, ALIGN - SectsStart)
 Sections = pe[SectsStart - SECTIONEXTRA:]
 
-buffer = "".join([
+buffer = b"".join([
   pe[PEoff:PEoff+HdrLen],
     (ALIGN - HdrLen - PEOFFSET - SECTIONEXTRA) * "\0",
   Sections,
@@ -214,9 +213,9 @@ buffer += relocateMP4(mp4, lenPEPNG + 0x560) # hardcoded offset of the PE in our
 lenBuffer = len(buffer) # placeholder
 # we need to align the PE header
 stage1 = template % locals()
-deltaPDF = stage1.find("stream\n") + len("stream\n")
+deltaPDF = stage1.find(b"stream\n") + len(b"stream\n")
 
-buffer = "\0" * (PEOFFSET - deltaPDF + len("2 0 R") - len("%i" % lenBuffer)) + buffer
+buffer = b"\0" * (PEOFFSET - deltaPDF + len(b"2 0 R") - len(b"%i" % lenBuffer)) + buffer
 lenBuffer += PEOFFSET - deltaPDF + 2 # +2 for the 2 carriage returns in the stream template
 with open("hacked.pdf", "wb") as f:
   f.write(template % locals())
@@ -226,8 +225,8 @@ with open("hacked.pdf", "wb") as f:
 # the direct length reference added by mutool will be replaced by a reference to object 2 via the prefix
 
 # (yes, errors will appear because we modified objects without adjusting XREF)
-print
-print "KEEP CALM and IGNORE THE NEXT ERRORS"
+print()
+print("KEEP CALM and IGNORE THE NEXT ERRORS")
 os.system('mutool clean hacked.pdf cleaned.pdf')
 
 with open("cleaned.pdf", "rb") as f:
@@ -257,7 +256,7 @@ cleaned = setDWORD(cleaned, 0x550, struct.pack(">L", zlib.crc32(cleaned[0x70:0x5
 
 # aNGE chunk
 cleaned = setDWORD(cleaned, 0x554, struct.pack(">L", lenPE + 4))
-cleaned = setDWORD(cleaned, 0x558, "aNGE")
+cleaned = setDWORD(cleaned, 0x558, b"aNGE")
 cleaned = setDWORD(
   cleaned,
   0x560 + lenPE,
