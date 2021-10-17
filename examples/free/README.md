@@ -10,6 +10,7 @@ Copyright-free, PII-free collision PoCs
 
 ## UniColl
 
+- GZip [md5-1.gz](md5-1.gz) / [md5-2.gz](md5-2.gz)
 - JPG images [md5-1.jpg](md5-1.jpg) / [md5-2.jpg](md5-2.jpg)
 - PDF documents [md5-1.pdf](md5-1.pdf) / [md5-2.pdf](md5-2.pdf)
 - PNG images

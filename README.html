@@ -119,6 +119,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="#incompatibility">incompatibility</a></li>
 </ul></li>
 <li><a href="#gif">GIF</a></li>
+<li><a href="#gzip">GZIP</a></li>
 <li><a href="#portable-executable">Portable Executable</a></li>
 <li><a href="#mp4-and-others">MP4 and others</a>
 <ul>
@@ -702,6 +703,21 @@ bc 00 00 18 b0 00 00 10 00 00 00 0c b8 00 00 10
 <p><em>2 MD5-colliding GIFs - pics by <a href="https://www.kidmograph.com/">KidMoGraph</a></em></p>
 <p>Here is a <a href="examples/gifFastColl.svg">recording</a> of the whole operation.</p>
 <p><img src="examples/gifFastColl.svg" alt="a recording of a GIF FastColl collision" /></p>
+<h3 id="gzip">GZIP</h3>
+<img alt='a GZIP file' src=https://raw.githubusercontent.com/corkami/pics/master/binary/GZip.png width=500/>
+
+<p>GZIP specs v4.3: <a href="https://datatracker.ietf.org/doc/html/rfc1952">RFC 1952</a> (1996).</p>
+<ul>
+<li>a Gzip file is made of one or more 'members' (gzip streams) concatenated. They will be all decompressed and their uncompressed content appended to each other - even if the stream's content is empty.</li>
+<li>these streams can be separated with zeroes. Any non-null byte will be checked for the signature <code>1F 8B</code>. If not matching, the parsing will stop, which can be used to forcibly stop parsing between two payloads.</li>
+<li>The optional <code>filename</code> and <code>file comment</code> are null-terminated whereas the <code>Extra field</code> is size-specified, therefore abusable. It's made of one or more, with an ID and its own length, but subfield are not enforced - very few are officially defined.</li>
+</ul>
+<p>Therefore an empty gzip file with an extra field is a perfect parasite host.</p>
+<p>After the header comes the compressed body, its CRC32 and its uncompressed size (not enforced). Therefore an empty data body with it's null CRC32 and size make a generic postwrap, which can even be shared by different members headers.</p>
+<p>The last double word of the file might be used to show the uncompressed size of the archive, but it's not enforced (gzip doesn't add the uncompressed sizes either).</p>
+<p>Here is a <a href="scripts/gz.py">script</a> to generate instant MD5 collisions of two GZip files.</p>
+<p>A <code>.tar.gz</code> is just the <code>gzip</code> archive of a <code>tar</code> archive. It will work fine with gzipped tar, unlike <code>tar</code> itself.</p>
+<p>Examples: <a href="examples/collision1.tar.gz">collision1.tar.gz</a> (Pacome) ⟷ <a href="examples/collision2.tar.gz">collision2.tar.gz</a> (Reg)</p>
 <h3 id="portable-executable">Portable Executable</h3>
 <img alt='a PE file' src=https://raw.githubusercontent.com/corkami/pics/master/binary/PE.png width=600/>
 

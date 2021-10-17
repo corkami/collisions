@@ -32,6 +32,7 @@ By Ange Albertini and Marc Stevens.
     - [PNG](#png)
       - [incompatibility](#incompatibility)
     - [GIF](#gif)
+    - [GZIP](#gzip)
     - [Portable Executable](#portable-executable)
     - [MP4 and others](#mp4-and-others)
       - [JPEG2000](#jpeg2000)
@@ -689,6 +690,29 @@ Examples:
 Here is a [recording](examples/gifFastColl.svg) of the whole operation.
 
 ![a recording of a GIF FastColl collision](examples/gifFastColl.svg)
+
+
+### GZIP
+
+<img alt='a GZIP file' src=https://raw.githubusercontent.com/corkami/pics/master/binary/GZip.png width=500/>
+
+GZIP specs v4.3: [RFC 1952](https://datatracker.ietf.org/doc/html/rfc1952) (1996).
+
+- a Gzip file is made of one or more 'members' (gzip streams) concatenated. They will be all decompressed and their uncompressed content appended to each other - even if the stream's content is empty.
+- these streams can be separated with zeroes. Any non-null byte will be checked for the signature `1F 8B`. If not matching, the parsing will stop, which can be used to forcibly stop parsing between two payloads.
+- The optional `filename` and `file comment` are null-terminated whereas the `Extra field` is size-specified, therefore abusable. It's made of one or more, with an ID and its own length, but subfield are not enforced - very few are officially defined.
+
+Therefore an empty gzip file with an extra field is a perfect parasite host.
+
+After the header comes the compressed body, its CRC32 and its uncompressed size (not enforced). Therefore an empty data body with it's null CRC32 and size make a generic postwrap, which can even be shared by different members headers.
+
+The last double word of the file might be used to show the uncompressed size of the archive, but it's not enforced (gzip doesn't add the uncompressed sizes either).
+
+Here is a [script](scripts/gz.py) to generate instant MD5 collisions of two GZip files.
+
+A `.tar.gz` is just the `gzip` archive of a `tar` archive. It will work fine with gzipped tar, unlike `tar` itself.
+
+Examples: [collision1.tar.gz](examples/collision1.tar.gz) (Pacome) ⟷ [collision2.tar.gz](examples/collision2.tar.gz) (Reg)
 
 ### Portable Executable
 
