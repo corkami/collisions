@@ -704,6 +704,8 @@ GZIP specs v4.3: [RFC 1952](https://datatracker.ietf.org/doc/html/rfc1952) (1996
 
 Therefore an empty gzip file with an extra field is a perfect parasite host.
 
+If the top file is too big to fit in an extra field, then its uncompressed stream can be split in smaller files until they all fit in extra fields.
+
 After the header come the compressed body, its CRC32 and its uncompressed size (not enforced). Therefore an empty data body with its null CRC32 and size make a generic postwrap, which can even be shared by different member headers.
 
 The last double word of the file might be used to show the uncompressed size of the archive, but it's not enforced (gzip doesn't add the uncompressed sizes either).

@@ -713,6 +713,7 @@ bc 00 00 18 b0 00 00 10 00 00 00 0c b8 00 00 10
 <li>The optional <code>filename</code> and <code>file comment</code> are null-terminated whereas the <code>Extra field</code> is size16-defined, therefore abusable. It's made of one or more subfield(s), with an ID and its own sublength, but subfield are not enforced - very few are officially defined.</li>
 </ul>
 <p>Therefore an empty gzip file with an extra field is a perfect parasite host.</p>
+<p>If the top file is too big to fit in an extra field, then its uncompressed stream can be split in smaller files until they all fit in extra fields.</p>
 <p>After the header come the compressed body, its CRC32 and its uncompressed size (not enforced). Therefore an empty data body with its null CRC32 and size make a generic postwrap, which can even be shared by different member headers.</p>
 <p>The last double word of the file might be used to show the uncompressed size of the archive, but it's not enforced (gzip doesn't add the uncompressed sizes either).</p>
 <p>Here is a <a href="scripts/gz.py">script</a> to generate instant MD5 collisions of two GZip files.</p>
