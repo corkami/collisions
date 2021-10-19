@@ -104,7 +104,21 @@ boom = 8 * b"AA"
 with open(filename_a, "rb") as f:
 	contents_a = f.read()
 
-archivesA = [contents_a]
+
+MAXEF = 0xffff - 2 - 2
+comp_l = len(contents_a)
+if comp_l <= MAXEF:
+	archivesA = [contents_a]
+else:
+	uncomp_data = gzip.decompress(contents_a)
+	uncomp_l = len(uncomp_data)
+	chunk_l = int(MAXEF * 2.0)
+	comp_factor = uncomp_l // chunk_l
+
+	archivesA = []
+	for i in range(comp_factor - 1):
+		archivesA.append(gzip.compress(uncomp_data[chunk_l * i:chunk_l * (i+1)], mtime=0))
+	archivesA.append(gzip.compress(uncomp_data[chunk_l * (comp_factor-1):], mtime=0))
 
 
 def split_archive(archive):
@@ -119,7 +133,7 @@ def split_archive(archive):
 
 while True:
 	for i, archive in enumerate(archivesA):
-		if len(archive) > 0xfffe:
+		if len(archive) > MAXEF:
 			archive1, archive2 = split_archive(archive)
 			archivesA[i] = archive2
 			archivesA.insert(i, archive1)
@@ -198,3 +212,8 @@ with open("coll-1.gz", "wb") as f:
 	f.write(data1)
 with open("coll-2.gz", "wb") as f:
 	f.write(data2)
+
+print("Success!")
+print("coll-1.gz => %s" % filename_b)
+print("coll-2.gz => %s" % filename_a)
+print(hashlib.md5(data1).hexdigest())
