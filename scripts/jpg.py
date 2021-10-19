@@ -28,7 +28,7 @@ with open("jpg2.bin", "rb") as f:
   block2 = f.read()
 
 # skip the signature, split by scans (usually the biggest segments)
-c1 = d1[2:].split("\xff\xda")
+c1 = d1[2:].split(b"\xff\xda")
 
 if max(len(i) for i in c1) >= 65536 - 8:
   print("ERROR: The first image file has a segment that is too big!" +
@@ -53,7 +53,7 @@ ascii_art = b"".join(b"""
 \\==============/
 vvvvvvvvvvvvvvvv""".splitlines())
 
-suffix = "".join([
+suffix = b"".join([
   # fake comment to jump over the first image chunk (typically small)
   b"\xff\xfe",
     struct.pack(">H", 0x100 + len(c1[0]) - 2 + 4),
