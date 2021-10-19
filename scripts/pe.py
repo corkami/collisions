@@ -14,7 +14,7 @@
 import sys, struct, hashlib, os
 
 def getPEhdr(d):
-  PEoffset = d.find("PE\0\0")
+  PEoffset = d.find(b"PE\0\0")
   peHDR = d[PEoffset:]
 
   Machine = struct.unpack("H", peHDR[4:4+2])[0]
@@ -78,8 +78,8 @@ with open(fn2, "rb") as f:
 
 
 # best PE validation ever :p
-assert d1.startswith("MZ")
-assert d2.startswith("MZ")
+assert d1.startswith(b"MZ")
+assert d2.startswith(b"MZ")
 
 PEoff1, HdrLen1, NumSec1, SecTblOff1, SectsStart1 = getPEhdr(d1)
 PEoff2, HdrLen2, NumSec2, SecTblOff2, SectsStart2 = getPEhdr(d2)
@@ -110,9 +110,9 @@ d2 = relocateSections(d2, SecTblOff2, NumSec2, OffSec2 - SectsStart2)
 
 suffix = b"".join([
   d1[PEoff1:PEoff1+HdrLen1],
-    (HEADER2OFF - (HEADER1OFF + HdrLen1)) * "\0",
+    (HEADER2OFF - (HEADER1OFF + HdrLen1)) * b"\0",
   d2[PEoff2:PEoff2+HdrLen2],
-    (SECTIONSOFF - (HEADER2OFF + HdrLen2)) * "\0",
+    (SECTIONSOFF - (HEADER2OFF + HdrLen2)) * b"\0",
   Sections1,
   Sections2
   ])

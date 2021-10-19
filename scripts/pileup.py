@@ -20,7 +20,7 @@ def dprint(s):
 
 def setDWORD(d, offset, s):
   assert len(s) == 4
-  return "".join([
+  return b"".join([
     d[:offset],
     s,
     d[offset+4:]
@@ -33,10 +33,10 @@ def relocateMP4(d, delta):
   # finds and relocates all Sample Tables Chunk Offset tables
   # TODO: support 64 bits `co64` tables ()
   offset = 0
-  tablecount = d.count("stco")
+  tablecount = d.count(b"stco")
   dprint("stco found: %i" % tablecount)
   for i in range(tablecount):
-    offset = d.find("stco", offset)
+    offset = d.find(b"stco", offset)
     dprint("current offset: %0X" % offset)
 
     length   = struct.unpack(">I", d[offset-4:offset])[0]
@@ -76,11 +76,11 @@ def EnclosedString(d, starts, ends):
   return d[off:d.find(ends, off)]
 
 def getCount(d):
-  s = EnclosedString(d, "/Count ", "/")
+  s = EnclosedString(d, b"/Count ", b"/")
   count = int(s)
   return count
 
-template = """%%PDF-1.3
+template = b"""%%PDF-1.3
 %%\xC2\xB5\xC2\xB6
 
 1 0 obj
@@ -111,7 +111,7 @@ endobj
 
 
 def getPEhdr(d):
-  PEoffset = d.find("PE\0\0")
+  PEoffset = d.find(b"PE\0\0")
   peHDR = d[PEoffset:]
 
   Machine = struct.unpack("H", peHDR[4:4+2])[0]
@@ -199,13 +199,13 @@ Sections = pe[SectsStart - SECTIONEXTRA:]
 
 buffer = b"".join([
   pe[PEoff:PEoff+HdrLen],
-    (ALIGN - HdrLen - PEOFFSET - SECTIONEXTRA) * "\0",
+    (ALIGN - HdrLen - PEOFFSET - SECTIONEXTRA) * b"\0",
   Sections,
   ])
 
 lenPE = len(buffer) # for PNG file
 
-buffer += "CRC3" + png
+buffer += b"CRC3" + png
 lenPEPNG = len(buffer) # for MP4 file
 
 buffer += relocateMP4(mp4, lenPEPNG + 0x560) # hardcoded offset of the PE in our computed prefix
@@ -245,7 +245,7 @@ with open("pileup-png.bin", "rb") as f:
 # MP4 free atom ###############################################################
 
 cleaned = setDWORD(cleaned, 0x540,struct.pack(">L", lenPEPNG + 0x20))
-cleaned = setDWORD(cleaned, 0x544, "free")
+cleaned = setDWORD(cleaned, 0x544, b"free")
 
 
 # PNG fixes 

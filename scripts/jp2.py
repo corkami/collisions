@@ -33,7 +33,7 @@ l1 = len(d1)
 l2 = len(d2)
 
 suffix = b"".join([
-  struct.pack(">I", 0x100 + 8),b "free",
+  struct.pack(">I", 0x100 + 8),b"free",
   b"\0" * (0x100 - 8),
   struct.pack(">I", 8 + l1), b"free",
   d1,

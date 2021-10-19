@@ -18,36 +18,36 @@ def EnclosedString(d, starts, ends):
   return d[off:d.find(ends, off)]
 
 def getCount(d):
-  s = EnclosedString(d, "/Count ", "/")
+  s = EnclosedString(d, b"/Count ", b"/")
   count = int(s)
   return count
 
 def procreate(l): # :p
-  return " 0 R ".join(l) + " 0 R"
+  return b" 0 R ".join(l) + b" 0 R"
 
 def adjustPDF(contents):
   """dumb [start]xref fix: fixes old-school xref with no holes, with hardcoded \\n"""
-  startXREF = contents.find("\nxref\n0 ") + 1
-  endXREF = contents.find(" \n\n", startXREF) + 1
+  startXREF = contents.find(b"\nxref\n0 ") + 1
+  endXREF = contents.find(b" \n\n", startXREF) + 1
   origXref = contents[startXREF:endXREF]
-  objCount = int(origXref.splitlines()[1].split(" ")[1])
+  objCount = int(origXref.splitlines()[1].split(b" ")[1])
   print("object count: %i" % objCount)
 
   xrefLines = [
-    "xref",
-    "0 %i" % objCount,
+    b"xref",
+    b"0 %i" % objCount,
     # mutool declare its first xref like this
-    "0000000000 00001 f "
+    b"0000000000 00001 f "
     ]
 
   i = 1
   while i < objCount:
     # doesn't support comments at the end of object declarations
-    off = contents.find("\n%i 0 obj\n" % i) + 1
-    xrefLines.append("%010i 00000 n " % (off))
+    off = contents.find(b"\n%i 0 obj\n" % i) + 1
+    xrefLines.append(b"%010i 00000 n " % (off))
     i += 1
 
-  xref = "\n".join(xrefLines)
+  xref = b"\n".join(xrefLines)
 
   # XREF length should be unchanged
   try:
@@ -58,8 +58,8 @@ def adjustPDF(contents):
 
   contents = contents[:startXREF] + xref + contents[endXREF:]
 
-  startStartXref = contents.find("\nstartxref\n", endXREF) + len("\nstartxref\n")
-  endStartXref = contents.find("\n%%%%EOF", startStartXref)
+  startStartXref = contents.find(b"\nstartxref\n", endXREF) + len(b"\nstartxref\n")
+  endStartXref = contents.find(b"\n%%%%EOF", startStartXref)
   contents = contents[:startStartXref] + "%i" % startXREF + contents[endStartXref:]
 
   return contents
@@ -88,12 +88,12 @@ COUNT1 = getCount(d1)
 COUNT2 = getCount(d2)
 
 
-kids = EnclosedString(dm, "/Kids[", "]")
+kids = EnclosedString(dm, b"/Kids[", b"]")
 
 # we skip the first dummy, and the last " 0 R" string
-pages = kids[:-4].split(" 0 R ")[1:]
+pages = kids[:-4].split(b" 0 R ")[1:]
 
-template = """%%PDF-1.4
+template = b"""%%PDF-1.4
 
 1 0 obj
 <<
@@ -132,7 +132,7 @@ KIDS2 = procreate(pages[getCount(d1):])
 contents = template % locals()
 
 # adjust parents for the first set of pages
-contents += dm[dm.find("5 0 obj"):].replace("/Parent 2 0 R", "/Parent 3 0 R", COUNT1)
+contents += dm[dm.find(b"5 0 obj"):].replace(b"/Parent 2 0 R", b"/Parent 3 0 R", COUNT1)
 
 # not necessary (will be fixed by mutool anyway) but avoids warnings
 contents = adjustPDF(contents)
@@ -148,8 +148,8 @@ with open("cleaned.pdf", "rb") as f:
 
 # some mutool versions do different stuff :(
 cleaned = cleaned.replace(
-  " 65536 f \n0000000016 00000 n \n",
-  " 65536 f \n0000000018 00000 n \n",
+  b" 65536 f \n0000000016 00000 n \n",
+  b" 65536 f \n0000000018 00000 n \n",
   1)
 
 with open("pdf1.bin", "rb") as f:
@@ -158,8 +158,8 @@ with open("pdf1.bin", "rb") as f:
 with open("pdf2.bin", "rb") as f:
   prefix2 = f.read()
 
-file1 = prefix1 + "\n" + cleaned[192:]
-file2 = prefix2 + "\n" + cleaned[192:]
+file1 = prefix1 + b"\n" + cleaned[192:]
+file2 = prefix2 + b"\n" + cleaned[192:]
 
 with open("collision1.pdf", "wb") as f:
   f.write(file1)

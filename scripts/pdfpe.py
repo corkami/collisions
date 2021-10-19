@@ -18,11 +18,11 @@ def EnclosedString(d, starts, ends):
   return d[off:d.find(ends, off)]
 
 def getCount(d):
-  s = EnclosedString(d, "/Count ", "/")
+  s = EnclosedString(d, b"/Count ", b"/")
   count = int(s)
   return count
 
-template = """%%PDF-1.3
+template = b"""%%PDF-1.3
 %%\xC2\xB5\xC2\xB6
 
 1 0 obj
@@ -135,7 +135,7 @@ kids = kids[6:]
 
 dm = dm[dm.find(b"5 0 obj"):]
 dm = dm.replace(b"/Parent 2 0 R", b"/Parent 4 0 R")
-dm = dm.replace("/Root 1 0 R", b"/Root 3 0 R")
+dm = dm.replace(b"/Root 1 0 R", b"/Root 3 0 R")
 
 pe = relocateSections(pe, SecTblOff, NumSec, ALIGN - SectsStart)
 Sections = pe[SectsStart - SECTIONEXTRA:]

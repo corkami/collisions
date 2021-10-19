@@ -43,7 +43,7 @@ if not glob.glob("png1-%s.bin" % hash):
     # 00-20 - original common header
     d1[:0x21],
     # 21-46 - padding chunk
-    b"\0\0\0\x1a", b"aNGE", b":MD5 ISREALLY DEAD NOW!!1!", "ROFL",
+    b"\0\0\0\x1a", b"aNGE", b":MD5 ISREALLY DEAD NOW!!1!", b"ROFL",
     
     # 47-C7 - collision chunk
 
