@@ -5,49 +5,59 @@
 
 # Ange Albertini 2021
 
-# 2021/10/17: first release
-# 2021/10/18: splitting streams of file if too big.
+# 2021/10/17: - first release
+# 2021/10/18: - splitting members of top file if too big.
+# 2021/10/20: - splitting bottom file for warning-less decompression.
+#             - prefix ordering
 
 
-# A (Archive) = T (Trampoline header) + [XtraField] + LP (LandingPad)
-# Sa = Size of Archive
-# Archive or LP always before JMP
+# Archive: T (Trampoline header) + [gap] + LP (LandingPad)
+# T: 16 bytes
+# LP: 2 + 4 + 4 = 10 bytes
+# Sa0 = Size of member A0
 
-# 000: Aalign
+# 000: Aalign                          vvv Prefix vvv
 # 03E: Tunicoll
-# 0C0: LPs
-# 0CA:     Ta (0x100 - required by UniColl)
-#         /      [0x100]
-# 1C0:   /    LPl [10]
-# 1CA:  /        T (10 + Sa1 + 16)
-# 1DA: LP       /
-# 1E4: Aa1     /
-#      T      /
-#      |    LP
-#      |        T (10 + Sa2 + 16)
-#      LP      /
-#      Aa2    /
-#      ......
-#      T     /
-#      |    LP
-#      |        T (10 + SaN + Boom)
-#      LP      /
-#      An     /
-#      Boom  /
-#           LP
-#           B
-
-# Make Boom a length of 16 to simplify the loop
+#       /    \  (jumps short or long) 
+# 0C0: LPs_   \                        vvv Suffix vvv
+#          Ta  \     (0x100)           (truncated)
+#         /     \    <gap>
+# 1C0:   /     LPl_
+#       /          T (10 + Sa1 + 16)   vvv no more gap vvv
+#      LP         /
+#      Aa0       /
+#      T        /    (10 + 16)
+#      |      LP_
+#      |         T   (10 + Sa1 + 16)
+#      LP       /
+#      Aa1     /
+#      ...   ...
+#      T      /      (10+16)
+#      |     LP__
+#      |         T   (10 + SaN + 16)
+#      LP       /
+#      An      /                  <-- archive A is over
+#                                     -> end the parsing cleanly
+#         T   /      (10 + Sb0 + 16)
+#        /   LP
+#       /    Ba0
+#      /     T       (10 + 16)
+#    LP__    |
+#     ...    ...
+#        T   |       (10 + Sb1 + 16)
+#       /    LP
+#      /     Ba1
+#     /      T       (10 + 16)
+#    LP_     |
+#       T    |       (10 + SbN + 16)
+#        \   LP
+#         \  BaN
+#          \_T       (0)   \ common end
+#            LP            /
 
 # Between each Ai..Aj:
 # T(10+16),                 , LP
 #           LP, T(10+Saj+16),
-
-# Ta jumps to LPa, but is truncated at LPl.
-# Tb jumps to LPb, over LPa+A+Boom.
-
-# Archive A will be split in gzip streams until all streams fit in an extra subfield.
-# Size of Archive B doesn't matter.
 
 # Acknowledgment:
 # Yann Droneaud - https://twitter.com/ydroneaud/status/1449079965853573127
@@ -90,8 +100,8 @@ args = parser.parse_args()
 filename_a = args.file1
 filename_b = args.file2
 
-# All landing pads are identical.
-lp = b"".join([
+# All landing pads are identical
+LP = b"".join([
 	b"\3\0",     # Body [empty data]
 	b"\0\0\0\0", # CRC32
 	b"\0\0\0\0", # USize32
@@ -99,30 +109,28 @@ lp = b"".join([
 
 # Gzip terminates when indicating 2 characters - since Gzip signature is 2 bytes
 # should be non null, should not be 1F 8B
+
+# Make Boom a length of 16 to simplify the loop
 boom = 8 * b"AA"
 
-with open(filename_a, "rb") as f:
-	contents_a = f.read()
-
-
 MAXEF = 0xffff - 2 - 2
-comp_l = len(contents_a)
-if comp_l <= MAXEF:
-	archivesA = [contents_a]
-else:
-	uncomp_data = gzip.decompress(contents_a)
+
+def slice_archive(archive, chunk_l=int(MAXEF * 2.0)):
+	"""slice in members of arbitrary - small - uncompressed length"""
+	uncomp_data = gzip.decompress(archive)
 	uncomp_l = len(uncomp_data)
-	chunk_l = int(MAXEF * 2.0)
 	comp_factor = uncomp_l // chunk_l
 
-	archivesA = []
+	members = []
 	for i in range(comp_factor - 1):
-		archivesA.append(gzip.compress(uncomp_data[chunk_l * i:chunk_l * (i+1)], mtime=0))
-	archivesA.append(gzip.compress(uncomp_data[chunk_l * (comp_factor-1):], mtime=0))
+		members.append(gzip.compress(uncomp_data[chunk_l * i:chunk_l * (i+1)], mtime=0))
+	members.append(gzip.compress(uncomp_data[chunk_l * (comp_factor-1):], mtime=0))
+	return members
 
 
-def split_archive(archive):
-	data = gzip.decompress(archive)
+def split_member(member):
+	"""split members by compressing data in halves"""
+	data = gzip.decompress(member)
 	l = len(data)
 	d1 = data[:l//2]
 	d2 = data[l//2:]
@@ -131,27 +139,52 @@ def split_archive(archive):
 	return a1, a2
 
 
-while True:
-	for i, archive in enumerate(archivesA):
-		if len(archive) > MAXEF:
-			archive1, archive2 = split_archive(archive)
-			archivesA[i] = archive2
-			archivesA.insert(i, archive1)
+def split_members(members):
+	"""split members until they're small enough"""
+	while True:
+		for i, member in enumerate(members):
+			if len(member) > MAXEF:
+				member1, member2 = split_member(member)
+				members[i] = member2
+				members.insert(i, member1)
+				break
+		else:
 			break
+	return members
+
+
+def test_members(archive, members):
+	concat = b""
+	for member in members:
+		assert len(member) <= 0xfffe
+		concat += member
+	assert gzip.decompress(archive) == gzip.decompress(concat)
+
+
+def process(contents):
+	if len(contents) <= MAXEF:
+		members = [contents]
 	else:
-		break
+		members = slice_archive(contents)
+		members = split_members(members)
+		test_members(contents, members)
+	return members
 
-concat = b""
-for archive in archivesA:
-	assert len(archive) <= 0xfffe
-	concat += archive
-assert gzip.decompress(contents_a) == gzip.decompress(concat)
 
+with open(filename_a, "rb") as f:
+	contents_a = f.read()
+membersA = process(contents_a)
+
+if len(membersA) > 1:
+	print("%s (%i bytes): split in %i members" % (args.file1, len(contents_a), len(membersA)))
 
 with open(filename_b, "rb") as f:
 	contents_b = f.read()
+membersB = process(contents_b)
+if len(membersB) > 1:
+	print("%s (%i bytes): split in %i members" % (args.file2, len(contents_b), len(membersB)))
 
-suffix = lp
+suffix = LP
 suffix += makeHeader(0x1DA - 0xDA, mtime=b"JMPa")
 
 def deco(s, c=b"|"):
@@ -176,21 +209,33 @@ suffix += b"".join([
 	deco(b"Albertini"),
 	b"+______________+",
 	])
+
 # suffix += (0x100 - len(suffix)) * b"\0"
 assert len(suffix) == 0x100
-suffix += lp
-suffix += makeHeader(len(archivesA[0]) + 10 + 16, mtime=b"JUMP")
-suffix += lp
-suffix += archivesA[0]
-for arc in archivesA[1:]:
+suffix += LP
+suffix += makeHeader(len(membersA[0]) + 10 + 16, mtime=b"JUMP")
+suffix += LP
+suffix += membersA[0]
+
+for member in membersA[1:]:
 	suffix += makeHeader(10 + 16, mtime=b"JMPb")
-	suffix +=   lp
-	suffix +=   makeHeader(len(arc) + 10 + 16, mtime=b"JMPc")
-	suffix += lp
-	suffix += arc
-suffix += boom
-suffix += lp
-suffix += contents_b
+	suffix +=   LP
+	suffix +=   makeHeader(len(member) + 10 + 16, mtime=b"JMPc")
+	suffix += LP
+	suffix += member
+
+for member in membersB[:-1]:
+	suffix += makeHeader(len(member) + 10 + 16, mtime=b"JMPe")
+	suffix +=   LP
+	suffix +=   member
+	suffix +=  makeHeader(10 + 16, mtime=b"JMPd")
+	suffix += LP
+
+suffix += makeHeader(len(membersB[-1]) + 10 + 16, mtime=b"JMPe")
+suffix +=   LP
+suffix +=   membersB[-1]
+suffix += makeHeader(0, mtime=b"END_") # required to end on the same LP
+suffix += LP
 
 
 with open("prefix1.gz", "rb") as f:
@@ -198,22 +243,36 @@ with open("prefix1.gz", "rb") as f:
 with open("prefix2.gz", "rb") as f:
 	prefix2 = f.read()
 
-def check(d1, d2):
+assert len(prefix1) % 64 == 0
+
+def check_pair(d1, d2):
 	assert prefix1 != prefix2
 	assert len(prefix1) == len(prefix2)
 	assert hashlib.md5(prefix1).hexdigest() == hashlib.md5(prefix2).hexdigest()
 
-check(prefix1, prefix2)
+check_pair(prefix1, prefix2)
+
+DIFF_o = -0x77 # first diff in first UniColl block
+
+# is prefix1 the short jump ?
+if prefix1[DIFF_o] - 1 == prefix2[DIFF_o]:
+	prefix1, prefix2 = prefix2, prefix1
+
+assert prefix1[DIFF_o] + 1 == prefix2[DIFF_o]
+
 data1 = prefix1 + suffix
 data2 = prefix2 + suffix
-check(data1, data2)
+
+assert gzip.decompress(contents_a) == gzip.decompress(data1)
+assert gzip.decompress(contents_b) == gzip.decompress(data2)
+check_pair(data1, data2)
+print("Success!")
 
 with open("coll-1.gz", "wb") as f:
 	f.write(data1)
 with open("coll-2.gz", "wb") as f:
 	f.write(data2)
 
-print("Success!")
-print("coll-1.gz => %s" % filename_b)
-print("coll-2.gz => %s" % filename_a)
 print(hashlib.md5(data1).hexdigest())
+print("coll-1.gz => %s" % filename_a)
+print("coll-2.gz => %s" % filename_b)
