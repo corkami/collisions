@@ -698,19 +698,19 @@ Here is a [recording](examples/gifFastColl.svg) of the whole operation.
 
 GZIP specs v4.3: [RFC 1952](https://datatracker.ietf.org/doc/html/rfc1952) (1996).
 
-- a Gzip file is made of one or more 'members' (gzip streams) concatenated. They will be all decompressed and their uncompressed content appended to each other - even if the stream's content is empty.
-- these streams can be separated with zeroes. Zeroes will be just skipped, except at file start. Any non-null byte will be checked for the signature `1F 8B`. If not matching the signature, the parsing will stop, which can be used to forcibly stop parsing between two payloads. Another strategy is to add one extra empty member at the end of the file, and make parsing of both payloads finish there.
-- The optional `filename` and `file comment` are null-terminated whereas the `Extra field` is size16-defined, therefore abusable. It's made of one or more subfield(s), with an ID and its own sublength, but subfield are not enforced - very few are officially defined.
+- a Gzip file is made of one or more 'members' (gzip streams) concatenated. They will be all decompressed and their uncompressed content appended to each other - even if the member's uncompressed content is empty.
+- these members can be separated with zeroes. Zeroes will be just skipped, except at file start. Any non-null byte will be checked for the signature `1F 8B`. If not matching the signature, the parsing will stop, which can be used to forcibly stop parsing between two payloads, but will trigger some warnings that might cause problems. Another strategy is to add one extra empty member at the end of the file, and make parsing of both payloads finish there - on the member or on its body.
+- The optional `filename` and `file comment` are null-terminated whereas the `Extra field` is size16-defined, therefore abusable. It's made of one or more subfield(s), with an ID and its own sublength, but subfields are not enforced - very few are officially defined.
 
-Therefore an empty gzip file with an extra field is a perfect parasite host.
+Therefore an empty gzip member with an extra field is a perfect parasite host.
 
 If the top file is too big to fit in an extra field, then its uncompressed stream can be split in smaller files until they all fit in extra fields.
 
-After the header come the compressed body, its CRC32 and its uncompressed size (not enforced). Therefore an empty data body with its null CRC32 and size make a generic postwrap, which can even be shared by different member headers.
+After the header of a member come its compressed body, its CRC32 and its uncompressed size (not enforced). Therefore an empty data body with its null CRC32 and size make a generic postwrap, which can even be shared by different member headers.
 
-The last double word of the file might be used to show the uncompressed size of the archive, but it's not enforced (gzip doesn't add the uncompressed sizes either).
+Various implementations rely on the uncompressed size of the last member instead of the sum of all members. So our collided files will show that they are null-sized, because these files finish with an empty member used as trampoline.
 
-Here is a [script](scripts/gz.py) to generate instant MD5 collisions of two GZip files.
+Here is a [script](scripts/gz.py) to generate instant MD5 collisions of two GZip files. It's taking most of its time to decompress and recompress data if the input files are big - the collisions prefix are pre-computed. Splitting members without decompressing is not possible as the uncompressed CRC32 needs to be calculated.
 
 A `.tar.gz` is just the `gzip` archive of a `tar` archive. It will work fine with gzipped tar, unlike `tar` itself.
 
