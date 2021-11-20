@@ -56,6 +56,7 @@ By Ange Albertini and Marc Stevens.
     - [Java Class](#java-class)
     - [TAR](#tar)
     - [ZIP](#zip)
+      - [Zip-based formats](#zip-based-formats)
   - [Exploitations summary](#exploitations-summary)
   - [Test files](#test-files)
 - [References](#references)
@@ -1400,30 +1401,70 @@ After two Unicoll computations, it gives the two colliding files:
 [collision1.zip](examples/collision1.zip) ⟷ [collision2.zip](examples/collision2.zip)
 
 
+#### Zip-based formats
+
+Even if the Zip format itself can't be generically exploited like Gzip, some formats relying on Zip *can* be generically exploited inside Zip archives with a pre-defined structure. Some precautions have to be taken to make the Zip collision generic.
+
+Some formats (Apk, Epub, Jar, Odf, Xps) are multi-files stored in a Zip archive, and rely on a root file that points to other files in the archive.
+
+Idea
+: make 2 files sets coexist in the same archive, and point to either sets of files. A generic root can be stored first in the beginning of the file.
+
+Steps:
+1. Put 2 sets of files from 2 origins in the same archive - i.e. in different subdirectories.
+1. Modify the root file to point to each set.
+1. Since the timestamp, length and CRC of the root file are stored in both the `Local File Header` - before the file's contents - and in the `Central Directory` - after the file contents - these values shouldn't change between the two versions of the files.
+
+   - If the length changes, all the pointers afterwards will change, so an identical suffix can't be used.
+   - If the CRC32 is incorrect in the `Central Directory`, this copy might be ignored by the parser, but forging a CRC32 to a constant value is helpful to avoid entirely the problem.
+Forging the CRC by appending 4 random bytes will likely not be enough, as these root files are typically in XML or text with strict syntaxes, so they would become invalid.
+[CrcHack](https://github.com/resilar/crchack) helps forging CRCs with arbitrary bits and no bruteforcing, making sure that the output file is ASCII, and that the modified bits are still in a comment.
+
+4. Using the `extra field` of an extra dummy file -- even empty -- in the archive after the root file is an elegant way to store Hashclash collision blocks: that way, the Zip archive maintains a standard structure and can be easily manipulated.
+
+`Extra Fields` have no CRC32, and their 16 bits length is declared in the headers before. They have their own internal `ID:2 Size:2 Data` format but it's usually ignored, and are in both the `Local File Header` and in the `Central Directory`, but it can be absent from the `Central Directory` to keep the suffix identical after the collision blocks.
+
+The presence of the extra file that covers the collision blocks in its `extra field` may have to be declared in the format structure, such as in the `[Content_Types].xml` file in an ODF document.
+
+Here's the overall structure of the generic exploit for a specific zip-based format:
+
+```
+[Root file] (with constant CRC32)
+
+[Dummy file] (with collision blocks in the extra field)
+
+[...] <- rest of the archive, with 2 documents merged
+```
+
+So by predefining the root file contents and forging ASCII CRC32s, one can compute a generic re-usable hashclash collision for a specific zip-based format.
+
 ## Exploitations summary
 
-Format   | Generic? | FastColl | UniColl | Shattered | HashClash
--------- | -------- | -------- | ------- | --------- | ---------
-PDF      | Y        |          | x       |           | x
-JPG      | Y (1)    |          | x       | x (2)     | x
-PNG      | Y/N (3)  |          | x       |           | x
-MP4      | Y (4)    |          | x       | x (5)     | x
-PE       | Y        |          |         |           | x
-         |          |          |         |           |
-GIF      | N        | x        |         |           | x
-ZIP      | N        |          | x (6)   |           | x
-         |          |          |         |           |
-ELF      | N        |          |         |           | x
-TAR      | N        |          |         |           | x
-Mach-O   | N        |          |         |           | x
-Class    | N        |          |         |           | x
+Format        | Generic? | FastColl | UniColl | Shattered | HashClash
+--------      | -------- | -------- | ------- | --------- | ---------
+PDF           | Y        |          | x       |           | x
+JPG           | Y (1)    |          | x       | x (2)     | x
+GZ            | Y        |          | x       |           | x
+PNG           | Y/N (3)  |          | x       |           | x
+MP4           | Y (4)    |          | x       | x (5)     | x
+PE            | Y        |          |         |           | x
+ZIP-based (6) | Y        |          |         |           | x
+              |          |          |         |           |
+GIF           | N        | x        |         |           | x
+ZIP           | N        |          | x (7)   |           | x
+              |          |          |         |           |
+ELF           | N        |          |         |           | x
+TAR           | N        |          |         |           | x
+Mach-O        | N        |          |         |           | x
+Class         | N        |          |         |           | x
 
-1. JPG: has some limitations on data that can be improved to some extend by manipulating scans encoding.
-1. PDF w/ JPG is the [initial implementation](http://shattered.io) of the Shattered attack, but it's just a pure JPG trick in a PDF document.
-1. PNG: Safari/Preview requires PNG to have their `IHDR` chunk in first slot, before any collision block. Doing so prevents a generic prefix, in which case the collision is limited to specific dimensions, color space, BPP and interlacing.
-1. Atom/Box formats like MP4 may work with the same prefix for different subformats. Some subformats like JPEG2000 or HEIF require extra grooming, but the exploit strategy is the same - it's just that the collision is not possible between sub-formats, only with a pair of prefix for a specific sub-format.
-1. Atom/Box is Shattered-compatible when using 64bit lengths.
-1. For better compatibility, ZIP needs two UniColl for a complete archive, and this collisions depend on both files contents.
+1. JPG has some limitations on data that can be improved to some extend by manipulating scans encoding.
+2. PDF w/ JPG is the [initial implementation](http://shattered.io) of the Shattered attack, but it's just a pure JPG trick in a PDF document.
+3. PNG: Safari/Preview requires PNG to have their `IHDR` chunk in first slot, before any collision block. Doing so prevents a generic prefix, in which case the collision is limited to specific dimensions, color space, BPP and interlacing.
+4. Atom/Box formats like MP4 may work with the same prefix for different subformats. Some subformats like JPEG2000 or HEIF require extra grooming, but the exploit strategy is the same - it's just that the collision is not possible between sub-formats, only with a pair of prefix for a specific sub-format.
+5. Atom/Box is Shattered-compatible when using 64bit lengths.
+6. Some Zip-based formats can be generically exploited.
+7. For better compatibility, ZIP needs two UniColl for a complete archive, and this collisions depend on both files contents.
 
 ## Test files
 

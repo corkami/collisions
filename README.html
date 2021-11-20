@@ -156,7 +156,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="#mach-o">Mach-O</a></li>
 <li><a href="#java-class">Java Class</a></li>
 <li><a href="#tar">TAR</a></li>
-<li><a href="#zip">ZIP</a></li>
+<li><a href="#zip">ZIP</a>
+<ul>
+<li><a href="#zip-based-formats">Zip-based formats</a></li>
+</ul></li>
 </ul></li>
 <li><a href="#exploitations-summary">Exploitations summary</a></li>
 <li><a href="#test-files">Test files</a></li>
@@ -1096,6 +1099,31 @@ sys 2m0.194s
 <p><img src="pics/zip.png" alt="diagram of ZIP collision" /></p>
 <p><strong>Example</strong>: here is an <a href="scripts/zip.asm">assembly source</a> that describes the structure of a dual ZIP, that can host two different archive files.</p>
 <p>After two Unicoll computations, it gives the two colliding files: <a href="examples/collision1.zip">collision1.zip</a> ⟷ <a href="examples/collision2.zip">collision2.zip</a></p>
+<h4 id="zip-based-formats">Zip-based formats</h4>
+<p>Even if the Zip format itself can't be generically exploited like Gzip, some formats relying on Zip <em>can</em> be generically exploited inside Zip archives with a pre-defined structure. Some precautions have to be taken to make the Zip collision generic.</p>
+<p>Some formats (Apk, Epub, Jar, Odf, Xps) are multi-files stored in a Zip archive, and rely on a root file that points to other files in the archive.</p>
+<p>Idea : make 2 files sets coexist in the same archive, and point to either sets of files. A generic root can be stored first in the beginning of the file.</p>
+<p>Steps:</p>
+<ol>
+<li><p>Put 2 sets of files from 2 origins in the same archive - i.e. in different subdirectories.</p></li>
+<li><p>Modify the root file to point to each set.</p></li>
+<li><p>Since the timestamp, length and CRC of the root file are stored in both the <code>Local File Header</code> - before the file's contents - and in the <code>Central Directory</code> - after the file contents - these values shouldn't change between the two versions of the files.</p>
+<ul>
+<li>If the length changes, all the pointers afterwards will change, so an identical suffix can't be used.</li>
+<li>If the CRC32 is incorrect in the <code>Central Directory</code>, this copy might be ignored by the parser, but forging a CRC32 to a constant value is helpful to avoid entirely the problem. Forging the CRC by appending 4 random bytes will likely not be enough, as these root files are typically in XML or text with strict syntaxes, so they would become invalid. <a href="https://github.com/resilar/crchack">CrcHack</a> helps forging CRCs with arbitrary bits and no bruteforcing, making sure that the output file is ASCII, and that the modified bits are still in a comment.</li>
+</ul></li>
+<li><p>Using the <code>extra field</code> of an extra dummy file -- even empty -- in the archive after the root file is an elegant way to store Hashclash collision blocks: that way, the Zip archive maintains a standard structure and can be easily manipulated.</p></li>
+</ol>
+<p><code>Extra Fields</code> have no CRC32, and their 16 bits length is declared in the headers before. They have their own internal <code>ID:2 Size:2 Data</code> format but it's usually ignored, and are in both the <code>Local File Header</code> and in the <code>Central Directory</code>, but it can be absent from the <code>Central Directory</code> to keep the suffix identical after the collision blocks.</p>
+<p>The presence of the extra file that covers the collision blocks in its <code>extra field</code> may have to be declared in the format structure, such as in the <code>[Content_Types].xml</code> file in an ODF document.</p>
+<p>Here's the overall structure of the generic exploit for a specific zip-based format:</p>
+<pre><code>[Root file] (with constant CRC32)
+
+[Dummy file] (with collision blocks in the extra field)
+
+[...] &lt;- rest of the archive, with 2 documents merged
+</code></pre>
+<p>So by predefining the root file contents and forging ASCII CRC32s, one can compute a generic re-usable hashclash collision for a specific zip-based format.</p>
 <h2 id="exploitations-summary">Exploitations summary</h2>
 <table>
 <thead>
@@ -1126,6 +1154,14 @@ sys 2m0.194s
 <td>x</td>
 </tr>
 <tr class="odd">
+<td>GZ</td>
+<td>Y</td>
+<td></td>
+<td>x</td>
+<td></td>
+<td>x</td>
+</tr>
+<tr class="even">
 <td>PNG</td>
 <td>Y/N (3)</td>
 <td> </td>
@@ -1133,7 +1169,7 @@ sys 2m0.194s
 <td> </td>
 <td>x</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>MP4</td>
 <td>Y (4)</td>
 <td> </td>
@@ -1141,12 +1177,20 @@ sys 2m0.194s
 <td>x (5)</td>
 <td>x</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>PE</td>
 <td>Y</td>
 <td> </td>
 <td> </td>
 <td> </td>
+<td>x</td>
+</tr>
+<tr class="odd">
+<td>ZIP-based (6)</td>
+<td>Y</td>
+<td></td>
+<td></td>
+<td></td>
 <td>x</td>
 </tr>
 <tr class="even">
@@ -1169,7 +1213,7 @@ sys 2m0.194s
 <td>ZIP</td>
 <td>N</td>
 <td> </td>
-<td>x (6)</td>
+<td>x (7)</td>
 <td> </td>
 <td>x</td>
 </tr>
@@ -1216,11 +1260,12 @@ sys 2m0.194s
 </tbody>
 </table>
 <ol>
-<li>JPG: has some limitations on data that can be improved to some extend by manipulating scans encoding.</li>
+<li>JPG has some limitations on data that can be improved to some extend by manipulating scans encoding.</li>
 <li>PDF w/ JPG is the <a href="http://shattered.io">initial implementation</a> of the Shattered attack, but it's just a pure JPG trick in a PDF document.</li>
 <li>PNG: Safari/Preview requires PNG to have their <code>IHDR</code> chunk in first slot, before any collision block. Doing so prevents a generic prefix, in which case the collision is limited to specific dimensions, color space, BPP and interlacing.</li>
 <li>Atom/Box formats like MP4 may work with the same prefix for different subformats. Some subformats like JPEG2000 or HEIF require extra grooming, but the exploit strategy is the same - it's just that the collision is not possible between sub-formats, only with a pair of prefix for a specific sub-format.</li>
 <li>Atom/Box is Shattered-compatible when using 64bit lengths.</li>
+<li>Some Zip-based formats can be generically exploited.</li>
 <li>For better compatibility, ZIP needs two UniColl for a complete archive, and this collisions depend on both files contents.</li>
 </ol>
 <h2 id="test-files">Test files</h2>
