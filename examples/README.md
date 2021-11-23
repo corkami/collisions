@@ -40,7 +40,9 @@ ZIP: [collision1.zip](collision1.zip) / [collision2.zip](collision2.zip)
 
 ### HashClash
 
-EPUB: [colllision-1.epub](colllision-1.epub) / [colllision-2.epub](colllision-2.epub)
+Zip-based:
+- EPUB: [colllision-1.epub](colllision-1.epub) / [colllision-2.epub](colllision-2.epub)
+- XPS: [colllision-1.xps](colllision-1.xps) / [colllision-2.xps](colllision-2.xps)
 
 PE: [collision1.exe](collision1.exe) / [collision2.exe](collision2.exe)
 
