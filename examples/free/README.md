@@ -1,12 +1,15 @@
 <!-- pandoc -s -f gfm -t html README.md -o README.html -->
 
-Copyright-free, PII-free collision PoCs
+Tiny, copyright-free, PII-free collision PoCs
+
 
 # MD5
+
 
 ## FastColl
 
 - GIF images [md5-1.gif](md5-1.gif) / [md5-2.gif](md5-2.gif)
+
 
 ## UniColl
 
@@ -26,9 +29,12 @@ Copyright-free, PII-free collision PoCs
 
 - ZIP [md5-1.zip](md5-1.zip) / [md5-2.zip](md5-2.zip)
 
+
 ## HashClash
 
 - PE executables [md5-1.exe](md5-1.exe) / [md5-2.exe](md5-2.exe)
+- ZIP-based formats
+  - Epub [md5-1.epub](md5-1.epub) / [md5-2.epub](md5-2.epub)
 
 # SHA1 (Shattered)
 

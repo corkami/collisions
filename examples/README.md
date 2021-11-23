@@ -1,9 +1,13 @@
 # Collisions examples
 
+
 ## MD5
 
+
 ### FastColl
+
 single frame GIF: [collision1.gif](collision1.gif) / [collision2.gif](collision2.gif) ([recording](gifFastColl.svg))
+
 
 ### UniColl
 
@@ -26,15 +30,20 @@ Strategies:
 - Good/bad contents (gotta catch 'em all): [gcea1.png](gcea1.png) / [gcea2.png](gcea2.png)
 - Valid/Invalid: [png-valid.png](png-valid.png) / [png-invalid.png](png-invalid.png)
 
+
 #### Multiple UniColl
 
 poeMD5 (not Adobe compatible by accident): [poeMD5_A.pdf](poeMD5_A.pdf) / [poeMD5_B.pdf](poeMD5_B.pdf)
 
 ZIP: [collision1.zip](collision1.zip) / [collision2.zip](collision2.zip)
 
+
 ### HashClash
 
+EPUB: [colllision-1.epub](colllision-1.epub) / [colllision-2.epub](colllision-2.epub)
+
 PE: [collision1.exe](collision1.exe) / [collision2.exe](collision2.exe)
+
 
 #### polycolls
 
@@ -42,6 +51,7 @@ PE: [collision1.exe](collision1.exe) / [collision2.exe](collision2.exe)
 - PE / PDF: [pepdf.exe](pepdf.exe) / [pepdf.pdf](pepdf.pdf)
 - PNG / PDF: [png-pdf.pdf](png-pdf.pdf) / [png-pdf.png](png-pdf.png)
 - PE / MP4 / PDF / PNG: [pileup.exe](pileup.exe) / [pileup.mp4](pileup.mp4) / [pileup.pdf](pileup.pdf) / [pileup.png](pileup.png)
+
 
 ## plain collisions
 
@@ -51,7 +61,9 @@ HashClash 9 blocks [cpc1.bin](cpc1.bin) / [cpc2.bin](cpc2.bin) - 1 block [single
 
 Single IPC: [single-ipc1.bin](single-ipc1.bin) / [single-ipc2.bin](single-ipc2.bin)
 
+
 ## SHA1 (Shattered)
+
 JPGs in PDF:
 - multiple clipped images: [shattered1.pdf](shattered1.pdf) / [shattered2.pdf](shattered2.pdf)
 
@@ -60,5 +72,6 @@ JPG as page contents (desktop only, not browser):
 - as image and page content: [dualjpg1.pdf](dualjpg1.pdf) / [dualjpg2.pdf](dualjpg2.pdf)
 
 # others
+
 - prefix-switching payload for HTML polyglot [polyglot.html](polyglot.html)
 - JPG file with 20 custom scans [20scans.jpg](20scans.jpg)
