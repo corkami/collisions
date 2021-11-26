@@ -1220,6 +1220,8 @@ with an HTML payload to generate the other files from the PDF release
 
 <img alt='Diagram of the issue 19 of PoC or GTFO, a polyglot and pileup.' src=pics/pocorgtfo19.png width=700/>
 
+Thanks to Rafał Hirsz for his permanent help on JavaScript.
+
 
 ## Use cases
 
@@ -1405,26 +1407,26 @@ After two Unicoll computations, it gives the two colliding files:
 
 Even if the Zip format itself can't be generically exploited like Gzip, some formats relying on Zip *can* be generically exploited inside Zip archives with a pre-defined structure. Some precautions have to be taken to make the Zip collision generic.
 
-Some formats (Apk, Epub, Jar, Odf, Xps) are multi-files stored in a Zip archive, and rely on a root file that points to other files in the archive.
+Some formats are multi-files stored in a Zip archive, and rely on a root file with a fixed filename that points to other files in the archive. Many of them are using XML or text for the root file, and storing other files as-is.
 
 Idea
-: make 2 files sets coexist in the same archive, and point to either sets of files. A generic root can be stored first in the beginning of the file.
+: make 2 files sets coexist in the same archive, and point to either sets of files. A generic root can be stored first in the beginning of the file, but the collision blocks are stored outside of the file content, in the archive (since collisions have a very high entropy, it's impossible to exploit XML or ASCII-only files with collisions).
 
 Steps:
 1. Put 2 sets of files from 2 origins in the same archive - i.e. in different subdirectories.
-1. Modify the root file to point to each set.
+1. Modify the root file to alternatively point to each set.
 1. Since the timestamp, length and CRC of the root file are stored in both the `Local File Header` - before the file's contents - and in the `Central Directory` - after the file contents - these values shouldn't change between the two versions of the files.
 
    - If the length changes, all the pointers afterwards will change, so an identical suffix can't be used.
    - If the CRC32 is incorrect in the `Central Directory`, this copy might be ignored by the parser, but forging a CRC32 to a constant value is helpful to avoid entirely the problem.
 Forging the CRC by appending 4 random bytes will likely not be enough, as these root files are typically in XML or text with strict syntaxes, so they would become invalid.
-[CrcHack](https://github.com/resilar/crchack) helps forging CRCs with arbitrary bits and no bruteforcing, making sure that the output file is ASCII, and that the modified bits are still in a comment.
+[CrcHack](https://github.com/resilar/crchack) greatly helps with forging CRCs with arbitrary bits and no bruteforcing, making sure that the output file is ASCII, and that the modified bits are still in a comment.
 
-4. Using the `extra field` of an extra dummy file -- even empty -- in the archive after the root file is an elegant way to store Hashclash collision blocks: that way, the Zip archive maintains a standard structure and can be easily manipulated.
+4. Using the `extra field` of an extra dummy file -- even empty -- in the archive after the root file is an elegant way to store Hashclash collision blocks: that way, the Zip archive maintains a standard structure and can be easily manipulated afterwards, even with standard tools.
 
 `Extra Fields` have no CRC32, and their 16 bits length is declared in the headers before. They have their own internal `ID:2 Size:2 Data` format but it's usually ignored, and are in both the `Local File Header` and in the `Central Directory`, but it can be absent from the `Central Directory` to keep the suffix identical after the collision blocks.
 
-The presence of the extra file that covers the collision blocks in its `extra field` may have to be declared in the format structure, such as in the `[Content_Types].xml` file in an ODF document.
+The presence of the extra file that covers the collision blocks in its `extra field` may have to be declared in the format structure, such as in the `[Content_Types].xml` file in an OOXML document. Other XML files in the suffix may have to be modified, as some formats required the use of absolute paths.
 
 Here's the overall structure of the generic exploit for a specific zip-based format:
 
@@ -1437,6 +1439,32 @@ Here's the overall structure of the generic exploit for a specific zip-based for
 ```
 
 So by predefining the root file contents and forging ASCII CRC32s, one can compute a generic re-usable hashclash collision for a specific zip-based format.
+
+### Examples
+
+A minimal XML comment (ASCII-only) with a forged CRC32 (instant computation) with Crchack.
+
+```
+echo "<!--ABCDEF-->" | crchack -b 4.0:+.8*6:1 -b 4.1:+.8*6:1 -b 4.2:+.8*6:1 -b 4.3:+.8*6:1 -b 4.4:+.8*6:1 -b 4.5:+.8*5:1 - 0xdeadf00d
+<!--X{]EZF-->
+```
+
+[Here is a script](scripts/makezip.py) to generate a root zip pair. After computing collisions, use [this other script](scripts/extendzip.py) to combine these roots pair with a common suffix.
+
+PoCs relying on generic prefix pairs:
+- Office Open XML: Excel ([1](examples/free/md5-1.xls) - [2](examples/free/md5-2.xls)), Powerpoint ([1](examples/free/md5-1.pptx) - [2](examples/free/md5-2.pptx)), Word ([1](examples/free/md5-1.docx) - [2](examples/free/md5-2.docx)).
+- Open Container Format: Epub ([1](examples/collision-1.epub) - [2](examples/collision-2.epub)).
+- Open Packaging Conventions: 3MF ([1](examples/collision-1.3mf) - [2](examples/collision-2.3mf)), XPS ([1](examples/collision-1.xps) - [2](examples/collision-2.xps)).
+
+
+Some formats with multiple files based on Zip can't be generically exploited:
+- Quake PK3: a zip of files with no specific root.
+- Open Document Format: the `META-INF/manifest.xml` file has to mention every other file, so it can't be generic.
+- APK, JAR, XPI: the `META-INF/MANIFEST.mf` file also has to mention every other file, with its hashes.
+
+
+Thanks to Philippe Lagadec for his help on Office file formats!
+
 
 ## Exploitations summary
 
@@ -1544,8 +1572,6 @@ All this was possible thanks to [Marc Stevens](https://marc-stevens.nl/research/
 not only for his cryptographic contributions, but also for his permanent help and suggestions!
 
 Thanks also to Philippe Teuwen for his extensive feedback for file formats in general.
-
-Thanks to Rafał Hirsz for his permanent help on JavaScript.
 
 
 # Conclusion
