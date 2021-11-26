@@ -34,10 +34,11 @@ Tiny, copyright-free, PII-free collision PoCs
 
 - PE executables [md5-1.exe](md5-1.exe) / [md5-2.exe](md5-2.exe)
 - ZIP-based formats
-  - 3mf [md5-1.3mf](md5-1.3mf) / [md5-2.3mf](md5-2.3mf)
-  - docx [md5-1.docx](md5-1.docx) / [md5-2.docx](md5-2.docx)
-  - Epub [md5-1.epub](md5-1.epub) / [md5-2.epub](md5-2.epub)
-  - Xps [md5-1.xps](md5-1.xps) / [md5-2.xps](md5-2.xps)
+  - 3MF [md5-1.3mf](md5-1.3mf) / [md5-2.3mf](md5-2.3mf)
+  - DOCX [md5-1.docx](md5-1.docx) / [md5-2.docx](md5-2.docx)
+  - EPUB [md5-1.epub](md5-1.epub) / [md5-2.epub](md5-2.epub)
+  - PPTX [md5-1.pptx](md5-1.pptx) / [md5-2.pptx](md5-2.pptx)
+  - XPS [md5-1.xps](md5-1.xps) / [md5-2.xps](md5-2.xps)
 
 
 # SHA1 (Shattered)
