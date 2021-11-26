@@ -13,7 +13,7 @@ Tiny, copyright-free, PII-free collision PoCs
 
 ## UniColl
 
-- GZip [md5-1.gz](md5-1.gz) / [md5-2.gz](md5-2.gz)
+- GZip archives [md5-1.gz](md5-1.gz) / [md5-2.gz](md5-2.gz)
 - JPG images [md5-1.jpg](md5-1.jpg) / [md5-2.jpg](md5-2.jpg)
 - PDF documents [md5-1.pdf](md5-1.pdf) / [md5-2.pdf](md5-2.pdf)
 - PNG images
@@ -33,12 +33,17 @@ Tiny, copyright-free, PII-free collision PoCs
 ## HashClash
 
 - PE executables [md5-1.exe](md5-1.exe) / [md5-2.exe](md5-2.exe)
-- ZIP-based formats
-  - 3MF [md5-1.3mf](md5-1.3mf) / [md5-2.3mf](md5-2.3mf)
+
+ZIP-based formats:
+- Office Open XML
   - DOCX [md5-1.docx](md5-1.docx) / [md5-2.docx](md5-2.docx)
-  - EPUB [md5-1.epub](md5-1.epub) / [md5-2.epub](md5-2.epub)
   - PPTX [md5-1.pptx](md5-1.pptx) / [md5-2.pptx](md5-2.pptx)
+  - XLSX [md5-1.xls](md5-1.xls) / [md5-2.xls](md5-2.xls)
+- Open Container Format
+  - EPUB [md5-1.epub](md5-1.epub) / [md5-2.epub](md5-2.epub)
+- Open Packaging Conventions
   - XPS [md5-1.xps](md5-1.xps) / [md5-2.xps](md5-2.xps)
+  - 3MF [md5-1.3mf](md5-1.3mf) / [md5-2.3mf](md5-2.3mf)
 
 
 # SHA1 (Shattered)
