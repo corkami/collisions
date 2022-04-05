@@ -103,6 +103,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="#chosen-prefix-collisions">Chosen-prefix collisions</a>
 <ul>
 <li><a href="#hashclash-md5">HashClash (MD5)</a></li>
+<li><a href="#shambles-sha-1">Shambles (SHA1)</a></li>
 </ul></li>
 <li><a href="#attacks-summary">Attacks summary</a></li>
 </ul></li>
@@ -128,6 +129,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="#pdf">PDF</a>
 <ul>
 <li><a href="#jpg-in-pdf">JPG in PDF</a></li>
+</ul></li>
+<li><a href="#zip">ZIP</a>
+<ul>
+<li><a href="#zip-based-formats">Zip-based formats</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#uncommon-strategies">Uncommon strategies</a>
@@ -156,10 +161,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="#mach-o">Mach-O</a></li>
 <li><a href="#java-class">Java Class</a></li>
 <li><a href="#tar">TAR</a></li>
-<li><a href="#zip">ZIP</a>
-<ul>
-<li><a href="#zip-based-formats">Zip-based formats</a></li>
-</ul></li>
 </ul></li>
 <li><a href="#exploitations-summary">Exploitations summary</a></li>
 <li><a href="#test-files">Test files</a></li>
@@ -391,16 +392,16 @@ or
 <li>exploitation: medium. The differences are right at the start and at the end of the collision blocks. So no control before <strong>and</strong> after a length in the prefix/in the suffix: PNG stores its length before the chunk type, so it won't work. However it will work with JP2 files when they use the JFIF form (the same as JPG), and likely MP4 and other atom/box formats if you use long lengths on 64bits (in this case, they're placed <em>after</em> the atom type).</li>
 </ul>
 <p>The difference between collision blocks of each side is this Xor mask:</p>
-<pre><code>0c 00 00 02 c0 00 00 10 b4 00 00 1c 3c 00 00 04
-bc 00 00 1a 20 00 00 10 24 00 00 1c ec 00 00 14
-0c 00 00 02 c0 00 00 10 b4 00 00 1c 2c 00 00 04
-bc 00 00 18 b0 00 00 10 00 00 00 0c b8 00 00 10
+<pre><code>0C 00 00 02 C0 00 00 10 B4 00 00 1C 3C 00 00 04
+BC 00 00 1A 20 00 00 10 24 00 00 1C EC 00 00 14
+0C 00 00 02 C0 00 00 10 B4 00 00 1C 2C 00 00 04
+BC 00 00 18 B0 00 00 10 00 00 00 0C B8 00 00 10
 </code></pre>
 <img alt='Shattered PoCs side by side' src=pics/shattered.png width=1000 />
 
 <p>Examples: <a href="https://github.com/angea/pocorgtfo#0x18">PoC||GTFO 0x18</a> is using the computed SHA1 prefixes, re-using the image directly from PDFLaTeX source (see <a href="https://archive.org/stream/pocorgtfo18#page/n62/mode/1up">article 18:10</a>), but also checking the value of the prefixes via JavaScript in the HTML page (the file is polyglot, ZIP HTML and PDF).</p>
 <h2 id="chosen-prefix-collisions">Chosen-prefix collisions</h2>
-<p>They allow to collide any content. They don't exist for SHA-1 yet.</p>
+<p>They allow to collide any content.</p>
 <table>
 <thead>
 <tr class="header">
@@ -519,6 +520,14 @@ bc 00 00 18 b0 00 00 10 00 00 00 0c b8 00 00 10
 1F0:  EB 8E 9D F6-90 A3 CD 08-65 D5 5A 4C-2E C6 BE 54  δÄ¥÷Éú═◘e╒ZL.╞╛T
 </code></pre>
 <p>Here is a <a href="examples/cpc.html">log</a> of the whole operation.</p>
+<h3 id="shambles-sha-1"><a href="https://sha-mbles.github.io/">Shambles</a> (SHA-1)</h3>
+<p>Shambles is a very expensive chosen-prefix collision that uses 9 blocks.</p>
+<p>Each block has the same xor pattern as Shattered:</p>
+<pre><code>0C 00 00 02 C0 00 00 10 B4 00 00 1C 3C 00 00 04
+BC 00 00 1A 20 00 00 10 24 00 00 1C EC 00 00 14
+0C 00 00 02 C0 00 00 10 B4 00 00 1C 2C 00 00 04
+BC 00 00 18 B0 00 00 10 00 00 00 0C B8 00 00 10
+</code></pre>
 <h2 id="attacks-summary">Attacks summary</h2>
 <table>
 <thead>
@@ -554,7 +563,7 @@ bc 00 00 18 b0 00 00 10 00 00 00 0c b8 00 00 10
 <td>2009</td>
 <td>72h</td>
 <td>Chosen</td>
-<td>none</td>
+<td>n/a</td>
 </tr>
 <tr class="even">
 <td> </td>
@@ -571,6 +580,14 @@ bc 00 00 18 b0 00 00 10 00 00 00 0c b8 00 00 10
 <td>6500yr</td>
 <td>Identical</td>
 <td>prefix &amp; suffix</td>
+</tr>
+<tr class="even">
+<td> </td>
+<td>Shambles</td>
+<td>2020</td>
+<td>?</td>
+<td>Chosen</td>
+<td>n/a</td>
 </tr>
 </tbody>
 </table>
@@ -884,53 +901,53 @@ endobj
 <p><strong>in PDFLaTeX</strong></p>
 <p>The previous techniques work with just a pair of PDF files, but it's also possible to do it directly from TeX sources via <a href="http://texdoc.net/texmf-dist/doc/pdftex/manual/pdftex-a.pdf">specific PDFTeX operators</a>.</p>
 <p>You can define objects directly - including dummy key and values for alignments - and define empty objects to reserve some object slots by including this at the very start of your TeX sources:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode latex"><code class="sourceCode latex"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="co">% set PDF version low to prevent stream XREF</span></a>
-<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="fu">\pdfminorversion</span>=3</a>
-<a class="sourceLine" id="cb17-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb17-4" data-line-number="4"><span class="fu">\begingroup</span></a>
-<a class="sourceLine" id="cb17-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb17-6" data-line-number="6">  <span class="co">% disable compression to keep alignments</span></a>
-<a class="sourceLine" id="cb17-7" data-line-number="7">  <span class="fu">\pdfcompresslevel</span>=0<span class="fu">\relax</span></a>
-<a class="sourceLine" id="cb17-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb17-9" data-line-number="9">  <span class="fu">\immediate</span></a>
-<a class="sourceLine" id="cb17-10" data-line-number="10">  <span class="fu">\pdfobj</span>{&lt;&lt;</a>
-<a class="sourceLine" id="cb17-11" data-line-number="11">    /Type /Catalog</a>
-<a class="sourceLine" id="cb17-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb17-13" data-line-number="13">    <span class="co">% cool alignment padding</span></a>
-<a class="sourceLine" id="cb17-14" data-line-number="14">    /MD5_is /REALLY_dead_now__</a>
-<a class="sourceLine" id="cb17-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb17-16" data-line-number="16">    <span class="co">% the first reference number should be on offset 0x49,</span></a>
-<a class="sourceLine" id="cb17-17" data-line-number="17">    <span class="co">% so the &#39;2&#39; object number will be changed to &#39;3&#39; by UniColl</span></a>
-<a class="sourceLine" id="cb17-18" data-line-number="18">    /Pages 2 0 R</a>
-<a class="sourceLine" id="cb17-19" data-line-number="19"></a>
-<a class="sourceLine" id="cb17-20" data-line-number="20">    <span class="co">% now padding so that the collision blocks (ends at 0xC0) are covered</span></a>
-<a class="sourceLine" id="cb17-21" data-line-number="21">    /0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF</a>
-<a class="sourceLine" id="cb17-22" data-line-number="22">    <span class="co">% with an extra character to be replaced by a return char</span></a>
-<a class="sourceLine" id="cb17-23" data-line-number="23">    /0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0</a>
-<a class="sourceLine" id="cb17-24" data-line-number="24">  &gt;&gt;}</a>
-<a class="sourceLine" id="cb17-25" data-line-number="25"></a>
-<a class="sourceLine" id="cb17-26" data-line-number="26">  <span class="co">% the original catalog of the shifted doc</span></a>
-<a class="sourceLine" id="cb17-27" data-line-number="27">  <span class="fu">\immediate\pdfobj</span>{&lt;&lt;/Type/Pages/Count 1/Kids[8 0 R]&gt;&gt;}</a>
-<a class="sourceLine" id="cb17-28" data-line-number="28"></a>
-<a class="sourceLine" id="cb17-29" data-line-number="29">  <span class="co">% the original catalog of the host doc</span></a>
-<a class="sourceLine" id="cb17-30" data-line-number="30">  <span class="fu">\immediate\pdfobj</span>{&lt;&lt;/Type/Pages/Count 1/Kids[33 0 R]&gt;&gt;}</a>
-<a class="sourceLine" id="cb17-31" data-line-number="31"></a>
-<a class="sourceLine" id="cb17-32" data-line-number="32">  <span class="co">% now we need to reserve PDF Objects so that there is no overlap</span></a>
-<a class="sourceLine" id="cb17-33" data-line-number="33">  <span class="fu">\newcount\objcount</span></a>
-<a class="sourceLine" id="cb17-34" data-line-number="34"></a>
-<a class="sourceLine" id="cb17-35" data-line-number="35">  <span class="co">% the host size (+3 for spare object slots) - 1</span></a>
-<a class="sourceLine" id="cb17-36" data-line-number="36">  <span class="co">% putting a higher margin will just work, and XREF can have huge gaps</span></a>
-<a class="sourceLine" id="cb17-37" data-line-number="37">  <span class="fu">\objcount</span>=25</a>
-<a class="sourceLine" id="cb17-38" data-line-number="38">  <span class="fu">\loop</span></a>
-<a class="sourceLine" id="cb17-39" data-line-number="39">    <span class="fu">\message</span>{<span class="fu">\the\objcount</span>}</a>
-<a class="sourceLine" id="cb17-40" data-line-number="40">    <span class="fu">\advance</span> <span class="fu">\objcount</span> -1</a>
-<a class="sourceLine" id="cb17-41" data-line-number="41"></a>
-<a class="sourceLine" id="cb17-42" data-line-number="42">  <span class="fu">\immediate\pdfobj</span>{&lt;&lt;&gt;&gt;} <span class="co">% just an empty object</span></a>
-<a class="sourceLine" id="cb17-43" data-line-number="43"></a>
-<a class="sourceLine" id="cb17-44" data-line-number="44">  <span class="fu">\ifnum</span> <span class="fu">\objcount</span>&gt;0</a>
-<a class="sourceLine" id="cb17-45" data-line-number="45">  <span class="fu">\repeat</span></a>
-<a class="sourceLine" id="cb17-46" data-line-number="46"></a>
-<a class="sourceLine" id="cb17-47" data-line-number="47"><span class="fu">\endgroup</span></a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode latex"><code class="sourceCode latex"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="co">% set PDF version low to prevent stream XREF</span></a>
+<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="fu">\pdfminorversion</span>=3</a>
+<a class="sourceLine" id="cb18-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb18-4" data-line-number="4"><span class="fu">\begingroup</span></a>
+<a class="sourceLine" id="cb18-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb18-6" data-line-number="6">  <span class="co">% disable compression to keep alignments</span></a>
+<a class="sourceLine" id="cb18-7" data-line-number="7">  <span class="fu">\pdfcompresslevel</span>=0<span class="fu">\relax</span></a>
+<a class="sourceLine" id="cb18-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb18-9" data-line-number="9">  <span class="fu">\immediate</span></a>
+<a class="sourceLine" id="cb18-10" data-line-number="10">  <span class="fu">\pdfobj</span>{&lt;&lt;</a>
+<a class="sourceLine" id="cb18-11" data-line-number="11">    /Type /Catalog</a>
+<a class="sourceLine" id="cb18-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb18-13" data-line-number="13">    <span class="co">% cool alignment padding</span></a>
+<a class="sourceLine" id="cb18-14" data-line-number="14">    /MD5_is /REALLY_dead_now__</a>
+<a class="sourceLine" id="cb18-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb18-16" data-line-number="16">    <span class="co">% the first reference number should be on offset 0x49,</span></a>
+<a class="sourceLine" id="cb18-17" data-line-number="17">    <span class="co">% so the &#39;2&#39; object number will be changed to &#39;3&#39; by UniColl</span></a>
+<a class="sourceLine" id="cb18-18" data-line-number="18">    /Pages 2 0 R</a>
+<a class="sourceLine" id="cb18-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb18-20" data-line-number="20">    <span class="co">% now padding so that the collision blocks (ends at 0xC0) are covered</span></a>
+<a class="sourceLine" id="cb18-21" data-line-number="21">    /0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF</a>
+<a class="sourceLine" id="cb18-22" data-line-number="22">    <span class="co">% with an extra character to be replaced by a return char</span></a>
+<a class="sourceLine" id="cb18-23" data-line-number="23">    /0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0</a>
+<a class="sourceLine" id="cb18-24" data-line-number="24">  &gt;&gt;}</a>
+<a class="sourceLine" id="cb18-25" data-line-number="25"></a>
+<a class="sourceLine" id="cb18-26" data-line-number="26">  <span class="co">% the original catalog of the shifted doc</span></a>
+<a class="sourceLine" id="cb18-27" data-line-number="27">  <span class="fu">\immediate\pdfobj</span>{&lt;&lt;/Type/Pages/Count 1/Kids[8 0 R]&gt;&gt;}</a>
+<a class="sourceLine" id="cb18-28" data-line-number="28"></a>
+<a class="sourceLine" id="cb18-29" data-line-number="29">  <span class="co">% the original catalog of the host doc</span></a>
+<a class="sourceLine" id="cb18-30" data-line-number="30">  <span class="fu">\immediate\pdfobj</span>{&lt;&lt;/Type/Pages/Count 1/Kids[33 0 R]&gt;&gt;}</a>
+<a class="sourceLine" id="cb18-31" data-line-number="31"></a>
+<a class="sourceLine" id="cb18-32" data-line-number="32">  <span class="co">% now we need to reserve PDF Objects so that there is no overlap</span></a>
+<a class="sourceLine" id="cb18-33" data-line-number="33">  <span class="fu">\newcount\objcount</span></a>
+<a class="sourceLine" id="cb18-34" data-line-number="34"></a>
+<a class="sourceLine" id="cb18-35" data-line-number="35">  <span class="co">% the host size (+3 for spare object slots) - 1</span></a>
+<a class="sourceLine" id="cb18-36" data-line-number="36">  <span class="co">% putting a higher margin will just work, and XREF can have huge gaps</span></a>
+<a class="sourceLine" id="cb18-37" data-line-number="37">  <span class="fu">\objcount</span>=25</a>
+<a class="sourceLine" id="cb18-38" data-line-number="38">  <span class="fu">\loop</span></a>
+<a class="sourceLine" id="cb18-39" data-line-number="39">    <span class="fu">\message</span>{<span class="fu">\the\objcount</span>}</a>
+<a class="sourceLine" id="cb18-40" data-line-number="40">    <span class="fu">\advance</span> <span class="fu">\objcount</span> -1</a>
+<a class="sourceLine" id="cb18-41" data-line-number="41"></a>
+<a class="sourceLine" id="cb18-42" data-line-number="42">  <span class="fu">\immediate\pdfobj</span>{&lt;&lt;&gt;&gt;} <span class="co">% just an empty object</span></a>
+<a class="sourceLine" id="cb18-43" data-line-number="43"></a>
+<a class="sourceLine" id="cb18-44" data-line-number="44">  <span class="fu">\ifnum</span> <span class="fu">\objcount</span>&gt;0</a>
+<a class="sourceLine" id="cb18-45" data-line-number="45">  <span class="fu">\repeat</span></a>
+<a class="sourceLine" id="cb18-46" data-line-number="46"></a>
+<a class="sourceLine" id="cb18-47" data-line-number="47"><span class="fu">\endgroup</span></a></code></pre></div>
 <p>Don't forget to normalize PDFLaTeX output - with <code>mutool</code> for example - if needed: PDFLaTeX is hard to get reproducible builds across distributions - you may even want to hook the time on execution to get the exact hash if required.</p>
 <h4 id="jpg-in-pdf">JPG in PDF</h4>
 <p>You could expect JPG to be only images, but in a PDF and some PDF readers (non browsers, such as Evince and Adobe Reader), it can be used as page content just like any other embedded object, that is embedded in a JPEG image.</p>
@@ -947,6 +964,118 @@ endobj
 <img alt='2 SHA-1 collidings PDF with JPG used as image and page content' src=pics/dualjpg.png width=700/>
 
 <p><em>2 SHA-1 colliding PDFs with JPG used as image and page content</em></p>
+<h3 id="zip">ZIP</h3>
+<p><strong>TL;DR</strong> There's no generic re-usable collision for ZIP, but there is for ZIP-based format. It should be possible to collide two files in 2h.core (36 times faster than chosen-prefix)</p>
+<img alt='a ZIP file' src=https://raw.githubusercontent.com/corkami/pics/master/binary/ZIP.png width=600/>
+
+<p>ZIP archives are a sandwich of 3 layers (at least). First comes the files' content (sequence of <code>Local File Header</code> structures, one per archived file or directory), then some index (again, a sequence of <code>Central Directory</code>), then a single structure that points to this index (<code>End Of Central Directory</code>).</p>
+<p>The order of these layers can't be moved around. Some parser only need the file content's structure, but that's not a correct way to parse and it can be abused.</p>
+<p>Because of this required order, there's no generic prefix that could help for any collision.</p>
+<p><strong>non generic approach</strong></p>
+<p>Another approach could be to just merge both archives, with their merged layers, and using UniColl - but with N=2, which introduces a difference on the 4th byte - to kill the magic signature of the <code>End of Central Directory</code>.</p>
+<p>This means one could collide two arbitrary ZIP with a single UniColl and 24 bytes of set prefix.</p>
+<p>A typical End of Central Directory, which is 22 bytes if the comment is empty:</p>
+<pre><code>00: 504b 0506 0000 0000 0000 0000 0000 0000  PK..............
+10: 0000 0000 0000                           ......
+</code></pre>
+<p>If we use this as prefix (pad the prefix to 16 bits) for UniColl and <code>N=2</code>, the difference is on the 4th byte, killing the magic <code>.P .K 05 06</code> by changing it predictably to <code>.P .K 05 86</code></p>
+<pre><code>00: 504b 0506 0000 0000 0000 0000 0000 0000  PK..............
+10: 0000 0000 0000 2121 eb66 cf9d db01 83bb  ......!!.f......
+20: 2888 4c41 e345 7d07 1634 5d4a 3b61 89a0  (.LA.E}..4]J;a..
+30: 0029 94af 4168 2517 0bbc b841 cbf2 9587  .)..Ah%....A....
+40: e438 0043 6390 279d 7c9e a01e e476 4c36  .8.Cc.&#39;.|....vL6
+50: 527f b1f4 653e d866 f98d 7278 5324 0bd5  R...e&gt;.f..rxS$..
+60: b31d ef6d d5d6 1163 5a2e a8a5 21bf eab4  ...m...cZ...!...
+70: c59c 028e a913 f6b7 0036 c93f 5092 a628  .........6.?P..(
+</code></pre>
+<pre><code>00: 504b 0586 0000 0000 0000 0000 0000 0000  PK..............
+10: 0000 0000 0000 2121 eb66 cf1d db01 83bb  ......!!.f......
+20: 2888 4c41 e345 7d07 1634 5d4a 3b61 89a0  (.LA.E}..4]J;a..
+30: 0029 94af 4168 251f 0bbc b841 cbf2 9587  .)..Ah%....A....
+40: e438 00c3 6390 279d 7c9e a01e e476 4c36  .8..c.&#39;.|....vL6
+50: 527f b1f4 653e d866 f98d 72f8 5324 0bd5  R...e&gt;.f..r.S$..
+60: b31d ef6d d5d6 1163 5a2e a8a5 21bf eab4  ...m...cZ...!...
+70: c59c 028e a913 f6af 0036 c93f 5092 a628  .........6.?P..(
+</code></pre>
+<p>This is not generic at all, but much faster than chosen-prefix collision:</p>
+<pre><code>real 12m23.993s
+user 112m24.072s
+sys 2m0.194s
+</code></pre>
+<p>A problem is that some parsers still parse ZIP files upside-down even if they should be parsed bottom-up: a way to make sure that both files are properly parsed is to chain two UniColl blocks, to enable/disable each <code>End of Central Directory</code>.</p>
+<p>To prevent ZIP parsers from complaining about unused space, one can abuse <code>Extra Fields</code>, file comments in <code>Central Directory</code> and archive comments in <code>End of Central Directory</code>.</p>
+<p><img src="pics/zip.png" alt="diagram of ZIP collision" /></p>
+<p><strong>Example</strong>: here is an <a href="scripts/zip.asm">assembly source</a> that describes the structure of a dual ZIP, that can host two different archive files.</p>
+<p>After two Unicoll computations, it gives the two colliding files: <a href="examples/collision1.zip">collision1.zip</a> ⟷ <a href="examples/collision2.zip">collision2.zip</a></p>
+<h4 id="zip-based-formats">Zip-based formats</h4>
+<p>Even if the Zip format itself can't be generically exploited like Gzip, some formats relying on Zip <em>can</em> be generically exploited inside Zip archives with a pre-defined structure. Some precautions have to be taken to make the Zip collision generic.</p>
+<p>Some formats are multi-files stored in a Zip archive, and rely on a root file with a fixed filename that points to other files in the archive. Many of them are using XML or text for the root file, and storing other files as-is.</p>
+<p>Idea : make 2 files sets coexist in the same archive, and point to either set of files. A generic root can be stored first in the beginning of the file, but the collision blocks are stored outside of the file content, in the archive (since collisions have a very high entropy, it's impossible to exploit XML or ASCII-only files with collisions).</p>
+<p>Steps:</p>
+<ol>
+<li><p>Put 2 sets of files from 2 origins in the same archive - i.e. in different subdirectories.</p></li>
+<li><p>Modify the root file to alternatively point to each set.</p></li>
+<li><p>Since the timestamp, length and CRC of the root file are stored in both the <code>Local File Header</code> - before the file's contents - and in the <code>Central Directory</code> - after the file contents - these values shouldn't change between the two versions of the files.</p>
+<ul>
+<li>If the length varies, all the pointers afterwards will vary, so an identical suffix wouldn't be possible.</li>
+<li>If the CRC32 is incorrect in the <code>Central Directory</code>, this copy of the value might be ignored by the parser, but forging a CRC32 to a constant value is helpful to avoid entirely the problem. Forging the CRC by appending 4 random bytes will likely not be enough, as these root files are typically in XML or text with strict syntaxes, so they would become invalid. <a href="https://github.com/resilar/crchack">CrcHack</a> greatly helps with forging CRCs with arbitrary bits and no bruteforcing, making sure that the output file is ASCII, and that the modified bits are still in a comment.</li>
+</ul></li>
+<li><p>Using the <code>extra field</code> of an extra dummy file -- even empty -- in the archive after the root file is an elegant way to store Hashclash collision blocks: that way, the Zip archive maintains a standard structure and can be easily manipulated afterwards, even with standard tools.</p></li>
+</ol>
+<p><code>Extra Fields</code> have no CRC32, and their 16 bits length is declared in the headers before. They have their own internal <code>ID:2 Size:2 Data</code> format but it's usually ignored, and are in both the <code>Local File Header</code> and in the <code>Central Directory</code>, but it can be absent from the <code>Central Directory</code> to keep the suffix identical after the collision blocks.</p>
+<p>The presence of the extra file that covers the collision blocks in its <code>extra field</code> may have to be declared in the format structure, such as in the <code>[Content_Types].xml</code> file in an OOXML document. Other XML files in the suffix may have to be modified, as some formats required the use of absolute paths.</p>
+<p>Here's the overall structure of the generic exploit for a specific zip-based format:</p>
+<pre><code>[Root file] (with constant CRC32)
+
+[Dummy file] (with collision blocks in the extra field)
+
+[...] &lt;- rest of the archive, with 2 documents merged
+</code></pre>
+<p>So by predefining the root file contents and forging ASCII CRC32s, one can compute a generic re-usable Hashclash collision for a specific zip-based format.</p>
+<h3 id="requirements-summary">Requirements summary</h3>
+<ul>
+<li>two or more prefixes</li>
+<li>one or more file types (polyglots work without problems)</li>
+<li>an XML root file with fixed filename, file length and CRC: this info is present twice, before and after the collision blocks</li>
+<li>contents are arbitrary XML</li>
+<li>padding is possible, even via XML comment, to reach the same length.</li>
+<li>CRC can be set (via CrcHack) on each content.</li>
+<li>both set of files co-exist in the suffix, likely in different directories. Some tools hardcode the path, which may reduce compatibility.</li>
+<li>a <em>Content type</em> XML file may need to be merged to cover all files, supported and unsupported (collision blocks, and alternate document)</li>
+</ul>
+<h3 id="examples">Examples</h3>
+<h4 id="crc32">CRC32</h4>
+<p>A minimal XML comment (ASCII-only) with a forged CRC32 (instant computation) with CrcHack.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="bu">echo</span> <span class="st">&quot;&lt;!--ABCDEF--&gt;&quot;</span> <span class="kw">|</span> <span class="ex">crchack</span> -b 4.0:+.8*6:1 -b 4.1:+.8*6:1 -b 4.2:+.8*6:1 -b 4.3:+.8*6:1 -b 4.4:+.8*6:1 -b 4.5:+.8*5:1 - 0xdeadf00d</a>
+<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="op">&lt;</span>!<span class="ex">--X</span>{]EZF--<span class="op">&gt;</span></a></code></pre></div>
+<p>Another example where you adjust the CRC with the case of an alphabetical message.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="bu">echo</span> <span class="st">&quot;&lt;!--THISKINDOFCRCISREALLYIMPRESSIVEA--&gt;&quot;</span> <span class="kw">|</span> <span class="ex">crchack.exe</span> -b 4:+.8*32:.8 - 0xcafebabe</a>
+<a class="sourceLine" id="cb25-2" data-line-number="2"><span class="op">&lt;</span>!<span class="ex">--THIskInDoFCRcIsrEALlyimpRESSIVea--</span><span class="op">&gt;</span></a></code></pre></div>
+<h4 id="collisions">Collisions</h4>
+<p><a href="scripts/zinsider.py">zInsider</a> is a script to instantly generate MD5 collisions of pairs of arbitrary documents using these ZIP+XML formats:</p>
+<ul>
+<li>Office Open XML: docx / pptx / xlsx</li>
+<li>Open Container Format: epub</li>
+<li>Open Packaging Conventions:
+<ul>
+<li>3D manufacturing format: 3mf</li>
+<li>XML Paper Specification: xps / oxps</li>
+</ul></li>
+</ul>
+<p>To generate your own collision prefixes, <a href="scripts/makezip.py">here is a script</a> to generate a root zip pair. After computing collisions, use <a href="scripts/extendzip.py">this other script</a> to combine these roots pair with a common suffix.</p>
+<p>A few collision PoCs:</p>
+<ul>
+<li>Office Open XML: Excel (<a href="examples/free/md5-1.xls">1</a> - <a href="examples/free/md5-2.xls">2</a>), Powerpoint (<a href="examples/free/md5-1.pptx">1</a> - <a href="examples/free/md5-2.pptx">2</a>), Word (<a href="examples/free/md5-1.docx">1</a> - <a href="examples/free/md5-2.docx">2</a>).</li>
+<li>Open Container Format: Epub (<a href="examples/collision-1.epub">1</a> - <a href="examples/collision-2.epub">2</a>).</li>
+<li>Open Packaging Conventions: 3MF (<a href="examples/collision-1.3mf">1</a> - <a href="examples/collision-2.3mf">2</a>), XPS (<a href="examples/collision-1.xps">1</a> - <a href="examples/collision-2.xps">2</a>).</li>
+</ul>
+<p>Some formats with multiple files based on Zip can't be generically exploited:</p>
+<ul>
+<li>Quake PK3: a zip of files with no specific root.</li>
+<li>Open Document Format: the <code>META-INF/manifest.xml</code> file has to mention every other file, so it can't be generic.</li>
+<li>APK, JAR, XPI: the <code>META-INF/MANIFEST.mf</code> file also has to mention every other file, with its hashes.</li>
+</ul>
+<p>Thanks to <a href="https://twitter.com/decalage2">Philippe Lagadec</a> for his help on Office file formats!</p>
 <h2 id="uncommon-strategies">Uncommon strategies</h2>
 <p>Collisions are usually about two valid files of the same type.</p>
 <h3 id="multicolls-multiple-collisions-chain">MultiColls: multiple collisions chain</h3>
@@ -1057,225 +1186,138 @@ endobj
 <p>Tape Archives are a sequence of concatenated header and file contents, all aligned to 512 bytes.</p>
 <p>There's no central structure to the whole file. So no global header or comment of any kind to abuse.</p>
 <p>A trick would be to start a dummy file of variable length, but the length is always at the same offset, which is not compatible with UniColl, which means only chosen-prefix collisions is useful here.</p>
-<h3 id="zip">ZIP</h3>
-<p><strong>TL;DR</strong> There's no generic re-usable collision for ZIP. It should be possible to collide two files in 2h.core (36 times faster than chosen-prefix)</p>
-<img alt='a ZIP file' src=https://raw.githubusercontent.com/corkami/pics/master/binary/ZIP.png width=600/>
-
-<p>ZIP archives are a sandwich of 3 layers (at least). First comes the files' content (sequence of <code>Local File Header</code> structures, one per archived file or directory), then some index (again, a sequence of <code>Central Directory</code>), then a single structure that points to this index (<code>End Of Central Directory</code>).</p>
-<p>The order of these layers can't be moved around. Some parser only need the file content's structure, but that's not a correct way to parse and it can be abused.</p>
-<p>Because of this required order, there's no generic prefix that could help for any collision.</p>
-<p><strong>non generic approach</strong></p>
-<p>Another approach could be to just merge both archives, with their merged layers, and using UniColl - but with N=2, which introduces a difference on the 4th byte - to kill the magic signature of the <code>End of Central Directory</code>.</p>
-<p>This means one could collide two arbitrary ZIP with a single UniColl and 24 bytes of set prefix.</p>
-<p>A typical End of Central Directory, which is 22 bytes if the comment is empty:</p>
-<pre><code>00: 504b 0506 0000 0000 0000 0000 0000 0000  PK..............
-10: 0000 0000 0000                           ......
-</code></pre>
-<p>If we use this as prefix (pad the prefix to 16 bits) for UniColl and <code>N=2</code>, the difference is on the 4th byte, killing the magic <code>.P .K 05 06</code> by changing it predictably to <code>.P .K 05 86</code></p>
-<pre><code>00: 504b 0506 0000 0000 0000 0000 0000 0000  PK..............
-10: 0000 0000 0000 2121 eb66 cf9d db01 83bb  ......!!.f......
-20: 2888 4c41 e345 7d07 1634 5d4a 3b61 89a0  (.LA.E}..4]J;a..
-30: 0029 94af 4168 2517 0bbc b841 cbf2 9587  .)..Ah%....A....
-40: e438 0043 6390 279d 7c9e a01e e476 4c36  .8.Cc.&#39;.|....vL6
-50: 527f b1f4 653e d866 f98d 7278 5324 0bd5  R...e&gt;.f..rxS$..
-60: b31d ef6d d5d6 1163 5a2e a8a5 21bf eab4  ...m...cZ...!...
-70: c59c 028e a913 f6b7 0036 c93f 5092 a628  .........6.?P..(
-</code></pre>
-<pre><code>00: 504b 0586 0000 0000 0000 0000 0000 0000  PK..............
-10: 0000 0000 0000 2121 eb66 cf1d db01 83bb  ......!!.f......
-20: 2888 4c41 e345 7d07 1634 5d4a 3b61 89a0  (.LA.E}..4]J;a..
-30: 0029 94af 4168 251f 0bbc b841 cbf2 9587  .)..Ah%....A....
-40: e438 00c3 6390 279d 7c9e a01e e476 4c36  .8..c.&#39;.|....vL6
-50: 527f b1f4 653e d866 f98d 72f8 5324 0bd5  R...e&gt;.f..r.S$..
-60: b31d ef6d d5d6 1163 5a2e a8a5 21bf eab4  ...m...cZ...!...
-70: c59c 028e a913 f6af 0036 c93f 5092 a628  .........6.?P..(
-</code></pre>
-<p>This is not generic at all, but much faster than chosen-prefix collision:</p>
-<pre><code>real 12m23.993s
-user 112m24.072s
-sys 2m0.194s
-</code></pre>
-<p>A problem is that some parsers still parse ZIP files upside-down even if they should be parsed bottom-up: a way to make sure that both files are properly parsed is to chain two UniColl blocks, to enable/disable each <code>End of Central Directory</code>.</p>
-<p>To prevent ZIP parsers from complaining about unused space, one can abuse <code>Extra Fields</code>, file comments in <code>Central Directory</code> and archive comments in <code>End of Central Directory</code>.</p>
-<p><img src="pics/zip.png" alt="diagram of ZIP collision" /></p>
-<p><strong>Example</strong>: here is an <a href="scripts/zip.asm">assembly source</a> that describes the structure of a dual ZIP, that can host two different archive files.</p>
-<p>After two Unicoll computations, it gives the two colliding files: <a href="examples/collision1.zip">collision1.zip</a> ⟷ <a href="examples/collision2.zip">collision2.zip</a></p>
-<h4 id="zip-based-formats">Zip-based formats</h4>
-<p>Even if the Zip format itself can't be generically exploited like Gzip, some formats relying on Zip <em>can</em> be generically exploited inside Zip archives with a pre-defined structure. Some precautions have to be taken to make the Zip collision generic.</p>
-<p>Some formats are multi-files stored in a Zip archive, and rely on a root file with a fixed filename that points to other files in the archive. Many of them are using XML or text for the root file, and storing other files as-is.</p>
-<p>Idea : make 2 files sets coexist in the same archive, and point to either sets of files. A generic root can be stored first in the beginning of the file, but the collision blocks are stored outside of the file content, in the archive (since collisions have a very high entropy, it's impossible to exploit XML or ASCII-only files with collisions).</p>
-<p>Steps:</p>
-<ol>
-<li><p>Put 2 sets of files from 2 origins in the same archive - i.e. in different subdirectories.</p></li>
-<li><p>Modify the root file to alternatively point to each set.</p></li>
-<li><p>Since the timestamp, length and CRC of the root file are stored in both the <code>Local File Header</code> - before the file's contents - and in the <code>Central Directory</code> - after the file contents - these values shouldn't change between the two versions of the files.</p>
-<ul>
-<li>If the length changes, all the pointers afterwards will change, so an identical suffix can't be used.</li>
-<li>If the CRC32 is incorrect in the <code>Central Directory</code>, this copy might be ignored by the parser, but forging a CRC32 to a constant value is helpful to avoid entirely the problem. Forging the CRC by appending 4 random bytes will likely not be enough, as these root files are typically in XML or text with strict syntaxes, so they would become invalid. <a href="https://github.com/resilar/crchack">CrcHack</a> greatly helps with forging CRCs with arbitrary bits and no bruteforcing, making sure that the output file is ASCII, and that the modified bits are still in a comment.</li>
-</ul></li>
-<li><p>Using the <code>extra field</code> of an extra dummy file -- even empty -- in the archive after the root file is an elegant way to store Hashclash collision blocks: that way, the Zip archive maintains a standard structure and can be easily manipulated afterwards, even with standard tools.</p></li>
-</ol>
-<p><code>Extra Fields</code> have no CRC32, and their 16 bits length is declared in the headers before. They have their own internal <code>ID:2 Size:2 Data</code> format but it's usually ignored, and are in both the <code>Local File Header</code> and in the <code>Central Directory</code>, but it can be absent from the <code>Central Directory</code> to keep the suffix identical after the collision blocks.</p>
-<p>The presence of the extra file that covers the collision blocks in its <code>extra field</code> may have to be declared in the format structure, such as in the <code>[Content_Types].xml</code> file in an OOXML document. Other XML files in the suffix may have to be modified, as some formats required the use of absolute paths.</p>
-<p>Here's the overall structure of the generic exploit for a specific zip-based format:</p>
-<pre><code>[Root file] (with constant CRC32)
-
-[Dummy file] (with collision blocks in the extra field)
-
-[...] &lt;- rest of the archive, with 2 documents merged
-</code></pre>
-<p>So by predefining the root file contents and forging ASCII CRC32s, one can compute a generic re-usable hashclash collision for a specific zip-based format.</p>
-<h3 id="examples">Examples</h3>
-<p>A minimal XML comment (ASCII-only) with a forged CRC32 (instant computation) with Crchack.</p>
-<pre><code>echo &quot;&lt;!--ABCDEF--&gt;&quot; | crchack -b 4.0:+.8*6:1 -b 4.1:+.8*6:1 -b 4.2:+.8*6:1 -b 4.3:+.8*6:1 -b 4.4:+.8*6:1 -b 4.5:+.8*5:1 - 0xdeadf00d
-&lt;!--X{]EZF--&gt;
-</code></pre>
-<p><a href="scripts/makezip.py">Here is a script</a> to generate a root zip pair. After computing collisions, use <a href="scripts/extendzip.py">this other script</a> to combine these roots pair with a common suffix.</p>
-<p>PoCs relying on generic prefix pairs:</p>
-<ul>
-<li>Office Open XML: Excel (<a href="examples/free/md5-1.xls">1</a> - <a href="examples/free/md5-2.xls">2</a>), Powerpoint (<a href="examples/free/md5-1.pptx">1</a> - <a href="examples/free/md5-2.pptx">2</a>), Word (<a href="examples/free/md5-1.docx">1</a> - <a href="examples/free/md5-2.docx">2</a>).</li>
-<li>Open Container Format: Epub (<a href="examples/collision-1.epub">1</a> - <a href="examples/collision-2.epub">2</a>).</li>
-<li>Open Packaging Conventions: 3MF (<a href="examples/collision-1.3mf">1</a> - <a href="examples/collision-2.3mf">2</a>), XPS (<a href="examples/collision-1.xps">1</a> - <a href="examples/collision-2.xps">2</a>).</li>
-</ul>
-<p>Some formats with multiple files based on Zip can't be generically exploited:</p>
-<ul>
-<li>Quake PK3: a zip of files with no specific root.</li>
-<li>Open Document Format: the <code>META-INF/manifest.xml</code> file has to mention every other file, so it can't be generic.</li>
-<li>APK, JAR, XPI: the <code>META-INF/MANIFEST.mf</code> file also has to mention every other file, with its hashes.</li>
-</ul>
-<p>Thanks to Philippe Lagadec for his help on Office file formats!</p>
 <h2 id="exploitations-summary">Exploitations summary</h2>
 <table>
 <thead>
 <tr class="header">
 <th>Format</th>
 <th>Generic?</th>
-<th>FastColl</th>
-<th>UniColl</th>
+<th style="text-align: center;">FastColl</th>
+<th style="text-align: center;">UniColl</th>
 <th>Shattered</th>
-<th>HashClash</th>
+<th style="text-align: center;">HashClash / Shambles</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>PDF</td>
 <td>Y</td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;">x</td>
 <td> </td>
-<td>x</td>
-<td> </td>
-<td>x</td>
+<td style="text-align: center;">x</td>
 </tr>
 <tr class="even">
 <td>JPG</td>
 <td>Y (1)</td>
-<td> </td>
-<td>x</td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;">x</td>
 <td>x (2)</td>
-<td>x</td>
+<td style="text-align: center;">x</td>
 </tr>
 <tr class="odd">
 <td>GZ</td>
 <td>Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">x</td>
 <td></td>
-<td>x</td>
-<td></td>
-<td>x</td>
+<td style="text-align: center;">x</td>
 </tr>
 <tr class="even">
 <td>PNG</td>
 <td>Y/N (3)</td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;">x</td>
 <td> </td>
-<td>x</td>
-<td> </td>
-<td>x</td>
+<td style="text-align: center;">x</td>
 </tr>
 <tr class="odd">
 <td>MP4</td>
 <td>Y (4)</td>
-<td> </td>
-<td>x</td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;">x</td>
 <td>x (5)</td>
-<td>x</td>
+<td style="text-align: center;">x</td>
 </tr>
 <tr class="even">
 <td>PE</td>
 <td>Y</td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
 <td> </td>
-<td> </td>
-<td> </td>
-<td>x</td>
+<td style="text-align: center;">x</td>
 </tr>
 <tr class="odd">
 <td>ZIP-based (6)</td>
 <td>Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
 <td></td>
-<td></td>
-<td></td>
-<td>x</td>
+<td style="text-align: center;">x</td>
 </tr>
 <tr class="even">
 <td> </td>
 <td> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
 <td> </td>
-<td> </td>
-<td> </td>
-<td></td>
+<td style="text-align: center;"></td>
 </tr>
 <tr class="odd">
 <td>GIF</td>
 <td>N</td>
-<td>x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;"> </td>
 <td> </td>
-<td> </td>
-<td>x</td>
+<td style="text-align: center;">x</td>
 </tr>
 <tr class="even">
 <td>ZIP</td>
 <td>N</td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;">x (7)</td>
 <td> </td>
-<td>x (7)</td>
-<td> </td>
-<td>x</td>
+<td style="text-align: center;">x</td>
 </tr>
 <tr class="odd">
 <td> </td>
 <td> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
 <td> </td>
-<td> </td>
-<td> </td>
-<td></td>
+<td style="text-align: center;"></td>
 </tr>
 <tr class="even">
 <td>ELF</td>
 <td>N</td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
 <td> </td>
-<td> </td>
-<td> </td>
-<td>x</td>
+<td style="text-align: center;">x</td>
 </tr>
 <tr class="odd">
 <td>TAR</td>
 <td>N</td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
 <td> </td>
-<td> </td>
-<td> </td>
-<td>x</td>
+<td style="text-align: center;">x</td>
 </tr>
 <tr class="even">
 <td>Mach-O</td>
 <td>N</td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
 <td> </td>
-<td> </td>
-<td> </td>
-<td>x</td>
+<td style="text-align: center;">x</td>
 </tr>
 <tr class="odd">
 <td>Class</td>
 <td>N</td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
 <td> </td>
-<td> </td>
-<td> </td>
-<td>x</td>
+<td style="text-align: center;">x</td>
 </tr>
 </tbody>
 </table>
@@ -1317,6 +1359,10 @@ sys 2m0.194s
 <li>2018:
 <ul>
 <li><a href="https://archive.org/stream/pocorgtfo18#page/n62/mode/1up">Easy SHA-1 Colliding PDFs with PDFLaTeX.</a> by Ange Albertini</li>
+</ul></li>
+<li>2020:
+<ul>
+<li><a href="https://eprint.iacr.org/2020/014.pdf">SHA-1 is a Shambles</a> by Gaëtan Leurent, Thomas Peyrin</li>
 </ul></li>
 </ul>
 <p>Presentations:</p>

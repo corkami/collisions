@@ -24,6 +24,7 @@ By Ange Albertini and Marc Stevens.
     - [Shattered (SHA1)](#shattered-sha1)
   - [Chosen-prefix collisions](#chosen-prefix-collisions)
     - [HashClash (MD5)](#hashclash-md5)
+    - [Shambles (SHA1)](#shambles-sha-1)
   - [Attacks summary](#attacks-summary)
 - [Exploitations](#exploitations)
   - [Standard strategy](#standard-strategy)
@@ -38,6 +39,8 @@ By Ange Albertini and Marc Stevens.
       - [JPEG2000](#jpeg2000)
     - [PDF](#pdf)
       - [JPG in PDF](#jpg-in-pdf)
+    - [ZIP](#zip)
+      - [Zip-based formats](#zip-based-formats)
   - [Uncommon strategies](#uncommon-strategies)
     - [MultiColls: multiple collisions chain](#multicolls-multiple-collisions-chain)
     - [Validity](#validity)
@@ -55,8 +58,6 @@ By Ange Albertini and Marc Stevens.
     - [Mach-O](#mach-o)
     - [Java Class](#java-class)
     - [TAR](#tar)
-    - [ZIP](#zip)
-      - [Zip-based formats](#zip-based-formats)
   - [Exploitations summary](#exploitations-summary)
   - [Test files](#test-files)
 - [References](#references)
@@ -337,10 +338,10 @@ Documented in [2013](https://marc-stevens.nl/research/papers/EC13-S.pdf), comput
 
 The difference between collision blocks of each side is this Xor mask:
 ```
-0c 00 00 02 c0 00 00 10 b4 00 00 1c 3c 00 00 04
-bc 00 00 1a 20 00 00 10 24 00 00 1c ec 00 00 14
-0c 00 00 02 c0 00 00 10 b4 00 00 1c 2c 00 00 04
-bc 00 00 18 b0 00 00 10 00 00 00 0c b8 00 00 10
+0C 00 00 02 C0 00 00 10 B4 00 00 1C 3C 00 00 04
+BC 00 00 1A 20 00 00 10 24 00 00 1C EC 00 00 14
+0C 00 00 02 C0 00 00 10 B4 00 00 1C 2C 00 00 04
+BC 00 00 18 B0 00 00 10 00 00 00 0C B8 00 00 10
 ```
 
 <img alt='Shattered PoCs side by side' src=pics/shattered.png width=1000 />
@@ -352,7 +353,7 @@ but also checking the value of the prefixes via JavaScript in the HTML page (the
 
 ## Chosen-prefix collisions
 
-They allow to collide any content. They don't exist for SHA-1 yet.
+They allow to collide any content.
 
 | 𝓐            | ≠ | 𝔅             |
 | :----:        |:-:| :----:        |
@@ -466,15 +467,29 @@ Examples: let's collide `yes` and `no`. It took three hours on 24 cores.
 Here is a [log](examples/cpc.html) of the whole operation.
 
 
+### [Shambles](https://sha-mbles.github.io/) (SHA-1)
+
+Shambles is a very expensive chosen-prefix collision that uses 9 blocks.
+
+Each block has the same xor pattern as Shattered:
+
+```
+0C 00 00 02 C0 00 00 10 B4 00 00 1C 3C 00 00 04
+BC 00 00 1A 20 00 00 10 24 00 00 1C EC 00 00 14
+0C 00 00 02 C0 00 00 10 B4 00 00 1C 2C 00 00 04
+BC 00 00 18 B0 00 00 10 00 00 00 0C B8 00 00 10
+```
+
 ## Attacks summary
 
 Hash | Name      | Date | Duration | Prefix type | Control near diff
 ---- | --------- | ---- | -------- | ----------- | -----------------
 MD5  | FastColl  | 2009 | 2s       | Identical   | none
      | UniColl   | 2012 | 7-40min  | Identical   | 4-10 bytes
-     | HashClash | 2009 | 72h      | Chosen      | none
+     | HashClash | 2009 | 72h      | Chosen      | n/a
      |           |      |          |             |
 SHA1 | Shattered | 2013 | 6500yr   | Identical   | prefix & suffix
+     | Shambles  | 2020 | ?        | Chosen      | n/a
 
 
 # Exploitations
@@ -1075,6 +1090,180 @@ Examples of SHA-1 colliding two PDFs via JPEG used as page data and picture to b
 
 *2 SHA-1 colliding PDFs with JPG used as image and page content*
 
+
+### ZIP
+
+**TL;DR** There's no generic re-usable collision for ZIP, but there is for ZIP-based format.
+It should be possible to collide two files in 2h.core (36 times faster than chosen-prefix)
+
+<img alt='a ZIP file' src=https://raw.githubusercontent.com/corkami/pics/master/binary/ZIP.png width=600/>
+
+ZIP archives are a sandwich of 3 layers (at least).
+First comes the files' content (sequence of `Local File Header` structures, one per archived file or directory),
+then some index (again, a sequence of `Central Directory`),
+then a single structure that points to this index (`End Of Central Directory`).
+
+The order of these layers can't be moved around.
+Some parser only need the file content's structure, but that's not a correct way to parse and it can be abused.
+
+Because of this required order, there's no generic prefix that could help for any collision.
+
+**non generic approach**
+
+Another approach could be to just merge both archives, with their merged layers, and using UniColl - but with N=2, which introduces a difference on the 4th byte - to kill the magic signature of the `End of Central Directory`.
+
+This means one could collide two arbitrary ZIP with a single UniColl and 24 bytes of set prefix.
+
+
+A typical End of Central Directory, which is 22 bytes if the comment is empty:
+```
+00: 504b 0506 0000 0000 0000 0000 0000 0000  PK..............
+10: 0000 0000 0000                           ......
+```
+
+If we use this as prefix (pad the prefix to 16 bits) for UniColl and `N=2`, the difference is on the 4th byte, killing the magic `.P .K 05 06` by changing it predictably to `.P .K 05 86`
+```
+00: 504b 0506 0000 0000 0000 0000 0000 0000  PK..............
+10: 0000 0000 0000 2121 eb66 cf9d db01 83bb  ......!!.f......
+20: 2888 4c41 e345 7d07 1634 5d4a 3b61 89a0  (.LA.E}..4]J;a..
+30: 0029 94af 4168 2517 0bbc b841 cbf2 9587  .)..Ah%....A....
+40: e438 0043 6390 279d 7c9e a01e e476 4c36  .8.Cc.'.|....vL6
+50: 527f b1f4 653e d866 f98d 7278 5324 0bd5  R...e>.f..rxS$..
+60: b31d ef6d d5d6 1163 5a2e a8a5 21bf eab4  ...m...cZ...!...
+70: c59c 028e a913 f6b7 0036 c93f 5092 a628  .........6.?P..(
+```
+
+```
+00: 504b 0586 0000 0000 0000 0000 0000 0000  PK..............
+10: 0000 0000 0000 2121 eb66 cf1d db01 83bb  ......!!.f......
+20: 2888 4c41 e345 7d07 1634 5d4a 3b61 89a0  (.LA.E}..4]J;a..
+30: 0029 94af 4168 251f 0bbc b841 cbf2 9587  .)..Ah%....A....
+40: e438 00c3 6390 279d 7c9e a01e e476 4c36  .8..c.'.|....vL6
+50: 527f b1f4 653e d866 f98d 72f8 5324 0bd5  R...e>.f..r.S$..
+60: b31d ef6d d5d6 1163 5a2e a8a5 21bf eab4  ...m...cZ...!...
+70: c59c 028e a913 f6af 0036 c93f 5092 a628  .........6.?P..(
+```
+
+This is not generic at all, but much faster than chosen-prefix collision:
+```
+real 12m23.993s
+user 112m24.072s
+sys 2m0.194s
+```
+
+A problem is that some parsers still parse ZIP files upside-down even if they should be parsed bottom-up:
+a way to make sure that both files are properly parsed is to chain two UniColl blocks,
+to enable/disable each `End of Central Directory`.
+
+To prevent ZIP parsers from complaining about unused space,
+one can abuse `Extra Fields`,
+file comments in `Central Directory` and archive comments in `End of Central Directory`.
+
+![diagram of ZIP collision](pics/zip.png)
+
+**Example**: here is an [assembly source](scripts/zip.asm) that describes the structure of a dual ZIP,
+that can host two different archive files.
+
+After two Unicoll computations, it gives the two colliding files:
+[collision1.zip](examples/collision1.zip) ⟷ [collision2.zip](examples/collision2.zip)
+
+
+#### Zip-based formats
+
+Even if the Zip format itself can't be generically exploited like Gzip, some formats relying on Zip *can* be generically exploited inside Zip archives with a pre-defined structure. Some precautions have to be taken to make the Zip collision generic.
+
+Some formats are multi-files stored in a Zip archive, and rely on a root file with a fixed filename that points to other files in the archive. Many of them are using XML or text for the root file, and storing other files as-is.
+
+Idea
+: make 2 files sets coexist in the same archive, and point to either set of files. A generic root can be stored first in the beginning of the file, but the collision blocks are stored outside of the file content, in the archive (since collisions have a very high entropy, it's impossible to exploit XML or ASCII-only files with collisions).
+
+Steps:
+1. Put 2 sets of files from 2 origins in the same archive - i.e. in different subdirectories.
+1. Modify the root file to alternatively point to each set.
+1. Since the timestamp, length and CRC of the root file are stored in both the `Local File Header` - before the file's contents - and in the `Central Directory` - after the file contents - these values shouldn't change between the two versions of the files.
+
+   - If the length varies, all the pointers afterwards will vary, so an identical suffix wouldn't be possible.
+   - If the CRC32 is incorrect in the `Central Directory`, this copy of the value might be ignored by the parser, but forging a CRC32 to a constant value is helpful to avoid entirely the problem.
+Forging the CRC by appending 4 random bytes will likely not be enough, as these root files are typically in XML or text with strict syntaxes, so they would become invalid.
+[CrcHack](https://github.com/resilar/crchack) greatly helps with forging CRCs with arbitrary bits and no bruteforcing, making sure that the output file is ASCII, and that the modified bits are still in a comment.
+
+4. Using the `extra field` of an extra dummy file -- even empty -- in the archive after the root file is an elegant way to store Hashclash collision blocks: that way, the Zip archive maintains a standard structure and can be easily manipulated afterwards, even with standard tools.
+
+`Extra Fields` have no CRC32, and their 16 bits length is declared in the headers before. They have their own internal `ID:2 Size:2 Data` format but it's usually ignored, and are in both the `Local File Header` and in the `Central Directory`, but it can be absent from the `Central Directory` to keep the suffix identical after the collision blocks.
+
+The presence of the extra file that covers the collision blocks in its `extra field` may have to be declared in the format structure, such as in the `[Content_Types].xml` file in an OOXML document. Other XML files in the suffix may have to be modified, as some formats required the use of absolute paths.
+
+Here's the overall structure of the generic exploit for a specific zip-based format:
+
+```
+[Root file] (with constant CRC32)
+
+[Dummy file] (with collision blocks in the extra field)
+
+[...] <- rest of the archive, with 2 documents merged
+```
+
+So by predefining the root file contents and forging ASCII CRC32s, one can compute a generic re-usable Hashclash collision for a specific zip-based format.
+
+
+### Requirements summary
+
+- two or more prefixes
+- one or more file types (polyglots work without problems)
+- an XML root file with fixed filename, file length and CRC: this info is present twice, before and after the collision blocks
+ - contents are arbitrary XML
+ - padding is possible, even via XML comment, to reach the same length.
+ - CRC can be set (via CrcHack) on each content.
+- both set of files co-exist in the suffix, likely in different directories. Some tools hardcode the path, which may reduce compatibility.
+- a *Content type* XML file may need to be merged to cover all files, supported and unsupported (collision blocks, and alternate document)
+
+
+### Examples
+
+#### CRC32
+
+A minimal XML comment (ASCII-only) with a forged CRC32 (instant computation) with CrcHack.
+
+``` bash
+echo "<!--ABCDEF-->" | crchack -b 4.0:+.8*6:1 -b 4.1:+.8*6:1 -b 4.2:+.8*6:1 -b 4.3:+.8*6:1 -b 4.4:+.8*6:1 -b 4.5:+.8*5:1 - 0xdeadf00d
+<!--X{]EZF-->
+```
+
+Another example where you adjust the CRC with the case of an alphabetical message.
+
+```bash
+echo "<!--THISKINDOFCRCISREALLYIMPRESSIVEA-->" | crchack.exe -b 4:+.8*32:.8 - 0xcafebabe
+<!--THIskInDoFCRcIsrEALlyimpRESSIVea-->
+```
+
+
+#### Collisions
+
+[zInsider](scripts/zinsider.py) is a script to instantly generate MD5 collisions of pairs of arbitrary documents using these ZIP+XML formats:
+- Office Open XML: docx / pptx / xlsx
+- Open Container Format: epub
+- Open Packaging Conventions:
+  - 3D manufacturing format: 3mf
+  - XML Paper Specification: xps / oxps
+
+To generate your own collision prefixes, [here is a script](scripts/makezip.py) to generate a root zip pair.
+After computing collisions, use [this other script](scripts/extendzip.py) to combine these roots pair with a common suffix.
+
+A few collision PoCs:
+- Office Open XML: Excel ([1](examples/free/md5-1.xls) - [2](examples/free/md5-2.xls)), Powerpoint ([1](examples/free/md5-1.pptx) - [2](examples/free/md5-2.pptx)), Word ([1](examples/free/md5-1.docx) - [2](examples/free/md5-2.docx)).
+- Open Container Format: Epub ([1](examples/collision-1.epub) - [2](examples/collision-2.epub)).
+- Open Packaging Conventions: 3MF ([1](examples/collision-1.3mf) - [2](examples/collision-2.3mf)), XPS ([1](examples/collision-1.xps) - [2](examples/collision-2.xps)).
+
+
+Some formats with multiple files based on Zip can't be generically exploited:
+- Quake PK3: a zip of files with no specific root.
+- Open Document Format: the `META-INF/manifest.xml` file has to mention every other file, so it can't be generic.
+- APK, JAR, XPI: the `META-INF/MANIFEST.mf` file also has to mention every other file, with its hashes.
+
+
+Thanks to [Philippe Lagadec](https://twitter.com/decalage2) for his help on Office file formats!
+
+
 ## Uncommon strategies
 
 Collisions are usually about two valid files of the same type.
@@ -1326,150 +1515,10 @@ There's no central structure to the whole file. So no global header or comment o
 A trick would be to start a dummy file of variable length, but the length is always at the same offset, which is not compatible with UniColl, which means only chosen-prefix collisions is useful here.
 
 
-### ZIP
-
-**TL;DR** There's no generic re-usable collision for ZIP.
-It should be possible to collide two files in 2h.core (36 times faster than chosen-prefix)
-
-<img alt='a ZIP file' src=https://raw.githubusercontent.com/corkami/pics/master/binary/ZIP.png width=600/>
-
-ZIP archives are a sandwich of 3 layers (at least).
-First comes the files' content (sequence of `Local File Header` structures, one per archived file or directory),
-then some index (again, a sequence of `Central Directory`),
-then a single structure that points to this index (`End Of Central Directory`).
-
-The order of these layers can't be moved around.
-Some parser only need the file content's structure, but that's not a correct way to parse and it can be abused.
-
-Because of this required order, there's no generic prefix that could help for any collision.
-
-**non generic approach**
-
-Another approach could be to just merge both archives, with their merged layers, and using UniColl - but with N=2, which introduces a difference on the 4th byte - to kill the magic signature of the `End of Central Directory`.
-
-This means one could collide two arbitrary ZIP with a single UniColl and 24 bytes of set prefix.
-
-
-A typical End of Central Directory, which is 22 bytes if the comment is empty:
-```
-00: 504b 0506 0000 0000 0000 0000 0000 0000  PK..............
-10: 0000 0000 0000                           ......
-```
-
-If we use this as prefix (pad the prefix to 16 bits) for UniColl and `N=2`, the difference is on the 4th byte, killing the magic `.P .K 05 06` by changing it predictably to `.P .K 05 86`
-```
-00: 504b 0506 0000 0000 0000 0000 0000 0000  PK..............
-10: 0000 0000 0000 2121 eb66 cf9d db01 83bb  ......!!.f......
-20: 2888 4c41 e345 7d07 1634 5d4a 3b61 89a0  (.LA.E}..4]J;a..
-30: 0029 94af 4168 2517 0bbc b841 cbf2 9587  .)..Ah%....A....
-40: e438 0043 6390 279d 7c9e a01e e476 4c36  .8.Cc.'.|....vL6
-50: 527f b1f4 653e d866 f98d 7278 5324 0bd5  R...e>.f..rxS$..
-60: b31d ef6d d5d6 1163 5a2e a8a5 21bf eab4  ...m...cZ...!...
-70: c59c 028e a913 f6b7 0036 c93f 5092 a628  .........6.?P..(
-```
-
-```
-00: 504b 0586 0000 0000 0000 0000 0000 0000  PK..............
-10: 0000 0000 0000 2121 eb66 cf1d db01 83bb  ......!!.f......
-20: 2888 4c41 e345 7d07 1634 5d4a 3b61 89a0  (.LA.E}..4]J;a..
-30: 0029 94af 4168 251f 0bbc b841 cbf2 9587  .)..Ah%....A....
-40: e438 00c3 6390 279d 7c9e a01e e476 4c36  .8..c.'.|....vL6
-50: 527f b1f4 653e d866 f98d 72f8 5324 0bd5  R...e>.f..r.S$..
-60: b31d ef6d d5d6 1163 5a2e a8a5 21bf eab4  ...m...cZ...!...
-70: c59c 028e a913 f6af 0036 c93f 5092 a628  .........6.?P..(
-```
-
-This is not generic at all, but much faster than chosen-prefix collision:
-```
-real 12m23.993s
-user 112m24.072s
-sys 2m0.194s
-```
-
-A problem is that some parsers still parse ZIP files upside-down even if they should be parsed bottom-up:
-a way to make sure that both files are properly parsed is to chain two UniColl blocks,
-to enable/disable each `End of Central Directory`.
-
-To prevent ZIP parsers from complaining about unused space,
-one can abuse `Extra Fields`,
-file comments in `Central Directory` and archive comments in `End of Central Directory`.
-
-![diagram of ZIP collision](pics/zip.png)
-
-**Example**: here is an [assembly source](scripts/zip.asm) that describes the structure of a dual ZIP,
-that can host two different archive files.
-
-After two Unicoll computations, it gives the two colliding files:
-[collision1.zip](examples/collision1.zip) ⟷ [collision2.zip](examples/collision2.zip)
-
-
-#### Zip-based formats
-
-Even if the Zip format itself can't be generically exploited like Gzip, some formats relying on Zip *can* be generically exploited inside Zip archives with a pre-defined structure. Some precautions have to be taken to make the Zip collision generic.
-
-Some formats are multi-files stored in a Zip archive, and rely on a root file with a fixed filename that points to other files in the archive. Many of them are using XML or text for the root file, and storing other files as-is.
-
-Idea
-: make 2 files sets coexist in the same archive, and point to either sets of files. A generic root can be stored first in the beginning of the file, but the collision blocks are stored outside of the file content, in the archive (since collisions have a very high entropy, it's impossible to exploit XML or ASCII-only files with collisions).
-
-Steps:
-1. Put 2 sets of files from 2 origins in the same archive - i.e. in different subdirectories.
-1. Modify the root file to alternatively point to each set.
-1. Since the timestamp, length and CRC of the root file are stored in both the `Local File Header` - before the file's contents - and in the `Central Directory` - after the file contents - these values shouldn't change between the two versions of the files.
-
-   - If the length changes, all the pointers afterwards will change, so an identical suffix can't be used.
-   - If the CRC32 is incorrect in the `Central Directory`, this copy might be ignored by the parser, but forging a CRC32 to a constant value is helpful to avoid entirely the problem.
-Forging the CRC by appending 4 random bytes will likely not be enough, as these root files are typically in XML or text with strict syntaxes, so they would become invalid.
-[CrcHack](https://github.com/resilar/crchack) greatly helps with forging CRCs with arbitrary bits and no bruteforcing, making sure that the output file is ASCII, and that the modified bits are still in a comment.
-
-4. Using the `extra field` of an extra dummy file -- even empty -- in the archive after the root file is an elegant way to store Hashclash collision blocks: that way, the Zip archive maintains a standard structure and can be easily manipulated afterwards, even with standard tools.
-
-`Extra Fields` have no CRC32, and their 16 bits length is declared in the headers before. They have their own internal `ID:2 Size:2 Data` format but it's usually ignored, and are in both the `Local File Header` and in the `Central Directory`, but it can be absent from the `Central Directory` to keep the suffix identical after the collision blocks.
-
-The presence of the extra file that covers the collision blocks in its `extra field` may have to be declared in the format structure, such as in the `[Content_Types].xml` file in an OOXML document. Other XML files in the suffix may have to be modified, as some formats required the use of absolute paths.
-
-Here's the overall structure of the generic exploit for a specific zip-based format:
-
-```
-[Root file] (with constant CRC32)
-
-[Dummy file] (with collision blocks in the extra field)
-
-[...] <- rest of the archive, with 2 documents merged
-```
-
-So by predefining the root file contents and forging ASCII CRC32s, one can compute a generic re-usable hashclash collision for a specific zip-based format.
-
-### Examples
-
-A minimal XML comment (ASCII-only) with a forged CRC32 (instant computation) with Crchack.
-
-```
-echo "<!--ABCDEF-->" | crchack -b 4.0:+.8*6:1 -b 4.1:+.8*6:1 -b 4.2:+.8*6:1 -b 4.3:+.8*6:1 -b 4.4:+.8*6:1 -b 4.5:+.8*5:1 - 0xdeadf00d
-<!--X{]EZF-->
-```
-
-[Here is a script](scripts/makezip.py) to generate a root zip pair. After computing collisions, use [this other script](scripts/extendzip.py) to combine these roots pair with a common suffix.
-
-PoCs relying on generic prefix pairs:
-- Office Open XML: Excel ([1](examples/free/md5-1.xls) - [2](examples/free/md5-2.xls)), Powerpoint ([1](examples/free/md5-1.pptx) - [2](examples/free/md5-2.pptx)), Word ([1](examples/free/md5-1.docx) - [2](examples/free/md5-2.docx)).
-- Open Container Format: Epub ([1](examples/collision-1.epub) - [2](examples/collision-2.epub)).
-- Open Packaging Conventions: 3MF ([1](examples/collision-1.3mf) - [2](examples/collision-2.3mf)), XPS ([1](examples/collision-1.xps) - [2](examples/collision-2.xps)).
-
-
-Some formats with multiple files based on Zip can't be generically exploited:
-- Quake PK3: a zip of files with no specific root.
-- Open Document Format: the `META-INF/manifest.xml` file has to mention every other file, so it can't be generic.
-- APK, JAR, XPI: the `META-INF/MANIFEST.mf` file also has to mention every other file, with its hashes.
-
-
-Thanks to Philippe Lagadec for his help on Office file formats!
-
-
 ## Exploitations summary
 
-Format        | Generic? | FastColl | UniColl | Shattered | HashClash
---------      | -------- | -------- | ------- | --------- | ---------
+Format        | Generic? | FastColl | UniColl | Shattered | HashClash / Shambles
+--------      | -------- | :------: | :-----: | --------- | :-------:
 PDF           | Y        |          | x       |           | x
 JPG           | Y (1)    |          | x       | x (2)     | x
 GZ            | Y        |          | x       |           | x
@@ -1498,6 +1547,7 @@ Class         | N        |          |         |           | x
 
 [Here](examples/free/README.md) are free (copyright-free, PII-free) test colliding pairs.
 
+
 # References
 
 Papers:
@@ -1517,6 +1567,8 @@ Papers:
   - [This PDF is an NES ROM that prints its own MD5 hash!](https://archive.org/stream/pocorgtfo14#page/n55/mode/1up) by Evan Sultanik, Evan Teran
 - 2018:
   - [Easy SHA-1 Colliding PDFs with PDFLaTeX.](https://archive.org/stream/pocorgtfo18#page/n62/mode/1up) by Ange Albertini
+- 2020:
+  - [SHA-1 is a Shambles](https://eprint.iacr.org/2020/014.pdf) by Gaëtan Leurent, Thomas Peyrin
 
 Presentations:
 - 2017 Exploiting Hash Collisions at Black Alps:
