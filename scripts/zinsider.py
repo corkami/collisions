@@ -79,12 +79,13 @@ def replaceNumber(p, suffix="1", skip=1):
 
 
 def setParams(comtype):
-	global updatePath, REL_FN, MOVE_EXCL, ATTRIB, XPATH, BLOCKS, CONTENT_FN
+	global updatePath, REL_FN, MOVE_EXCL, MOVE_EXCL_CT, ATTRIB, XPATH, BLOCKS, CONTENT_FN
 	if comtype in ["docx", "xlsx", "pptx", "3mf"]:
 		REL_FN = "_rels/.rels" # ".//{http://schemas.openxmlformats.org/package/2006/relationships}Relationship[@Target]",
 		ET.register_namespace('', 'http://schemas.openxmlformats.org/package/2006/content-types')
 		CONTENT_FN = "[Content_Types].xml"
 		MOVE_EXCL = "docProps/"
+		MOVE_EXCL_CT = "/docProps/"
 		ATTRIB = 'PartName'
 		XPATH = ".//{http://schemas.openxmlformats.org/package/2006/content-types}Override[@PartName]"
 		BLOCKS = ET.Element("Override",
@@ -120,6 +121,10 @@ def mergeZips():
 		np = iz.filename
 		if not np.startswith(MOVE_EXCL):
 			np = updatePath(np, suffix="1")
+			#print('MergeZips - not excluded: %s' % np)
+		# else:
+			#print('MergeZips - excluded: %s' % np)
+		
 		# print("> %s => %s" % (iz.filename, np))
 		iz.filename = np
 		zfSuffix.writestr(iz, data_)
@@ -150,13 +155,20 @@ def mergeCT():
 
 		filename = CONTENT_FN
 		tree.parse(zip1.open(filename))
+		if sys.version_info >= (3,9):
+			ET.indent(tree, space="\t", level=0)
+
 		root = tree.getroot()
 
 		for e in root.findall(XPATH):
 			a = e.attrib[ATTRIB]
-			if not a.startswith(MOVE_EXCL):
+			if not a.startswith(MOVE_EXCL_CT):
 				na = updatePath(a, suffix="1")
-			e.attrib[ATTRIB] = na
+				#print('MergeCT - not excluded: %s' % a)
+				e.attrib[ATTRIB] = na
+			else:
+				na = a
+				#print('MergeCT - excluded: %s' % a)
 			# print("> Content types(1):", a, na)
 
 		print("Merging content types")
@@ -165,12 +177,16 @@ def mergeCT():
 
 		for e in rootExtra.findall(XPATH):
 			a = e.attrib[ATTRIB]
-			if not a.startswith(MOVE_EXCL):
+			if not a.startswith(MOVE_EXCL_CT):
 				na = updatePath(a, suffix="2")
-			e.attrib[ATTRIB] = na
-			root.append(ET.Element(
-				e.tag, e.attrib
-				))
+				#print('MergeCT - not excluded: %s' % a)
+				e.attrib[ATTRIB] = na
+				root.append(ET.Element(
+					e.tag, e.attrib
+					))
+			else:
+				na = a
+				#print('MergeCT - excluded: %s' % a)
 			# print("> Content types(2):", a, na)
 
 		if BLOCKS is not None:
@@ -189,9 +205,6 @@ if __name__ == '__main__':
 	comtype = checkFileType(zip1, zip2)
 
 	print("Common file type: %s" % (comtype))
-
-	if sys.version_info >= (3,9):
-		ET.indent(tree, space="\t", level=0)
 
 	# XML Manifest pointing to root file.
 	REL_FN = None
