@@ -154,10 +154,14 @@ def mergeCT():
 
 		for e in root.findall(XPATH):
 			a = e.attrib[ATTRIB]
-			if not a.startswith(MOVE_EXCL):
+			if not (a.startswith(MOVE_EXCL) or 
+				a.startswith("/" + MOVE_EXCL)):
 				na = updatePath(a, suffix="1")
-			e.attrib[ATTRIB] = na
-			# print("> Content types(1):", a, na)
+				e.attrib[ATTRIB] = na
+				# print("> Content types(1):", a, na)
+
+		# Getting all paths
+		attribs1 = [e.attrib[ATTRIB] for e in root.findall(XPATH)]
 
 		print("Merging content types")
 		treeExtra.parse(zip2.open(filename))
@@ -165,17 +169,23 @@ def mergeCT():
 
 		for e in rootExtra.findall(XPATH):
 			a = e.attrib[ATTRIB]
-			if not a.startswith(MOVE_EXCL):
+			if not (a.startswith(MOVE_EXCL) or 
+				a.startswith("/" + MOVE_EXCL)):
 				na = updatePath(a, suffix="2")
-			e.attrib[ATTRIB] = na
-			root.append(ET.Element(
-				e.tag, e.attrib
-				))
-			# print("> Content types(2):", a, na)
+				e.attrib[ATTRIB] = na
+				# print("> Content types(2):", a, na)
+			# avoid duplicates
+			if e.attrib[ATTRIB] not in attribs1:
+				root.append(ET.Element(
+					e.tag, e.attrib
+					))
 
 		if BLOCKS is not None:
 			print("Adding collision block exclusion")
 			root.append(BLOCKS)
+	
+		if sys.version_info >= (3,9):
+			ET.indent(tree, space="\t", level=0)
 
 		data_ = ET.tostring(root, encoding='utf-8', xml_declaration=True)
 		zfSuffix.writestr(filename, data_)
@@ -189,9 +199,6 @@ if __name__ == '__main__':
 	comtype = checkFileType(zip1, zip2)
 
 	print("Common file type: %s" % (comtype))
-
-	if sys.version_info >= (3,9):
-		ET.indent(tree, space="\t", level=0)
 
 	# XML Manifest pointing to root file.
 	REL_FN = None
