@@ -65,6 +65,13 @@ HashClash 9 blocks [cpc1.bin](cpc1.bin) / [cpc2.bin](cpc2.bin) - 1 block [single
 Single IPC: [single-ipc1.bin](single-ipc1.bin) / [single-ipc2.bin](single-ipc2.bin)
 
 
+## certificates
+
+[Flame CA](flame.der)
+
+[Rogue CA](https://www.win.tue.nl/hashclash/rogue-ca/): [real](ca-real.der) / [rogue](ca-rogue.der)
+
+
 ## SHA1 (Shattered)
 
 JPGs in PDF:
