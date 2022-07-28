@@ -60,6 +60,8 @@ By Ange Albertini and Marc Stevens.
     - [TAR](#tar)
   - [Exploitations summary](#exploitations-summary)
   - [Test files](#test-files)
+- [Detection](#detection)
+  - [Safe hashes](#safe-hashes)
 - [References](#references)
 - [Credits](#credits)
 - [Conclusion](#conclusion)
@@ -82,9 +84,9 @@ but about new forms of exploitations of existing attacks.
 
 # Status
 
-Current status - as of December 2018 - of known attacks:
+Current status of known attacks:
 - get a file to get another file's hash or a given hash: **impossible**
-  - it's still even [not practical](https://eprint.iacr.org/2008/089.pdf) with MD2.
+  - it's still even not practical with [MD2](https://eprint.iacr.org/2008/089.pdf) or [MD4](https://who.paris.inria.fr/Gaetan.Leurent/files/MD4_FSE08.pdf).
   - works for simpler hashes(\*) <!-- Thanks Sven! -->
 
 - get two different files with the same MD5: **instant**
@@ -479,6 +481,11 @@ BC 00 00 1A 20 00 00 10 24 00 00 1C EC 00 00 14
 0C 00 00 02 C0 00 00 10 B4 00 00 1C 2C 00 00 04
 BC 00 00 18 B0 00 00 10 00 00 00 0C B8 00 00 10
 ```
+
+But even if Shattered is much easier to exploit than FastColl,
+the constraints of the differences in the collision blocks are irrelevant
+since Shambles is a Chosen Prefix Collision.
+
 
 ## Attacks summary
 
@@ -1543,14 +1550,47 @@ Class         | N        |          |         |           | x
 6. Some Zip-based formats can be generically exploited.
 7. For better compatibility, ZIP needs two UniColl for a complete archive, and this collisions depend on both files contents.
 
+
 ## Test files
 
 [Here](examples/free/README.md) are free (copyright-free, PII-free) test colliding pairs.
 
 
+# Detection
+
+There are different ways to detect hash collisions in files.
+
+1. Two files: if you have two or more files with different contents and the same hash, just diff them!
+
+However, if you only have a single file, it can be difficult to tell if the file contains a hash collision.
+
+2. File structure: look at the file at block boundaries, and if you notice high entropy blocks and identical prefix/suffix, you might be able to tell which collision it's about, but it's very error-prone. In the case of a chosen-prefix collision, it's might be impossible to spot as both files might be mostly different besides most of the collision blocks.
+
+3. Hash computation: use a tool ([C](https://github.com/cr-marcstevens/hashclash/tree/collisiondetection/src/collisiondetection), [Go](https://github.com/therealmik/detectcoll)) based on Marc Stevens' DetectColl (cf his [Counter-cryptanalysis](https://marc-stevens.nl/research/papers/C13-S.pdf) paper). It only requires one file (for example, like Flame's certificate) but it requires the collision to be in a working state (the exact original prefix and its corresponding collision blocks).
+
+
+## Safe hashes
+
+Since Detectcoll can identify blocks that implement a hash collision, it can mitigate it via *safe hashes*: if a collision block is detected, it reprocesses it again so the collision property will be broken. So DetectColl is able to tell different contents apart via the same hash function despite the collisions in the file.
+
+Examples: MD5 of Wang's original collision
+```
+md5sum wang*
+79054025255fb1a26e4bc422aef54eb4 *wang1.bin
+79054025255fb1a26e4bc422aef54eb4 *wang2.bin
+```
+
+Safe hashes on these files:
+```
+detectcoll wang1.bin wang2.bin | grep coll
+*coll* ff531291d102a41aa131e0e09f64ca60 wang1.bin
+*coll* 6a8e7124724d5c819401afc202a4fbd0 wang2.bin
+```
+
+
 # References
 
-Papers:
+Papers (about file formats exploitation):
 
 - 2004
   - [MD5 To Be Considered Harmful Someday](https://eprint.iacr.org/2004/357.pdf) - Dan Kaminsky

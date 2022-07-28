@@ -165,6 +165,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="#exploitations-summary">Exploitations summary</a></li>
 <li><a href="#test-files">Test files</a></li>
 </ul></li>
+<li><a href="#detection">Detection</a>
+<ul>
+<li><a href="#safe-hashes">Safe hashes</a></li>
+</ul></li>
 <li><a href="#references">References</a></li>
 <li><a href="#credits">Credits</a></li>
 <li><a href="#conclusion">Conclusion</a></li>
@@ -174,11 +178,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Indeed, the same file format trick can be used on several hashes (the same JPG tricks were used for <a href="https://archive.org/stream/pocorgtfo14#page/n49/mode/1up">MD5</a>, <a href="https://malicioussha1.github.io/">malicious SHA-1</a> and <a href="http://shattered.io">SHA1</a>), as long as the collisions follow the same byte patterns.</p>
 <p>This document is <strong>not</strong> about new attacks (the most recent one was documented in 2012), but about new forms of exploitations of existing attacks.</p>
 <h1 id="status">Status</h1>
-<p>Current status - as of December 2018 - of known attacks:</p>
+<p>Current status of known attacks:</p>
 <ul>
 <li><p>get a file to get another file's hash or a given hash: <strong>impossible</strong></p>
 <ul>
-<li>it's still even <a href="https://eprint.iacr.org/2008/089.pdf">not practical</a> with MD2.</li>
+<li>it's still even not practical with <a href="https://eprint.iacr.org/2008/089.pdf">MD2</a> or <a href="https://who.paris.inria.fr/Gaetan.Leurent/files/MD4_FSE08.pdf">MD4</a>.</li>
 <li>works for simpler hashes(*) <!-- Thanks Sven! --></li>
 </ul></li>
 <li><p>get two different files with the same MD5: <strong>instant</strong></p>
@@ -528,6 +532,7 @@ BC 00 00 1A 20 00 00 10 24 00 00 1C EC 00 00 14
 0C 00 00 02 C0 00 00 10 B4 00 00 1C 2C 00 00 04
 BC 00 00 18 B0 00 00 10 00 00 00 0C B8 00 00 10
 </code></pre>
+<p>But even if Shattered is much easier to exploit than FastColl, the constraints of the differences in the collision blocks are irrelevant since Shambles is a Chosen Prefix Collision.</p>
 <h2 id="attacks-summary">Attacks summary</h2>
 <table>
 <thead>
@@ -1332,8 +1337,30 @@ sys 2m0.194s
 </ol>
 <h2 id="test-files">Test files</h2>
 <p><a href="examples/free/README.md">Here</a> are free (copyright-free, PII-free) test colliding pairs.</p>
+<h1 id="detection">Detection</h1>
+<p>There are different ways to detect hash collisions in files.</p>
+<ol>
+<li>Two files: if you have two or more files with different contents and the same hash, just diff them!</li>
+</ol>
+<p>However, if you only have a single file, it can be difficult to tell if the file contains a hash collision.</p>
+<ol start="2">
+<li><p>File structure: look at the file at block boundaries, and if you notice high entropy blocks and identical prefix/suffix, you might be able to tell which collision it's about, but it's very error-prone. In the case of a chosen-prefix collision, it's might be impossible to spot as both files might be mostly different besides most of the collision blocks.</p></li>
+<li><p>Hash computation: use a tool (<a href="https://github.com/cr-marcstevens/hashclash/tree/collisiondetection/src/collisiondetection">C</a>, <a href="https://github.com/therealmik/detectcoll">Go</a>) based on Marc Stevens' DetectColl (cf his <a href="https://marc-stevens.nl/research/papers/C13-S.pdf">Counter-cryptanalysis</a> paper). It only requires one file (for example, like Flame's certificate) but it requires the collision to be in a working state (the exact original prefix and its corresponding collision blocks).</p></li>
+</ol>
+<h2 id="safe-hashes">Safe hashes</h2>
+<p>Since Detectcoll can identify blocks that implement a hash collision, it can mitigate it via <em>safe hashes</em>: if a collision block is detected, it reprocesses it again so the collision property will be broken. So DetectColl is able to tell different contents apart via the same hash function despite the collisions in the file.</p>
+<p>Examples: MD5 of Wang's original collision</p>
+<pre><code>md5sum wang*
+79054025255fb1a26e4bc422aef54eb4 *wang1.bin
+79054025255fb1a26e4bc422aef54eb4 *wang2.bin
+</code></pre>
+<p>Safe hashes on these files:</p>
+<pre><code>detectcoll wang1.bin wang2.bin | grep coll
+*coll* ff531291d102a41aa131e0e09f64ca60 wang1.bin
+*coll* 6a8e7124724d5c819401afc202a4fbd0 wang2.bin
+</code></pre>
 <h1 id="references">References</h1>
-<p>Papers:</p>
+<p>Papers (about file formats exploitation):</p>
 <ul>
 <li>2004
 <ul>
