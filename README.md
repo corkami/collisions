@@ -1564,28 +1564,94 @@ There are different ways to detect hash collisions in files.
 
 However, if you only have a single file, it can be difficult to tell if the file contains a hash collision.
 
-2. File structure: look at the file at block boundaries, and if you notice high entropy blocks and identical prefix/suffix, you might be able to tell which collision it's about, but it's very error-prone. In the case of a chosen-prefix collision, it's might be impossible to spot as both files might be mostly different besides most of the collision blocks.
+2. File structure: analyse the file at block boundaries, and if you notice high entropy blocks and maybe identical prefix/suffix, you might be able to tell which collision it's using, but it's very error-prone. In the case of a chosen-prefix collision, it's might be impossible to spot as both files might be mostly different besides most of the collision blocks.
 
-3. Hash computation: use a tool ([C](https://github.com/cr-marcstevens/hashclash/tree/collisiondetection/src/collisiondetection), [Go](https://github.com/therealmik/detectcoll)) based on Marc Stevens' DetectColl (cf his [Counter-cryptanalysis](https://marc-stevens.nl/research/papers/C13-S.pdf) paper). It only requires one file (for example, like Flame's certificate) but it requires the collision to be in a working state (the exact original prefix and its corresponding collision blocks).
+3. Hash computation: use an implementation (in [C](https://github.com/cr-marcstevens/hashclash/tree/collisiondetection/src/collisiondetection) or [Go](https://github.com/therealmik/detectcoll)) of Marc Stevens' DetectColl (cf his [Counter-cryptanalysis](https://marc-stevens.nl/research/papers/C13-S.pdf) paper). It only requires one file but it requires the collision to be in a working state (the exact prefix and its corresponding collision blocks) and it's slow.
+
+DetectColl gives technical information about the collision itself, and shows `*coll*` next to the collided hash.
+
+## Example
+
+With the Flame malware certificate:
+```
+$ detectcoll flame.der
+Found collision in block 11:
+   dm: dm4=80000000 dm11=ffff8000 dm14=80000000
+   ihv1=1ba33aac3a7f9ed70aec349b40390e85
+   ihv2=9ba33aac3c7f60ee8cebf69bc2391085
+*coll* c38a66643af816f8438b375b5f42ccbb flame.der
+ba2499ba3dda9ef818f854b75a2bd1cd9f2b7bed flame.der
+```
 
 
 ## Safe hashes
 
-Since Detectcoll can identify blocks that implement a hash collision, it can mitigate it via *safe hashes*: if a collision block is detected, it reprocesses it again so the collision property will be broken. So DetectColl is able to tell different contents apart via the same hash function despite the collisions in the file.
+Since Detectcoll can identify blocks used for a hash collision, it can mitigate the collision via *safe hashes*: if a collision block is detected, it reprocesses it again to break the collision property. So DetectColl is able to tell different contents apart via the same hash function despite the collisions in the file.
 
-Examples: MD5 of Wang's original collision
+In short:
+- for files with no collision, a safe hash value is equal to the standard hash value.
+- for files with collision, the safe hash differs but will also differs on different file contents despite the collisions.
+
+
+Example with Wang's original collision from 2005:
+
 ```
-md5sum wang*
+$ md5sum wang*
 79054025255fb1a26e4bc422aef54eb4 *wang1.bin
 79054025255fb1a26e4bc422aef54eb4 *wang2.bin
 ```
 
-Safe hashes on these files:
+Safe MD5 on these files:
 ```
-detectcoll wang1.bin wang2.bin | grep coll
+$ detectcoll wang1.bin | grep coll
 *coll* ff531291d102a41aa131e0e09f64ca60 wang1.bin
+```
+
+```
+$ detectcoll wang2.bin | grep coll
 *coll* 6a8e7124724d5c819401afc202a4fbd0 wang2.bin
 ```
+
+
+### Multiple collisions
+
+A minor drawback of safe hashes is that they prevent the detection of multiple collisions in the same file, but DetectColl can still detect collisions with 'standard' hashes.
+
+Examples with PoCorGTFO 0x14 (a NES+PDF hashquine with an alternate cover picture).
+
+Safe hashes can only find one collision:
+```
+$ detectcoll_safe pocorgtfo14.pdf
+Found collision in block 135:
+   dm: dm4=80000000 dm11=ffff8000 dm14=80000000
+   ihv1=73b615bd01d5e48032d3d1a549d0f956
+   ihv2=f3b615bd83d5e480b4d3d1a5cbd0f956
+*coll* c4b085f9fa4b38669fa79d4c410538e9 pocorgtfo14.pdf
+eb5d0fb7607c1262236a5a7f591bb510ee9afbbc pocorgtfo14.pdf   
+```
+
+Unsafe hashes finds all of them:
+```
+$ detectcoll_unsafe pocorgtfo14.pdf | grep Found | wc -l
+609
+```
+
+If you check the last few collisions:
+```
+$ detectcoll_unsafe pocorgtfo14.pdf | tail | grep Found
+Found collision in block 34169:
+Found collision in block 34250:
+Found collision in block 34324:
+Found collision in block 34389:
+Found collision in block 34456:
+Found collision in block 34523:
+Found collision in block 34585:
+Found collision in block 34738:
+```
+
+You can notice that the last one is not so close from the previous ones:
+that's because the previous ones belong to the same image file for the hashquines,
+while the last one is for the alternate cover.
 
 
 # References
