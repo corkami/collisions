@@ -3,6 +3,14 @@
 
 ## MD5
 
+[Wang](https://link.springer.com/chapter/10.1007/11426639_2) (2005): [wang1.bin](wang1.bin) / [wang2.bin](wang2.bin)
+
+[Apop](https://link.springer.com/chapter/10.1007/978-3-540-79263-5_1) (2008): [apop-1.bin](apop-1.bin) / [apop-2.bin](apop-2.bin)
+
+[Rogue CA](https://www.win.tue.nl/hashclash/rogue-ca/) (2008): [real](ca-real.der) / [rogue](ca-rogue.der)
+
+[Flame](https://en.wikipedia.org/wiki/Flame_(malware)) (2012): [certificate](flame.der)
+
 
 ### FastColl
 
@@ -60,16 +68,9 @@ PE: [collision1.exe](collision1.exe) / [collision2.exe](collision2.exe)
 
 FastColl: [fastcoll1.bin](fastcoll1.bin) / [fastcoll2.bin](fastcoll2.bin)
 
-HashClash 9 blocks [cpc1.bin](cpc1.bin) / [cpc2.bin](cpc2.bin) - 1 block [single-cpc1.bin](single-cpc1.bin) / [single-cpc2.bin](single-cpc2.bin)
+HashClash 9 blocks [cpc1.bin](cpc1.bin) / [cpc2.bin](cpc2.bin) - [1 block](https://www.win.tue.nl/hashclash/SingleBlock/) (2009) [single-cpc1.bin](single-cpc1.bin) / [single-cpc2.bin](single-cpc2.bin)
 
-Single IPC: [single-ipc1.bin](single-ipc1.bin) / [single-ipc2.bin](single-ipc2.bin)
-
-
-## certificates
-
-[Flame CA](flame.der)
-
-[Rogue CA](https://www.win.tue.nl/hashclash/rogue-ca/): [real](ca-real.der) / [rogue](ca-rogue.der)
+[Single IPC](https://marc-stevens.nl/research/md5-1block-collision/) (2012): [single-ipc1.bin](single-ipc1.bin) / [single-ipc2.bin](single-ipc2.bin)
 
 
 ## SHA1 (Shattered)
