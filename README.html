@@ -137,7 +137,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li><a href="#uncommon-strategies">Uncommon strategies</a>
 <ul>
-<li><a href="#multicolls-multiple-collisions-chain">MultiColls: multiple collisions chain</a></li>
+<li><a href="#multicolls-multiple-collisions-chain">MultiColls: multiple collisions chain</a>
+<ul>
+<li><a href="#hashquines">Hashquines</a></li>
+</ul></li>
 <li><a href="#validity">Validity</a></li>
 <li><a href="#polycolls-collisions-of-different-file-types">PolyColls: collisions of different file types</a>
 <ul>
@@ -1085,6 +1088,8 @@ sys 2m0.194s
 <p>Collisions are usually about two valid files of the same type.</p>
 <h3 id="multicolls-multiple-collisions-chain">MultiColls: multiple collisions chain</h3>
 <p>Nothing prevents to chain several collision blocks, and have more than two contents with the same hash value. An example of that are <em>hashquines</em> - that shows their own MD5 value. The <a href="https://github.com/angea/pocorgtfo#0x14">PoCGTFO 14</a> file contains 609 FastColl collisions, to do that through two file types in the same file.</p>
+<h4 id="hashquines">Hashquines</h4>
+<p>Hashquines are files showing their own hash value. They are covered <a href="hashquines/">here</a>.</p>
 <h3 id="validity">Validity</h3>
 <p>A different strategy would be to kill the file type to bypass scanning as a corrupted file. Just overwriting the magic signature will be enough. Appending both files (as valid or invalid) with a format that doesn't need to be at offset 0 (archive, like ZIP/RAR/...) would reveal another file type.</p>
 <p>This enables polyglot collisions without using a chosen-prefix collision:</p>

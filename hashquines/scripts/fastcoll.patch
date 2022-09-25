@@ -1,0 +1,19 @@
+diff -Naur fastcoll/block0.cpp fastcoll/block0.cpp
+--- fastcoll/block0.cpp	2017-03-07 11:23:18.050444929 +0100
++++ fastcoll/block0.cpp	2017-03-06 21:48:19.345474357 +0100
+@@ -87,6 +87,15 @@
+ 		MD5_REVERSE_STEP(7, 0xfd469501, 22);
+ 		MD5_REVERSE_STEP(11, 0x895cd7be, 22);
+ 		MD5_REVERSE_STEP(14, 0xa679438e, 17);
++		// EVIL HACK: insert a JPEG comment marker here with a suitable size - makomk
++		block[14] = 0x01feff | ((block[14] - 0x8000) & 0xff000000) ;
++		Q[Qoff + 15] = RL((FF(Q[Qoff + 14], Q[Qoff + 13], Q[Qoff + 12]) + Q[Qoff + 11] + block[14] + 0xa679438e),17) + Q[Qoff + 14];
++		if((Q[Qoff + 15] & 0x80008000) !=  0x80008000)
++			continue;
++		if(Q[Qoff + 15] & 0x21000008)
++			continue;
++		if((Q[Qoff + 15] & 0x00010000) != (~Q[Qoff + 14] & 0x00010000))
++			continue;
+ 		MD5_REVERSE_STEP(15, 0x49b40821, 22);
+ 
+ 		const uint32 tt1 = FF(Q[Qoff + 1], Q[Qoff + 0], Q[Qoff - 1]) + Q[Qoff - 2] + 0xe8c7b756;		

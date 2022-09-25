@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="hashquines">Hashquines</h1>
+<p>Hashquines are files showing their own MD5.</p>
+<p>It seems like an impossible magic trick because modifying the file's contents changes the hash, therefore the hash can't be known in advance. So it's the opposite strategy: make it possible to display any value, included the value of the actual hash of the file, without changing the overall hash of the file.</p>
+<p>They serve no security purpose, but they show that MD5 is now just a fun toy.</p>
+<h1 id="strategies">Strategies</h1>
+<h2 id="self-check">Self-check</h2>
+<p>'Cheating' by just computing the hash value and displaying it. They don't rely on hash collisions.</p>
+<p>In Python:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="im">import</span> hashlib</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="im">import</span> sys</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="bu">print</span>(hashlib.md5(<span class="bu">open</span>(sys.argv[<span class="dv">0</span>],<span class="st">&quot;rb&quot;</span>).read()).hexdigest())</a></code></pre></div>
+<p>In Batch:</p>
+<pre class="batch"><code>md5sum %0
+</code></pre>
+<h2 id="read-an-encoded-value">Read an encoded value</h2>
+<p>Chain enough fast collisions to be able to encode a hash value without modifying the final hash value, then some code is <em>executed</em> to check and display that value.</p>
+<p>Some fixed offsets of FastColl collision blocks will be xored with <code>0x80</code>, so that bit can be checked reliably - in this case, one collision equals 1 bit of information.</p>
+<p>An MD5 is 128 bits, so 128 Fastcoll blocks are needed.</p>
+<h2 id="abuse-format-parsing">Abuse format parsing</h2>
+<p>Abuse the format structure to make the parser display a digit or another while keeping the same hash value, repeat for each digit and for every value to be displayed (<code>32*16=512</code>).</p>
+<p>Like colliding 2 images or documents, but instead colliding the contents of many different elements at various positions, to display the right value of the actual hash file without changing the overall file hash.</p>
+<p>Depending on the format, a possible way is to use a collision as a switch to enable one character or another. In this case, <code>N</code> chained collisions display <code>N+1</code> different objects in the same position.</p>
+<p>To display the hex value of an MD5, 16 characters are required for 32 digits, so <code>480</code> (=<code>32*15</code>) collisions.</p>
+<p>A way to reduce this amount of collision is to display the characters via 7-segments display, in which case each segments needs to be toggled on or off (like bits). So in this case, <code>224</code> (<code>=32*7</code>) collisions are required.</p>
+<pre><code> -
+| |
+ -
+| |
+ -
+</code></pre>
+<h1 id="examples">Examples</h1>
+<ul>
+<li>a <a href="md5.ps">PostScript</a> 'encoding' hashquine by <em>Gregor Kopf</em> - cf <a href="https://github.com/angea/pocorgtfo#0x14">Poc||GTFO 0x14:09</a> (<a href="https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-09.pdf">article 9</a>)</li>
+</ul>
+<p><img src=pics/postscript.png height=200></img></p>
+<ul>
+<li><p>2 PDF hashquines: one via <a href="pocs/md5jpg.pdf">JPG</a>, one via <a href="pocs/md5text.pdf">text</a>, by <em>Mako</em> - cf <a href="https://github.com/angea/pocorgtfo#0x14">Poc||GTFO 0x14:10</a> (<a href="https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-10.pdf">article 10</a>)</p></li>
+<li><p>2 GIF hashquines by <em>spq</em> - cf <a href="https://github.com/angea/pocorgtfo#0x14">Poc||GTFO 0x14:11</a> (<a href="https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-11.pdf">article 11</a>)</p></li>
+</ul>
+<p><img src=pocs/md5.gif width=400></img> <img src=pocs/md5_avp_loop.gif width=300></img></p>
+<ul>
+<li>a NES 'encoding' hashquine, by Evan Sultanik and Evan Teran, in PoC||GTFO 0x14 (here as a <a href="pocs/hashquine.nes">standalone file</a>) - cf <a href="https://github.com/angea/pocorgtfo#0x14">Poc||GTFO 0x14:12</a> (<a href="https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-12.pdf">article 12</a>)</li>
+</ul>
+<p><img src=pics/nes.png height=200></img></p>
+<ul>
+<li><a href="https://github.com/angea/pocorgtfo#0x14">Poc||GTFO 0x14</a> is a polyglot file: simultaneously a JPG in PDF hashquine and a NES hashquine, with also a hidden cover while keeping the same MD5 - a classic collision, albeit the JPG picture has a lot of custom scans.</li>
+</ul>
+<p><img src=pics/pocorgtfo14.png height=400></img></p>
+<ul>
+<li>a GIF hashquine by <em>Rogdham</em> - cf <a href="https://www.rogdham.net/2017/03/12/gif-md5-hashquine.en">blog post</a></li>
+</ul>
+<p><img src=pocs/rogdham_gif_md5_hashquine.gif height=150></img></p>
+<ul>
+<li>a TIFF <a href="pocs/rogdham_tiff_md5_hashquine_4Go.zip">hashquine (4 gb)</a> by <em>Rogdham</em></li>
+</ul>
+<p>Cf self-descriptive image (here as PNG):</p>
+<p><img src=pics/tiff_preview.png height=600></img></p>
+<ul>
+<li>a PNG hashquine by <em>David 'Retr0id' Buchanan</em></li>
+</ul>
+<p><img src=pocs/hashquine_by_retr0id.png height=600></img></p>
+<h1 id="notes">Notes</h1>
+<h2 id="custom-fastcoll">Custom FastColl</h2>
+<p>For these hashquines, new forms of hash collisions were introduced by <em>Mako</em>:</p>
+<ul>
+<li><p>Rather than relying on UniColl, FastColl was modified to force the creation of a JPEG comment <code>FF FE</code> right before the collision difference. Very useful also for standard collisions.</p></li>
+<li><p>Similarly, in the PDF hashquine with text, 32b of the FastColl are forced to be <code>Do(...)</code> which is a valid PDF operator. It's very nice to have such a short text operator that can be abused in the middle of a collision block!</p></li>
+</ul>
+<h2 id="hiding-collision-blocks">Hiding collision blocks</h2>
+<p>As usual, hiding collision blocks can be tricky. Here are some introduced techniques.</p>
+<ul>
+<li><em>Mako</em> abused PDF name conventions, forcing the start of the collision block to define a PDF name - the last character before the collision block is a <code>/</code>, defining a PDF name. The name has to be reused later in the file.</li>
+</ul>
+<p>For example, the first collision block defines the atrocious but working name <code>/öÃÝüúá.3A¢å¦e»ñæÀ¿Wæ‚b—»ò´óûàÊÄÃ’\q±*,ÆýH™æSùÞsp</code>.</p>
+<ul>
+<li><em>Retr0id</em> put the collision blocks in plain sight: a custom palette is used to hide all colors but 0, and collision blocks containing null values are rejected.</li>
+</ul>
+<p>Here's the a crop of the picture around the <code>8</code> digit with a more revealing palette (black and red color unmodified). <img src=pics/8blue.png height=100></img> These are unicoll blocks to turn on/off the red pixels (color <code>0</code> or <code>1</code>)</p>
+<h2 id="misc">Misc</h2>
+<ul>
+<li><p><a href="https://github.com/corkami/collisions#detection"><code>detectcoll</code></a> in <em>unsafe mode</em> can enumerate all Fastcoll and Unicoll occurences are present in the file - cf <a href="logs/">logs</a>.</p>
+<ul>
+<li>Knowing the offsets and the types of the collision just from one file, it's then possible to modify or reset the collisions and alter the display yourself of the files without changing their MD5 or recomputing any collision, whether it's an 'encoding' hashquine (ex: for <a href="scripts/nes.py">NES</a>) or a 'format' hashquine (ex: <a href="scripts/jpgpdf.py">Jpg in PDF</a>).</li>
+</ul></li>
+<li><p>Since Unicoll only changes one byte, Retr0id's PNG font is made of one pixel per line:</p></li>
+</ul>
+<p><img src=pics/8.png height=100></img></p>
+<pre><code>  *
+     *
+*
+       *
+*
+       *
+  *
+     *
+*
+       *
+*
+       *
+  *
+     *
+</code></pre>
+<ul>
+<li>Since correct values of Adler32 are required for Zlib chunks and CRC32 are required for PNG chunks, <em>Retr0id</em> had to forge these values while keeping the same MD5 hash: to do that, he added many fastcoll blocks and swapped them in a clever meet-in-a-middle attack to reach a suitable value - cf this <a href="https://gist.github.com/DavidBuchanan314/a15e93eeaaad977a0fec3a6232c0b8ae">gitst</a>.</li>
+</ul>
+<p>The Fastcoll blocks to forge the CRCs are 'visible' at the bottom of the picture (here, with a revealing palette).</p>
+<p><img src=pics/retr0id_blue.png height=500></img></p>
+<!-- pandoc -s -f gfm -t html README.md -o README.html -->
+</body>
+</html>

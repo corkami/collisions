@@ -43,6 +43,7 @@ By Ange Albertini and Marc Stevens.
       - [Zip-based formats](#zip-based-formats)
   - [Uncommon strategies](#uncommon-strategies)
     - [MultiColls: multiple collisions chain](#multicolls-multiple-collisions-chain)
+      - [Hashquines](#hashquines)
     - [Validity](#validity)
     - [PolyColls: collisions of different file types](#polycolls-collisions-of-different-file-types)
       - [PE - JPG](#pe---jpg)
@@ -1283,6 +1284,11 @@ and have more than two contents with the same hash value.
 An example of that are *hashquines* - that shows their own MD5 value.
 The [PoCGTFO 14](https://github.com/angea/pocorgtfo#0x14) file contains 609 FastColl collisions,
 to do that through two file types in the same file.
+
+
+#### Hashquines
+
+Hashquines are files showing their own hash value. They are covered [here](hashquines/).
 
 
 ### Validity
