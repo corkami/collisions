@@ -14,7 +14,9 @@ Tiny, copyright-free, PII-free collision PoCs
 ## UniColl
 
 - GZip archives [md5-1.gz](md5-1.gz) / [md5-2.gz](md5-2.gz)
-- JPG images [md5-1.jpg](md5-1.jpg) / [md5-2.jpg](md5-2.jpg)
+- JPG images
+  - via UniColl [md5-1.jpg](md5-1.jpg) / [md5-2.jpg](md5-2.jpg)
+  - via modified FastColl [md5-1fc.jpg](md5-1fc.jpg) / [md5-2fc.jpg](md5-2fc.jpg)
 - PDF documents [md5-1.pdf](md5-1.pdf) / [md5-2.pdf](md5-2.pdf)
 - PNG images
    - generic header, not 100% compatible
