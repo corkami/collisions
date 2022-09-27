@@ -171,4 +171,23 @@ The Fastcoll blocks to forge the CRCs are 'visible' at the bottom of the picture
 <img src=pics/retr0id_blue.png height=500></img>
 
 
+# More than hash values
+
+Many collisions can be used to encode or display a hash value, but they can be used to encode anything else, even bigger.
+
+*Retr0id* [combined](https://github.com/DavidBuchanan314/monomorph) parallelized Fastcoll with a linux 4kb shellcode loader, generating a hashquine (benign), a rickroll (fun) or a meterpreter (evil) or anything you want with the same final hash.
+
+```
+$ python3 monomorph.py bin/monomorph.linux.x86-64.benign benign
+[...]
+$ python3 monomorph.py bin/monomorph.linux.x86-64.benign hashquine sample_payloads/bin/hashquine.bin
+[...]
+$ benign
+$ hashquine
+My MD5 is: 3cebbe60d91ce760409bbe513593e401
+$ md5sum benign hashquine
+3cebbe60d91ce760409bbe513593e401  benign
+3cebbe60d91ce760409bbe513593e401  hashquine
+```
+
 <!-- pandoc -s -f gfm -t html README.md -o README.html -->
