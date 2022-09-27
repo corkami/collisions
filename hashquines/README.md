@@ -3,9 +3,9 @@
 Hashquines are files showing their own MD5.
 
 It seems like an impossible magic trick because modifying the file's contents changes the hash, therefore the hash can't be known in advance.
-So it's the opposite strategy: make it possible to display any value, included the value of the actual hash of the file, without changing the overall hash of the file.
+So it's the opposite strategy: make it possible to display *any* value, included the value of the actual hash of the file, without changing the overall hash of the file.
 
-They serve no security purpose, but they show that MD5 is now just a fun toy.
+While the security risk they represent is debatable, they certainly show that MD5 is now just a fun toy.
  
 
 # Strategies
@@ -68,6 +68,16 @@ So in this case, `224` (`=32*7`) collisions are required.
 
 - 2 PDF hashquines: one via [JPG](pocs/md5jpg.pdf), one via [text](pocs/md5text.pdf), by *Mako* - cf [Poc||GTFO 0x14:10](https://github.com/angea/pocorgtfo#0x14) ([article 10](https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-10.pdf))
 
+<img src=pics/jpgpdf.png height=100></img>
+
+```
+$ pdftotext -q md5text.pdf -
+66DA5E07C0FD4C921679A65931FF8393
+
+$ md5sum md5text.pdf
+66da5e07c0fd4c921679a65931ff8393 *md5text.pdf
+```
+
 - 2 GIF hashquines by *spq* - cf [Poc||GTFO 0x14:11](https://github.com/angea/pocorgtfo#0x14) ([article 11](https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-11.pdf))
 
 <img src=pocs/md5.gif width=400></img>
@@ -106,7 +116,7 @@ Cf self-descriptive image (here as PNG):
 
 For these hashquines, new forms of hash collisions were introduced by *Mako*:
 
-- Rather than relying on UniColl, FastColl was modified to force the creation of a JPEG comment `FF FE` right before the collision difference. Very useful also for standard collisions.
+- Rather than relying on UniColl, FastColl was modified to force the creation of a JPEG comment `FF FE` right before the collision difference. Also useable for standard JPEG [collisions](../examples/free).
 
 - Similarly, in the PDF hashquine with text, 32b of the FastColl are forced to be ` Do(...)` which is a valid PDF operator. It's very nice to have such a short text operator that can be abused in the middle of a collision block!
 
@@ -122,7 +132,9 @@ For example, the first collision block defines the atrocious but working name `/
 - *Retr0id* put the collision blocks in plain sight: a custom palette is used to hide all colors but 0, and collision blocks containing null values are rejected.
 
 Here's the a crop of the picture around the `8` digit with a more revealing palette (black and red color unmodified).
+
 <img src=pics/8blue.png height=100></img>
+
 These are unicoll blocks to turn on/off the red pixels (color `0` or `1`)
 
 

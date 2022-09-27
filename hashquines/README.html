@@ -83,8 +83,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <body>
 <h1 id="hashquines">Hashquines</h1>
 <p>Hashquines are files showing their own MD5.</p>
-<p>It seems like an impossible magic trick because modifying the file's contents changes the hash, therefore the hash can't be known in advance. So it's the opposite strategy: make it possible to display any value, included the value of the actual hash of the file, without changing the overall hash of the file.</p>
-<p>They serve no security purpose, but they show that MD5 is now just a fun toy.</p>
+<p>It seems like an impossible magic trick because modifying the file's contents changes the hash, therefore the hash can't be known in advance. So it's the opposite strategy: make it possible to display <em>any</em> value, included the value of the actual hash of the file, without changing the overall hash of the file.</p>
+<p>While the security risk they represent is debatable, they certainly show that MD5 is now just a fun toy.</p>
 <h1 id="strategies">Strategies</h1>
 <h2 id="self-check">Self-check</h2>
 <p>'Cheating' by just computing the hash value and displaying it. They don't rely on hash collisions.</p>
@@ -117,8 +117,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <p><img src=pics/postscript.png height=200></img></p>
 <ul>
-<li><p>2 PDF hashquines: one via <a href="pocs/md5jpg.pdf">JPG</a>, one via <a href="pocs/md5text.pdf">text</a>, by <em>Mako</em> - cf <a href="https://github.com/angea/pocorgtfo#0x14">Poc||GTFO 0x14:10</a> (<a href="https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-10.pdf">article 10</a>)</p></li>
-<li><p>2 GIF hashquines by <em>spq</em> - cf <a href="https://github.com/angea/pocorgtfo#0x14">Poc||GTFO 0x14:11</a> (<a href="https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-11.pdf">article 11</a>)</p></li>
+<li>2 PDF hashquines: one via <a href="pocs/md5jpg.pdf">JPG</a>, one via <a href="pocs/md5text.pdf">text</a>, by <em>Mako</em> - cf <a href="https://github.com/angea/pocorgtfo#0x14">Poc||GTFO 0x14:10</a> (<a href="https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-10.pdf">article 10</a>)</li>
+</ul>
+<p><img src=pics/jpgpdf.png height=100></img></p>
+<pre><code>$ pdftotext -q md5text.pdf -
+66DA5E07C0FD4C921679A65931FF8393
+
+$ md5sum md5text.pdf
+66da5e07c0fd4c921679a65931ff8393 *md5text.pdf
+</code></pre>
+<ul>
+<li>2 GIF hashquines by <em>spq</em> - cf <a href="https://github.com/angea/pocorgtfo#0x14">Poc||GTFO 0x14:11</a> (<a href="https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-11.pdf">article 11</a>)</li>
 </ul>
 <p><img src=pocs/md5.gif width=400></img> <img src=pocs/md5_avp_loop.gif width=300></img></p>
 <ul>
@@ -146,7 +155,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 id="custom-fastcoll">Custom FastColl</h2>
 <p>For these hashquines, new forms of hash collisions were introduced by <em>Mako</em>:</p>
 <ul>
-<li><p>Rather than relying on UniColl, FastColl was modified to force the creation of a JPEG comment <code>FF FE</code> right before the collision difference. Very useful also for standard collisions.</p></li>
+<li><p>Rather than relying on UniColl, FastColl was modified to force the creation of a JPEG comment <code>FF FE</code> right before the collision difference. Also useable for standard JPEG <a href="../examples/free">collisions</a>.</p></li>
 <li><p>Similarly, in the PDF hashquine with text, 32b of the FastColl are forced to be <code>Do(...)</code> which is a valid PDF operator. It's very nice to have such a short text operator that can be abused in the middle of a collision block!</p></li>
 </ul>
 <h2 id="hiding-collision-blocks">Hiding collision blocks</h2>
@@ -158,7 +167,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li><em>Retr0id</em> put the collision blocks in plain sight: a custom palette is used to hide all colors but 0, and collision blocks containing null values are rejected.</li>
 </ul>
-<p>Here's the a crop of the picture around the <code>8</code> digit with a more revealing palette (black and red color unmodified). <img src=pics/8blue.png height=100></img> These are unicoll blocks to turn on/off the red pixels (color <code>0</code> or <code>1</code>)</p>
+<p>Here's the a crop of the picture around the <code>8</code> digit with a more revealing palette (black and red color unmodified).</p>
+<p><img src=pics/8blue.png height=100></img></p>
+<p>These are unicoll blocks to turn on/off the red pixels (color <code>0</code> or <code>1</code>)</p>
 <h2 id="misc">Misc</h2>
 <ul>
 <li><p><a href="https://github.com/corkami/collisions#detection"><code>detectcoll</code></a> in <em>unsafe mode</em> can enumerate all Fastcoll and Unicoll occurences are present in the file - cf <a href="logs/">logs</a>.</p>
