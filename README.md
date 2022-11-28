@@ -1,19 +1,53 @@
 <!-- pandoc -s -f gfm -t html README.md -o README.html -->
 
-**TL;DR** getting an MD5 collision of these two images is now(\*) [trivial](scripts/png.py) and instant.
-
-[![MD5 page on Wikipedia](examples/tldr-1.jpg)](https://en.wikipedia.org/wiki/MD5) ⟷
-<a href=http://gunshowcomic.com/648><img src=examples/tldr-2.jpg height=400 alt='On Fire / This is fine'></a>
-
-Don't play with fire, don't rely on MD5.
-
-(\*) Colliding any pair of files has been possible for many years, but it takes several hours each time, with no shortcut.
-This page provide tricks specific to file formats and precomputed collision prefixes to make collision **instant**.
-`git clone`. Run Script. Done.
-
 # Hash collisions and exploitations
 
 By Ange Albertini and Marc Stevens.
+
+
+## FAQ (TL;DR)
+
+Q: Is it possible to make a file get an arbitrary MD2/MD4/MD5/MD6/SHA1/SHA2/SHA3, or the same hash as another file?<br/>
+A: No.
+
+Q: Can one create 2 different files with the same hash?<br/>
+A: With MD5, in [a few seconds on a standard computer](#fastcoll-md5). With SHA1, it's [possible](#shattered-sha1) but not practical for end-users (Complexity: 2^61.2 Price: $11k).
+
+Q: Can one make 2 different files get the same hash by appending stuff?<br/>
+A: With MD5, in [a few hours on a standard computer](#hashclash-md5). With SHA1, it's [possible](#shambles-sha-1) but not practical for end-users (Complexity: 2^63.4 Price: $45K)
+
+Q: Will the 2 files remain valid?<br/>
+A: In general, yes, as most file formats tolerate appended data. OTOH files signatures will be likely broken.
+
+Q: Can one make 2 different files with arbitrary contents and the same hash?<br/>
+A: Yes, it can be instant by relying on special file structures:<br/>
+1. a special format header (or pair) with tricks, acting as a switch between 2 contents (some formats won't allow such tricks).<br/>
+2. pre-computed collisions, based on the specific header(s).<br/>
+3. two contents of specific formats, both presents after the collision (added after the computation).
+
+Q: Which formats can I get instant MD5-colliding files pair for?<br/>
+A: [JPG](scripts/jpg.py), [PNG](scripts/png.py), [GIF](scripts/gif.py), [GZIP](scripts/gz.py), [Portable Executable](scripts/pe.py), [MP4](scripts/mp4.py), [JPEG2000](scripts/jp2.py), [PDF](scripts/pdf.py), [DOCX/PPTX/XSLX](scripts/zinsider.py), [EPUB](scripts/zinsider.py), [3MF](scripts/zinsider.py), [XPS](scripts/zinsider.py). Just run the specific script.
+
+Q: What about for SHA1?<br/>
+A: For SHA1, [JPG in a PDF](https://github.com/nneonneo/sha1collider) is computed and implemented.
+
+Q: What about formats already supported for MD5 (JPG, PNG...), but for SHA1 instead?<br/>
+A: They're most likely supported with SHA1 too, but their collisions hasn't been computed.
+
+Q: Are computations faster for similar (but different) contents?<br/>
+A: No. Any tiny difference requires a full computation.
+
+Q: Which formats don't have such shortcut?<br/>
+A: ELF, Mach-O, Java Class, TAR, ZIP (among others...)
+
+Q: Are classic collisions (in a few hours) still possible with these formats?<br/>
+A: Yes, as long as any amount of appended data is tolerated (ie likely not ZIP or Class).
+
+Q: Do you provide examples of collisions?<br/>
+A: [Yes](examples/free/README.md).
+
+
+## Table of Contents
 
 - [Introduction](#introduction)
 - [Status](#status)
