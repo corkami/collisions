@@ -1,0 +1,11 @@
+Partial collision found
+Found collision in block 3 using DV II(52,0):
+   dm: dm0=f3fffffe dm1=c0000010 dm2=5400000c dm3=04000004 dm4=b3fffff6 dm5=20000010 dm6=1bffffe4 dm7=2bffffec dm8=04000002 dm9=40000010 dm10=73fffffc dm11=1bfffffc dm12=7bfffff8 dm13=50000010 dm14=fffffffc dm15=b8000010 
+   ihv1=4ea962697c876e2674d107f0fec6798414f5bf45
+   ihv2=4ea962697c876e2674d107f0fec6798414f5bf45
+Found collision in block 4 using DV II(52,0):
+   dm: dm0=0c000002 dm1=40000010 dm2=73ffffe4 dm3=13fffffc dm4=bc00000a dm5=20000010 dm6=e400001c dm7=13ffffec dm8=03fffffe dm9=bffffff0 dm10=abfffffc dm11=1bfffffc dm12=7c000008 dm13=6ffffff0 dm14=fffffffc dm15=b8000010 
+   ihv1=8d64d617ffed5352ebc859155ec7eb34f38a5a7b
+   ihv2=8d64c821ffed52e2ebc859155ec7eb36738a5a7b
+80e808e7abdbe9109903c71f049a30f7 12-shattered2.bin
+*coll* f92d74e3874587aaf443d1db961d4e26dde13e9c 12-shattered2.bin

@@ -1,0 +1,6 @@
+Found collision in block 9 using DV II(52,0):
+   dm: dm0=0bfffffe dm1=c0000010 dm2=93ffffe4 dm3=1bfffffc dm4=a4000006 dm5=e0000010 dm6=dbffffec dm7=54000014 dm8=0bfffffe dm9=3ffffff0 dm10=6c00001c dm11=e4000004 dm12=bc000008 dm13=b0000010 dm14=00000004 dm15=57fffff0 
+   ihv1=72d43f9ba661592f73fc20173d1dce03cc7813bc
+   ihv2=72d42d69a661589d73fc20173d1dce014c7813bc
+d27794ba8bc1f19e97ec82fea19a231e 13-shambles2.bin
+*coll* 8ac60ba76f1999a1ab70223f225aefdc78d4ddc0 13-shambles2.bin
