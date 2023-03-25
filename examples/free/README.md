@@ -31,6 +31,9 @@ Tiny, copyright-free, PII-free collision PoCs
 
 - ZIP [md5-1.zip](md5-1.zip) / [md5-2.zip](md5-2.zip)
 
+- LZ4 archives [md5-1.lz4](md5-1.lz4) / [md5-2.lz4](md5-2.lz4)
+- Zstandard archives [md5-1.zstd](md5-1.zstd) / [md5-2.zstd](md5-2.zstd)
+
 
 ## HashClash
 
