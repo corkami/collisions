@@ -68,6 +68,7 @@ A: [Yes](examples/free/README.md).
       - [incompatibility](#incompatibility)
     - [GIF](#gif)
     - [GZIP](#gzip)
+    - [LZ4 / Zstandard](#lz4--zstandard)
     - [Portable Executable](#portable-executable)
     - [MP4 and others](#mp4-and-others)
       - [JPEG2000](#jpeg2000)
@@ -773,6 +774,26 @@ Here is a [script](scripts/gz.py) to generate instant MD5 collisions of two GZip
 A `.tar.gz` is just the `gzip` archive of a `tar` archive. It will work fine with gzipped tar, unlike `tar` itself.
 
 Examples: [collision1.tar.gz](examples/collision1.tar.gz) (Pacome) ⟷ [collision2.tar.gz](examples/collision2.tar.gz) (Reg)
+
+
+### LZ4 / Zstandard
+
+<img alt='an Zstandard file' src=https://raw.githubusercontent.com/corkami/pics/master/binary/zstd_skip.png width=500/>
+<img alt='an LZ4 file' src=https://raw.githubusercontent.com/corkami/pics/master/binary/lz4.png width=500/>
+
+LZ4 and Zstandard are 2 different compression formats, with a similar overall structure:
+they're made of frames, each starting with a specific magic: `0xFD2FB528` for Zstandard frames, `0x184D2204` for Lz4 frames.
+
+They also **share** the same 'skippable' TLV frames, starting with 4 bytes *magics* in the range `0x184D2A50` - `0x184D2A5F`, then the *Length* of the user data (4 bytes, little-endian), then the *User Data* itself.
+These frames are entirely optional, of any length, and repeatable. The files can start with these frames. So these frames can be chained to make a perfect generic collision prefix, across 2 formats.
+
+Here is a [script](scripts/zstd-lz4.py) to generate instant MD5 collisions of two Zstd/Lz4 files. Like Gzip, 2 different archives will be visible from the outside no matter the content: for example, a `.cpio.zst`.
+
+Examples:
+- [md5-1.lz4](examples/free/md5-1.lz4) ⟷ [md5-2.lz4](examples/free/md5-2.lz4)
+- [md5-1.zstd](examples/free/md5-1.zstd) ⟷ [md5-2.zstd](examples/free/md5-2.zstd)
+- [md5-c6a611ce.zstd](examples/free/md5-c6a611ce.zstd) ⟷ [md5-c6a611ce.lz4](examples/free/md5-c6a611ce.lz4)
+
 
 ### Portable Executable
 
