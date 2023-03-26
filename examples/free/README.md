@@ -33,8 +33,7 @@ Tiny, copyright-free, PII-free collision PoCs
 
 - LZ4 archives [md5-1.lz4](md5-1.lz4) / [md5-2.lz4](md5-2.lz4)
 - Zstandard archives [md5-1.zstd](md5-1.zstd) / [md5-2.zstd](md5-2.zstd)
-- Zstandard archives [md5-1.zstd](md5-1.zstd) / [md5-2.zstd](md5-2.zstd)
-- LZ4/Zstandard archives [md5-c6a611ce.zstd](md5-c6a611ce.zstd) / [md5-c6a611ce.lz4]/md5-c6a611ce.lz4
+- LZ4/Zstandard archives [md5-c6a611ce.zstd](md5-c6a611ce.zstd) / [md5-c6a611ce.lz4](md5-c6a611ce.lz4)
 
 
 ## HashClash
