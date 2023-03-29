@@ -76,6 +76,7 @@ A: [Yes](examples/free/README.md).
       - [JPG in PDF](#jpg-in-pdf)
     - [ZIP](#zip)
       - [Zip-based formats](#zip-based-formats)
+    - [Others](#others)
   - [Uncommon strategies](#uncommon-strategies)
     - [MultiColls: multiple collisions chain](#multicolls-multiple-collisions-chain)
       - [Hashquines](#hashquines)
@@ -1325,6 +1326,11 @@ Some formats with multiple files based on Zip can't be generically exploited:
 
 
 Thanks to [Philippe Lagadec](https://twitter.com/decalage2) for his help on Office file formats!
+
+
+### Others
+
+- Wasm, via a custom section: [script](scripts/wasm.py), examples: [md5-1.wasm](examples/free/md5-1.wasm) ⟷ [md5-2.wasm](examples/free/md5-2.wasm)
 
 
 ## Uncommon strategies

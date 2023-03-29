@@ -35,6 +35,8 @@ Tiny, copyright-free, PII-free collision PoCs
 - Zstandard archives [md5-1.zstd](md5-1.zstd) / [md5-2.zstd](md5-2.zstd)
 - LZ4/Zstandard archives [md5-c6a611ce.zstd](md5-c6a611ce.zstd) / [md5-c6a611ce.lz4](md5-c6a611ce.lz4)
 
+- Wasm executables [md5-1.wasm](md5-1.wasm) / [md5-2.wasm](md5-2.wasm)
+
 
 ## HashClash
 
