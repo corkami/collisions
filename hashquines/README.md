@@ -46,7 +46,9 @@ Like colliding 2 images or documents, but instead colliding the contents of many
 
 Depending on the format, a possible way is to use a collision as a switch to enable one character or another. In this case, `N` chained collisions display `N+1` different objects in the same position.
 
-To display the hex value of an MD5, 16 characters are required for 32 digits, so `480` (=`32*15`) collisions.
+To display the hex value of an MD5, 16 characters are required for 32 digits, so `480` (=`32*15`) collisions if there's the ability to select between different characters.
+
+If it's only possible to turn on/off decoded sequences, then `512` (=`32*16`) collisions are needed.
 
 A way to reduce this amount of collision is to display the characters via 7-segments display, in which case each segments needs to be toggled on or off (like bits).
 So in this case, `224` (`=32*7`) collisions are required.
@@ -107,6 +109,28 @@ Cf self-descriptive image (here as PNG):
 - a PNG hashquine by *David 'Retr0id' Buchanan*
 
 <img src=pocs/hashquine_by_retr0id.png height=600></img>
+
+- a [GZIP hashquine](pocs/hashquine.gz) by *Ange Albertini*
+
+```
+$ md5sum hashquine.gz
+ad5de2581f4bd8f35051b789df379d36 *hashquine.gz
+
+$ gzip -dck hashquine.gz
+ad5de2581f4bd8f35051b789df379d36 is the hash of this archive.
+
+This is a Gzip partial hashquine, made of many Gzip members chained together.
+It's using 192 Unicoll MD5 collisions to display optionally each of the
+16 hexadecimal characters '0123456789abcdef' 12 times (in that order).
+This is not enough to display any MD5 digest (32 nibbles),
+so an extra small member with bruteforced contents was appended to give the file
+an MD5 that can be displayed with this limited input.
+
+Thanks to Marc Stevens for creating Unicoll.
+Thanks to David Buchanan for the constructive discussions.
+
+Ange Albertini 2023
+```
 
 
 # Notes
@@ -169,6 +193,15 @@ These are unicoll blocks to turn on/off the red pixels (color `0` or `1`)
 The Fastcoll blocks to forge the CRCs are 'visible' at the bottom of the picture (here, with a revealing palette).
 
 <img src=pics/retr0id_blue.png height=500></img>
+
+
+- If the whole file has to be parsed, and each hex character can be switched on/off,
+ an MD5 might be displayable by less characters than the whole range of 16 characters: in practice, `192` (=`32*12`) collisions are enough to display a bruteforced MD5 after roughly a few 1000s tries.
+
+  For example, `ad5de2581f4bd8f35051b789df379d36` is a bruteforced MD5 made of 12 groups of hex characters in increasing order:
+
+  `ad`, `5de`, `258`, `1f`, `4bd`, `8f`, `35`, `05`, `1b`, `789df`, `379d`, `36`.
+
 
 
 # More than hash values

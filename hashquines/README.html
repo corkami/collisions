@@ -103,7 +103,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Abuse the format structure to make the parser display a digit or another while keeping the same hash value, repeat for each digit and for every value to be displayed (<code>32*16=512</code>).</p>
 <p>Like colliding 2 images or documents, but instead colliding the contents of many different elements at various positions, to display the right value of the actual hash file without changing the overall file hash.</p>
 <p>Depending on the format, a possible way is to use a collision as a switch to enable one character or another. In this case, <code>N</code> chained collisions display <code>N+1</code> different objects in the same position.</p>
-<p>To display the hex value of an MD5, 16 characters are required for 32 digits, so <code>480</code> (=<code>32*15</code>) collisions.</p>
+<p>To display the hex value of an MD5, 16 characters are required for 32 digits, so <code>480</code> (=<code>32*15</code>) collisions if there's the ability to select between different characters.</p>
+<p>If it's only possible to turn on/off decoded sequences, then <code>512</code> (=<code>32*16</code>) collisions are needed.</p>
 <p>A way to reduce this amount of collision is to display the characters via 7-segments display, in which case each segments needs to be toggled on or off (like bits). So in this case, <code>224</code> (<code>=32*7</code>) collisions are required.</p>
 <pre><code> -
 | |
@@ -151,6 +152,27 @@ $ md5sum md5text.pdf
 <li>a PNG hashquine by <em>David 'Retr0id' Buchanan</em></li>
 </ul>
 <p><img src=pocs/hashquine_by_retr0id.png height=600></img></p>
+<ul>
+<li>a <a href="pocs/hashquine.gz">GZIP hashquine</a> by <em>Ange Albertini</em></li>
+</ul>
+<pre><code>$ md5sum hashquine.gz
+ad5de2581f4bd8f35051b789df379d36 *hashquine.gz
+
+$ gzip -dck hashquine.gz
+ad5de2581f4bd8f35051b789df379d36 is the hash of this archive.
+
+This is a Gzip partial hashquine, made of many Gzip members chained together.
+It&#39;s using 192 Unicoll MD5 collisions to display optionally each of the
+16 hexadecimal characters &#39;0123456789abcdef&#39; 12 times (in that order).
+This is not enough to display any MD5 digest (32 nibbles),
+so an extra small member with bruteforced contents was appended to give the file
+an MD5 that can be displayed with this limited input.
+
+Thanks to Marc Stevens for creating Unicoll.
+Thanks to David Buchanan for the constructive discussions.
+
+Ange Albertini 2023
+</code></pre>
 <h1 id="notes">Notes</h1>
 <h2 id="custom-fastcoll">Custom FastColl</h2>
 <p>For these hashquines, new forms of hash collisions were introduced by <em>Mako</em>:</p>
@@ -199,6 +221,11 @@ $ md5sum md5text.pdf
 </ul>
 <p>The Fastcoll blocks to forge the CRCs are 'visible' at the bottom of the picture (here, with a revealing palette).</p>
 <p><img src=pics/retr0id_blue.png height=500></img></p>
+<ul>
+<li><p>If the whole file has to be parsed, and each hex character can be switched on/off, an MD5 might be displayable by less characters than the whole range of 16 characters: in practice, <code>192</code> (=<code>32*12</code>) collisions are enough to display a bruteforced MD5 after roughly a few 1000s tries.</p>
+<p>For example, <code>ad5de2581f4bd8f35051b789df379d36</code> is a bruteforced MD5 made of 12 groups of hex characters in increasing order:</p>
+<p><code>ad</code>, <code>5de</code>, <code>258</code>, <code>1f</code>, <code>4bd</code>, <code>8f</code>, <code>35</code>, <code>05</code>, <code>1b</code>, <code>789df</code>, <code>379d</code>, <code>36</code>.</p></li>
+</ul>
 <h1 id="more-than-hash-values">More than hash values</h1>
 <p>Many collisions can be used to encode or display a hash value, but they can be used to encode anything else, even bigger.</p>
 <p><em>Retr0id</em> <a href="https://github.com/DavidBuchanan314/monomorph">combined</a> parallelized Fastcoll with a linux 4kb shellcode loader, generating a hashquine (benign), a rickroll (fun) or a meterpreter (evil) or anything you want with the same final hash.</p>
