@@ -196,7 +196,7 @@ The Fastcoll blocks to forge the CRCs are 'visible' at the bottom of the picture
 
 
 - If the whole file has to be parsed, and each hex character can be switched on/off,
- an MD5 might be displayable by less characters than the whole range of 16 characters: in practice, `192` (=`32*12`) collisions are enough to display a bruteforced MD5 after roughly a few 1000s tries.
+ an MD5 might be displayable by less characters than the whole range of 16 characters: in practice, `192` (=`12*16`) collisions are enough to display a bruteforced MD5 after roughly a few 1000s tries.
 
   For example, `ad5de2581f4bd8f35051b789df379d36` is a bruteforced MD5 made of 12 groups of hex characters in increasing order:
 
