@@ -132,6 +132,14 @@ Thanks to David Buchanan for the constructive discussions.
 Ange Albertini 2023
 ```
 
+- an [LZ4 hashquine](pocs/hashquine.lz4) by *Ange Albertini*, with 160 collisions.
+
+```
+$ md5sum hashquine.lz4
+1690738ac079d914645ade5693ab019b *hashquine.lz4
+$ lz4 -c hashquine.lz4
+1690738ac079d914645ade5693ab019b
+```
 
 # Notes
 
@@ -202,6 +210,9 @@ The Fastcoll blocks to forge the CRCs are 'visible' at the bottom of the picture
 
   `ad`, `5de`, `258`, `1f`, `4bd`, `8f`, `35`, `05`, `1b`, `789df`, `379d`, `36`.
 
+  It's possible with even fewer collisions (for example with only 10 characters sets), but it requires more luck:
+  
+  `169`, `0738ac`, `079d`, `9`, `146`, `45a`, `de`, `569`, `3ab`, `019b` fits in 10 groups.
 
 
 # More than hash values

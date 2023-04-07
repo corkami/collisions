@@ -173,6 +173,14 @@ Thanks to David Buchanan for the constructive discussions.
 
 Ange Albertini 2023
 </code></pre>
+<ul>
+<li>an <a href="pocs/hashquine.lz4">LZ4 hashquine</a> by <em>Ange Albertini</em>, with 160 collisions.</li>
+</ul>
+<pre><code>$ md5sum hashquine.lz4
+1690738ac079d914645ade5693ab019b *hashquine.lz4
+$ lz4 -c hashquine.lz4
+1690738ac079d914645ade5693ab019b
+</code></pre>
 <h1 id="notes">Notes</h1>
 <h2 id="custom-fastcoll">Custom FastColl</h2>
 <p>For these hashquines, new forms of hash collisions were introduced by <em>Mako</em>:</p>
@@ -224,7 +232,9 @@ Ange Albertini 2023
 <ul>
 <li><p>If the whole file has to be parsed, and each hex character can be switched on/off, an MD5 might be displayable by less characters than the whole range of 16 characters: in practice, <code>192</code> (=<code>12*16</code>) collisions are enough to display a bruteforced MD5 after roughly a few 1000s tries.</p>
 <p>For example, <code>ad5de2581f4bd8f35051b789df379d36</code> is a bruteforced MD5 made of 12 groups of hex characters in increasing order:</p>
-<p><code>ad</code>, <code>5de</code>, <code>258</code>, <code>1f</code>, <code>4bd</code>, <code>8f</code>, <code>35</code>, <code>05</code>, <code>1b</code>, <code>789df</code>, <code>379d</code>, <code>36</code>.</p></li>
+<p><code>ad</code>, <code>5de</code>, <code>258</code>, <code>1f</code>, <code>4bd</code>, <code>8f</code>, <code>35</code>, <code>05</code>, <code>1b</code>, <code>789df</code>, <code>379d</code>, <code>36</code>.</p>
+<p>It's possible with even fewer collisions (for example with only 10 characters sets), but it requires more luck:</p>
+<p><code>169</code>, <code>0738ac</code>, <code>079d</code>, <code>9</code>, <code>146</code>, <code>45a</code>, <code>de</code>, <code>569</code>, <code>3ab</code>, <code>019b</code> fits in 10 groups.</p></li>
 </ul>
 <h1 id="more-than-hash-values">More than hash values</h1>
 <p>Many collisions can be used to encode or display a hash value, but they can be used to encode anything else, even bigger.</p>
