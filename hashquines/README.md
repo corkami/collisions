@@ -110,6 +110,11 @@ Cf self-descriptive image (here as PNG):
 
 <img src=pocs/hashquine_by_retr0id.png height=600></img>
 
+
+## Archive hashquines
+
+Decompressing these archives gives the hash of the whole archive.
+
 - a [GZIP hashquine](pocs/hashquine.gz) by *Ange Albertini*
 
 ```
@@ -140,6 +145,36 @@ $ md5sum hashquine.lz4
 $ lz4 -c hashquine.lz4
 1690738ac079d914645ade5693ab019b
 ```
+
+- a Zstandard hashquine by *David 'Retr0id' Buchanan*:
+
+As a pure [ZStandard](pocs/hashquine.zst) file:
+
+```
+$ md5sum hashquine.zst
+720ca7f6842f1a608fcb924f5811ebb9 *hashquine.zst
+
+$ zstd -cd hashquine.zst
+The MD5 of hashquine.zst is:
+720ca7f6842f1a608fcb924f5811ebb9
+```
+
+As a [Zstandard(tar)](pocs/hashquine.tar.zst) file:
+
+```
+$ md5sum hashquine.tar.zst
+703911cf9e409965cebd05392acc1503 *hashquine.tar.zst
+
+$ tar -Oxf hashquine.tar.zst hash.md5
+The MD5 of hashquine.tar.zst is:
+703911cf9e409965cebd05392acc1503
+```
+
+Both files are Zstandard-streams via the same prefix with 653 collisions (!):
+- 17*8 for the octal digits of the tar header (file length + header checksum)
+- 32*16 for the hex digits of the hash strings
+- 5 extra collisions for switching the tar header, and the "the MD5 of ..."  prefix strings.
+
 
 # Notes
 
@@ -211,8 +246,8 @@ The Fastcoll blocks to forge the CRCs are 'visible' at the bottom of the picture
   `ad`, `5de`, `258`, `1f`, `4bd`, `8f`, `35`, `05`, `1b`, `789df`, `379d`, `36`.
 
   It's possible with even fewer collisions (for example with only 10 characters sets), but it requires more luck:
-  
-  `169`, `0738ac`, `079d`, `9`, `146`, `45a`, `de`, `569`, `3ab`, `019b` fits in 10 groups.
+
+  `169`, `07`, `38ac`, `079d`, `9`, `146`, `45ade`, `569`, `3ab`, `019b` fits in 10 groups.
 
 
 # More than hash values

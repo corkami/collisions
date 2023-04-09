@@ -152,6 +152,8 @@ $ md5sum md5text.pdf
 <li>a PNG hashquine by <em>David 'Retr0id' Buchanan</em></li>
 </ul>
 <p><img src=pocs/hashquine_by_retr0id.png height=600></img></p>
+<h2 id="archive-hashquines">Archive hashquines</h2>
+<p>Decompressing these archives gives the hash of the whole archive.</p>
 <ul>
 <li>a <a href="pocs/hashquine.gz">GZIP hashquine</a> by <em>Ange Albertini</em></li>
 </ul>
@@ -181,6 +183,31 @@ Ange Albertini 2023
 $ lz4 -c hashquine.lz4
 1690738ac079d914645ade5693ab019b
 </code></pre>
+<ul>
+<li>a Zstandard hashquine by <em>David 'Retr0id' Buchanan</em>:</li>
+</ul>
+<p>As a pure <a href="pocs/hashquine.zst">ZStandard</a> file:</p>
+<pre><code>$ md5sum hashquine.zst
+720ca7f6842f1a608fcb924f5811ebb9 *hashquine.zst
+
+$ zstd -cd hashquine.zst
+The MD5 of hashquine.zst is:
+720ca7f6842f1a608fcb924f5811ebb9
+</code></pre>
+<p>As a <a href="pocs/hashquine.tar.zst">Zstandard(tar)</a> file:</p>
+<pre><code>$ md5sum hashquine.tar.zst
+703911cf9e409965cebd05392acc1503 *hashquine.tar.zst
+
+$ tar -Oxf hashquine.tar.zst hash.md5
+The MD5 of hashquine.tar.zst is:
+703911cf9e409965cebd05392acc1503
+</code></pre>
+<p>Both files are Zstandard-streams via the same prefix with 653 collisions (!):</p>
+<ul>
+<li>17*8 for the octal digits of the tar header (file length + header checksum)</li>
+<li>32*16 for the hex digits of the hash strings</li>
+<li>5 extra collisions for switching the tar header, and the &quot;the MD5 of ...&quot; prefix strings.</li>
+</ul>
 <h1 id="notes">Notes</h1>
 <h2 id="custom-fastcoll">Custom FastColl</h2>
 <p>For these hashquines, new forms of hash collisions were introduced by <em>Mako</em>:</p>
@@ -234,7 +261,7 @@ $ lz4 -c hashquine.lz4
 <p>For example, <code>ad5de2581f4bd8f35051b789df379d36</code> is a bruteforced MD5 made of 12 groups of hex characters in increasing order:</p>
 <p><code>ad</code>, <code>5de</code>, <code>258</code>, <code>1f</code>, <code>4bd</code>, <code>8f</code>, <code>35</code>, <code>05</code>, <code>1b</code>, <code>789df</code>, <code>379d</code>, <code>36</code>.</p>
 <p>It's possible with even fewer collisions (for example with only 10 characters sets), but it requires more luck:</p>
-<p><code>169</code>, <code>0738ac</code>, <code>079d</code>, <code>9</code>, <code>146</code>, <code>45a</code>, <code>de</code>, <code>569</code>, <code>3ab</code>, <code>019b</code> fits in 10 groups.</p></li>
+<p><code>169</code>, <code>07</code>, <code>38ac</code>, <code>079d</code>, <code>9</code>, <code>146</code>, <code>45ade</code>, <code>569</code>, <code>3ab</code>, <code>019b</code> fits in 10 groups.</p></li>
 </ul>
 <h1 id="more-than-hash-values">More than hash values</h1>
 <p>Many collisions can be used to encode or display a hash value, but they can be used to encode anything else, even bigger.</p>
