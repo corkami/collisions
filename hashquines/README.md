@@ -64,11 +64,11 @@ So in this case, `224` (`=32*7`) collisions are required.
 
 # Examples
 
-- a [PostScript](md5.ps) 'encoding' hashquine by *Gregor Kopf* - cf [Poc||GTFO 0x14:09](https://github.com/angea/pocorgtfo#0x14) ([article 9](https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-09.pdf))
+- a [PostScript](md5.ps) 'encoding' hashquine by *Gregor Kopf* - cf [Poc||GTFO 0x14:09](https://github.com/angea/pocorgtfo#0x14) ([article 9](https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-09.pdf)) ([script](scripts/ps.py))
 
 <img src=pics/postscript.png height=200></img>
 
-- 2 PDF hashquines: one via [JPG](pocs/md5jpg.pdf), one via [text](pocs/md5text.pdf), by *Mako* - cf [Poc||GTFO 0x14:10](https://github.com/angea/pocorgtfo#0x14) ([article 10](https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-10.pdf))
+- 2 PDF hashquines: one via [JPG](pocs/md5jpg.pdf), one via [text](pocs/md5text.pdf), by *Mako* - cf [Poc||GTFO 0x14:10](https://github.com/angea/pocorgtfo#0x14) ([article 10](https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-10.pdf)) (scripts: [jpg](scripts/pdf_jpg.py), [txt](scripts/pdf_txt.py))
 
 <img src=pics/jpgpdf.png height=100></img>
 
@@ -80,13 +80,13 @@ $ md5sum md5text.pdf
 66da5e07c0fd4c921679a65931ff8393 *md5text.pdf
 ```
 
-- 2 GIF hashquines by *spq* - cf [Poc||GTFO 0x14:11](https://github.com/angea/pocorgtfo#0x14) ([article 11](https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-11.pdf))
+- 2 GIF hashquines by *spq* - cf [Poc||GTFO 0x14:11](https://github.com/angea/pocorgtfo#0x14) ([article 11](https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-11.pdf)) (scripts: [segments](scripts/gif_seg.py), [avp](scripts/gif_avp.py))
 
 <img src=pocs/md5.gif width=400></img>
 <img src=pocs/md5_avp_loop.gif width=300></img>
 
 
-- a NES 'encoding' hashquine, by Evan Sultanik and Evan Teran, in PoC||GTFO 0x14 (here as a [standalone file](pocs/hashquine.nes)) - cf [Poc||GTFO 0x14:12](https://github.com/angea/pocorgtfo#0x14) ([article 12](https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-12.pdf))
+- a NES 'encoding' hashquine, by Evan Sultanik and Evan Teran, in PoC||GTFO 0x14 (here as a [standalone file](pocs/hashquine.nes)) - cf [Poc||GTFO 0x14:12](https://github.com/angea/pocorgtfo#0x14) ([article 12](https://github.com/angea/pocorgtfo/blob/master/contents/articles/14-12.pdf)) ([script](scripts/nes.py))
 
 <img src=pics/nes.png height=200></img>
 
@@ -115,7 +115,7 @@ Cf self-descriptive image (here as PNG):
 
 Decompressing these archives gives the hash of the whole archive.
 
-- a [GZIP hashquine](pocs/hashquine.gz) by *Ange Albertini*
+- a [GZIP hashquine](pocs/hashquine.gz) by *Ange Albertini* ([script](scripts/gzip.py))
 
 ```
 $ md5sum hashquine.gz
@@ -137,7 +137,7 @@ Thanks to David Buchanan for the constructive discussions.
 Ange Albertini 2023
 ```
 
-- an [LZ4 hashquine](pocs/hashquine.lz4) by *Ange Albertini*, with 160 collisions.
+- an [LZ4 hashquine](pocs/hashquine.lz4) by *Ange Albertini*, with 160 collisions.  ([script](scripts/lz4.py))
 
 ```
 $ md5sum hashquine.lz4
@@ -146,7 +146,7 @@ $ lz4 -c hashquine.lz4
 1690738ac079d914645ade5693ab019b
 ```
 
-- a Zstandard hashquine by *David 'Retr0id' Buchanan*:
+- a Zstandard hashquine by *David 'Retr0id' Buchanan*.  ([script](scripts/zst.py))
 
 As a pure [ZStandard](pocs/hashquine.zst) file:
 
@@ -208,7 +208,7 @@ These are unicoll blocks to turn on/off the red pixels (color `0` or `1`)
 ## Misc
 
 - [`detectcoll`](https://github.com/corkami/collisions#detection) in *unsafe mode* can enumerate all Fastcoll and Unicoll occurences are present in the file - cf [logs](logs/).
-  - Knowing the offsets and the types of the collision just from one file, it's then possible to modify or reset the collisions and alter the display yourself of the files without changing their MD5 or recomputing any collision, whether it's an 'encoding' hashquine (ex: for [NES](scripts/nes.py)) or a 'format' hashquine (ex: [Jpg in PDF](scripts/jpgpdf.py)).
+  - Knowing the offsets and the types of the collision just from one file, it's then possible to modify or reset the collisions and alter the display yourself of the files without changing their MD5 or recomputing any collision, whether it's an encoding-based, format-based or archive hashquine.
 
 - Since Unicoll only changes one byte, Retr0id's PNG font is made of one pixel per line:
 
@@ -231,7 +231,7 @@ These are unicoll blocks to turn on/off the red pixels (color `0` or `1`)
      *
 ```
 
-- Since correct values of Adler32 are required for Zlib chunks and CRC32 are required for PNG chunks, *Retr0id* had to forge these values while keeping the same MD5 hash: to do that, he added many fastcoll blocks and swapped them in a clever meet-in-a-middle attack to reach a suitable value - cf this [gitst](https://gist.github.com/DavidBuchanan314/a15e93eeaaad977a0fec3a6232c0b8ae).
+- Since correct values of Adler32 are required for Zlib chunks and CRC32 are required for PNG chunks, *Retr0id* had to forge these values while keeping the same MD5 hash: to do that, he added many fastcoll blocks and swapped them in a clever meet-in-a-middle attack to reach a suitable value - cf this [gist](https://gist.github.com/DavidBuchanan314/a15e93eeaaad977a0fec3a6232c0b8ae).
 
 The Fastcoll blocks to forge the CRCs are 'visible' at the bottom of the picture (here, with a revealing palette).
 
