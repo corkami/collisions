@@ -146,7 +146,7 @@ $ lz4 -c hashquine.lz4
 1690738ac079d914645ade5693ab019b
 ```
 
-- a Zstandard hashquine by *David 'Retr0id' Buchanan*.  ([script](scripts/zst.py))
+- a Zstandard hashquine by *David 'Retr0id' Buchanan*.  (scripts: [zst](scripts/zst.py), [tar.zst](scripts/tar_zst.py))
 
 As a pure [ZStandard](pocs/hashquine.zst) file:
 
