@@ -21,8 +21,9 @@ def write_dword(data: bytearray, value: int, offset: int):
 
 
 def setFastcoll(data: bytearray, block_idx: int, sideB: bool = None):
-    # get a given 'side' of fastcoll (False = left, True = right)
-    # Get the other side of the collision if no side if specified
+    """Set a given 'side' of fastcoll (False = left, True = right)
+    Get the other side of the collision if no side if specified
+    """
     XOR_MASK = 0x80
     XOR_OFFSETS = [0x13, 0x3b]
     block_off = block_idx * BLOCK_SIZE
@@ -99,7 +100,7 @@ def setUniColl(data: bytearray, block_idx: int, sideB: bool = None):
     # get a given 'side' of a Unicoll (False = left, True = right)
     # Get the other side of the collision if no side if specified
 
-    # That's UniColl #1
+    # That's UniColl #1 btw
     OFFSET = +8
     DELTA = 0x100
 

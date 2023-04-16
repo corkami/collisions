@@ -95,7 +95,7 @@ $ md5sum md5text.pdf
 <img src=pics/pocorgtfo14.png height=400></img>
 
 
-- a GIF hashquine by *Rogdham* - cf [blog post](https://www.rogdham.net/2017/03/12/gif-md5-hashquine.en)
+- a GIF hashquine by *Rogdham* - cf [blog post](https://www.rogdham.net/2017/03/12/gif-md5-hashquine.en) ([script](scripts/gif_rog.py))
 
 <img src=pocs/rogdham_gif_md5_hashquine.gif height=150></img>
 
