@@ -1,0 +1,768 @@
+Found collision in block 2:
+   dm: dm2=00000100 
+   ihv1=32ee362d4055acef56bbcbbcaffa0c7f
+   ihv2=b2ee362dbfd5acefd63bcbbc2ffa0c7f
+Found collision in block 9:
+   dm: dm2=00000100 
+   ihv1=0ffff6190e8b486762d6c5b8a95e68f2
+   ihv2=8ffff6198e0b4867e256c5b8295e68f2
+Found collision in block 16:
+   dm: dm2=00000100 
+   ihv1=4380671fc42fe5093a6aef31b34231f3
+   ihv2=c380671f43afe509b9eaef31334231f3
+Found collision in block 23:
+   dm: dm2=00000100 
+   ihv1=b4e62fdfbf966419a7f365813f6fa9f0
+   ihv2=34e62fdf3f16641927736581bf6fa9f0
+Found collision in block 30:
+   dm: dm2=00000100 
+   ihv1=44e3fa261e8265a6a7bf64a6b472061e
+   ihv2=c4e3fa269e0265a6273f64a63472061e
+Found collision in block 37:
+   dm: dm2=00000100 
+   ihv1=8fb4f5d54c1c60ef919764de8158eb9a
+   ihv2=0fb4f5d5cb9c60ef111764de0158eb9a
+Found collision in block 44:
+   dm: dm2=00000100 
+   ihv1=5e468b4cd91c8f9b670339d6a56c2cc8
+   ihv2=de468b4c589c8f9be68339d6256c2cc8
+Found collision in block 51:
+   dm: dm2=00000100 
+   ihv1=33609fedc8b382db41afd00549f03fc6
+   ihv2=b3609fed483382dbc12fd005c9f03fc6
+Found collision in block 58:
+   dm: dm2=00000100 
+   ihv1=3c576032480de3993a5bbbf2f5aaacf2
+   ihv2=bc576032c78de399b9dbbbf275aaacf2
+Found collision in block 65:
+   dm: dm2=00000100 
+   ihv1=e3aa530763bcce2ae4e237a3b2967cf3
+   ihv2=63aa5307e33cce2a646237a332967cf3
+Found collision in block 72:
+   dm: dm2=ffffff00 
+   ihv1=a5f3607f01fa374a3fde328c342c53d1
+   ihv2=25f3607f827a374ac05e328cb42c53d1
+Found collision in block 79:
+   dm: dm2=00000100 
+   ihv1=6bca353004061e63ac532caff83a4562
+   ihv2=ebca353083861e632bd32caf783a4562
+Found collision in block 86:
+   dm: dm2=00000100 
+   ihv1=3a79d34a9b34630048efe9594c5e44bf
+   ihv2=ba79d34a1ab46300c86fe959cc5e44bf
+Found collision in block 93:
+   dm: dm2=ffffff00 
+   ihv1=07a4c180ee75064a149afe63af3b36f9
+   ihv2=87a4c1806ef5064a951afe632f3b36f9
+Found collision in block 100:
+   dm: dm2=00000100 
+   ihv1=449b6dd788cf7f4a7234cdfb63a3fb52
+   ihv2=c49b6dd7084f7f4af1b4cdfbe3a3fb52
+Found collision in block 107:
+   dm: dm2=00000100 
+   ihv1=8be8f86cb2cff44896236b3a496575f0
+   ihv2=0be8f86c324ff44815a36b3ac96575f0
+Found collision in block 114:
+   dm: dm2=00000100 
+   ihv1=cabee637eb04e6eea1ebc8f1e887190a
+   ihv2=4abee6376a84e6ee216bc8f16887190a
+Found collision in block 121:
+   dm: dm2=00000100 
+   ihv1=f52b6e164e36b18cc85f585f727e5e73
+   ihv2=752b6e16cdb6b18c47df585ff27e5e73
+Found collision in block 128:
+   dm: dm2=00000100 
+   ihv1=c253059a85a33f85e7f8f85b0c4e3eab
+   ihv2=4253059a05233f856778f85b8c4e3eab
+Found collision in block 135:
+   dm: dm2=00000100 
+   ihv1=d71468aa98beb84586c2d8a1be494d72
+   ihv2=571468aa183eb8450642d8a13e494d72
+Found collision in block 142:
+   dm: dm2=00000100 
+   ihv1=a0714f65da4b755f8610883bc3fd705b
+   ihv2=20714f6559cb755f0590883b43fd705b
+Found collision in block 149:
+   dm: dm2=ffffff00 
+   ihv1=fab1ac17f9f72d0c217a8cb8f83c4c4d
+   ihv2=7ab1ac177a772d0ca1fa8cb8783c4c4d
+Found collision in block 156:
+   dm: dm2=00000100 
+   ihv1=99a88f21690e88128bb1b9e65c957c63
+   ihv2=19a88f21e88e88120b31b9e6dc957c63
+Found collision in block 163:
+   dm: dm2=00000100 
+   ihv1=b5eb1b6a413ffda5766441195a7fa8d3
+   ihv2=35eb1b6ac0bffda5f5e44119da7fa8d3
+Found collision in block 170:
+   dm: dm2=00000100 
+   ihv1=2f1a28671ddbb81089c60ff35d36be14
+   ihv2=af1a28679d5bb81009460ff3dd36be14
+Found collision in block 177:
+   dm: dm2=00000100 
+   ihv1=91ff9573d5179035c89018996044a11f
+   ihv2=11ff95735497903548101899e044a11f
+Found collision in block 184:
+   dm: dm2=00000100 
+   ihv1=7aa2caa184e43185eb2da64efec032fd
+   ihv2=faa2caa1046431856aada64e7ec032fd
+Found collision in block 191:
+   dm: dm2=00000100 
+   ihv1=e4e0d23507f4b1ea802641693c96c8bc
+   ihv2=64e0d2358774b1eaffa64169bc96c8bc
+Found collision in block 198:
+   dm: dm2=00000100 
+   ihv1=84311c1eb7cb8554f54b5793753d0975
+   ihv2=04311c1e374b855474cb5793f53d0975
+Found collision in block 205:
+   dm: dm2=ffffff00 
+   ihv1=495f760cc60f35b43a8a26074cf07190
+   ihv2=c95f760c468f35b4bb0a2607ccf07190
+Found collision in block 212:
+   dm: dm2=ffffff00 
+   ihv1=75028a592e35275be40242811b67f470
+   ihv2=f5028a59aeb5275b648242819b67f470
+Found collision in block 219:
+   dm: dm2=00000100 
+   ihv1=bf3f8a07184472e1be00ceb56654b5ce
+   ihv2=3f3f8a0797c472e13d80ceb5e654b5ce
+Found collision in block 226:
+   dm: dm2=00000100 
+   ihv1=22a7df2181a65c4dd3b3c1563c1b3275
+   ihv2=a2a7df2101265c4d5333c156bc1b3275
+Found collision in block 233:
+   dm: dm2=00000100 
+   ihv1=b9dc43189475561ec34bcdfd9c7030a3
+   ihv2=39dc431813f5561e42cbcdfd1c7030a3
+Found collision in block 240:
+   dm: dm2=ffffff00 
+   ihv1=94c6c12c259426b916121f969c93cd69
+   ihv2=14c6c12ca61426b996921f961c93cd69
+Found collision in block 247:
+   dm: dm2=00000100 
+   ihv1=249c7962f4ad4a096125a2ff978ee36e
+   ihv2=a49c7962742d4a09e0a5a2ff178ee36e
+Found collision in block 254:
+   dm: dm2=00000100 
+   ihv1=bcfe2663ffb4a341a33d17dca0365008
+   ihv2=3cfe26637f34a34122bd17dc20365008
+Found collision in block 261:
+   dm: dm2=ffffff00 
+   ihv1=d2461ac7cf16137e7d57c876843ed539
+   ihv2=52461ac74f96137efdd7c876043ed539
+Found collision in block 268:
+   dm: dm2=00000100 
+   ihv1=62b793add08ab488bf30fb732c18c723
+   ihv2=e2b793ad500ab4883eb0fb73ac18c723
+Found collision in block 275:
+   dm: dm2=00000100 
+   ihv1=791f8534dfbbd2d64b6b25a8d08614d6
+   ihv2=f91f85345f3bd2d6caeb25a8508614d6
+Found collision in block 282:
+   dm: dm2=ffffff00 
+   ihv1=3e0b9b205d1436f1b04aa47f35321fa9
+   ihv2=be0b9b20dd9436f130caa47fb5321fa9
+Found collision in block 289:
+   dm: dm2=00000100 
+   ihv1=801c3c4d6daae447960aabcde52cda07
+   ihv2=001c3c4ded2ae447158aabcd652cda07
+Found collision in block 296:
+   dm: dm2=00000100 
+   ihv1=142c112315b06d95c40ffe808ef067f7
+   ihv2=942c112395306d95438ffe800ef067f7
+Found collision in block 303:
+   dm: dm2=00000100 
+   ihv1=6178c887d4ada5b766fa0598da74383f
+   ihv2=e178c887542da5b7e67a05985a74383f
+Found collision in block 310:
+   dm: dm2=00000100 
+   ihv1=3876f115d2050c5e657db2192acba56b
+   ihv2=b876f11551850c5ee4fdb219aacba56b
+Found collision in block 317:
+   dm: dm2=00000100 
+   ihv1=0e080a2bc7cc5a6b89bc0b750afbb3b1
+   ihv2=8e080a2b474c5a6b093c0b758afbb3b1
+Found collision in block 324:
+   dm: dm2=00000100 
+   ihv1=721f500177f990ba401c93849da945b3
+   ihv2=f21f5001f77990babf9c93841da945b3
+Found collision in block 331:
+   dm: dm2=00000100 
+   ihv1=df847f4ca4a0bdd3007235704ea4edbc
+   ihv2=5f847f4c2420bdd37ff23570cea4edbc
+Found collision in block 338:
+   dm: dm2=00000100 
+   ihv1=36d56ebacfac5f05aff15eef38dde6bf
+   ihv2=b6d56eba4f2c5f052f715eefb8dde6bf
+Found collision in block 345:
+   dm: dm2=ffffff00 
+   ihv1=e79f8ea238eacb746d7af28475f49651
+   ihv2=679f8ea2b96acb74edfaf284f5f49651
+Found collision in block 352:
+   dm: dm2=00000100 
+   ihv1=c5217a385c6b2bfee9e5de1fef35940e
+   ihv2=45217a38dbeb2bfe6965de1f6f35940e
+Found collision in block 359:
+   dm: dm2=00000100 
+   ihv1=9ecd28f5018ee08f450bed851bc4290d
+   ihv2=1ecd28f5810ee08fc48bed859bc4290d
+Found collision in block 366:
+   dm: dm2=00000100 
+   ihv1=dc58fb3155b25ef59bb19a858e10b516
+   ihv2=5c58fb31d5325ef51b319a850e10b516
+Found collision in block 373:
+   dm: dm2=00000100 
+   ihv1=0afbe91a7f8b04753176b99e05d561e7
+   ihv2=8afbe91aff0b0475b0f6b99e85d561e7
+Found collision in block 380:
+   dm: dm2=00000100 
+   ihv1=11a2bfe96990394afb66b46de61bf752
+   ihv2=91a2bfe9e910394a7ae6b46d661bf752
+Found collision in block 387:
+   dm: dm2=00000100 
+   ihv1=01c94e1cbb58f4ff8a1dffadeedf3cd9
+   ihv2=81c94e1c3ad8f4ff099dffad6edf3cd9
+Found collision in block 394:
+   dm: dm2=00000100 
+   ihv1=79ed4df5a042a1e1ffd1f29ee77a3050
+   ihv2=f9ed4df51fc2a1e17f51f29e677a3050
+Found collision in block 401:
+   dm: dm2=00000100 
+   ihv1=46f8861d336bf88dec7023e3859564e3
+   ihv2=c6f8861db2ebf88d6bf023e3059564e3
+Found collision in block 408:
+   dm: dm2=00000100 
+   ihv1=6ae4b63416f1933055899eda522812f1
+   ihv2=eae4b63496719330d5099edad22812f1
+Found collision in block 415:
+   dm: dm2=00000100 
+   ihv1=814550aa1e6addef9028533f6c197750
+   ihv2=014550aa9deaddef0fa8533fec197750
+Found collision in block 422:
+   dm: dm2=00000100 
+   ihv1=8eccbb6d0e821414bcea29496c280f1c
+   ihv2=0eccbb6d8e0214143c6a2949ec280f1c
+Found collision in block 429:
+   dm: dm2=00000100 
+   ihv1=736b6beb3ba23f192ab750e10e4f139f
+   ihv2=f36b6bebbb223f19aa3750e18e4f139f
+Found collision in block 436:
+   dm: dm2=00000100 
+   ihv1=6a60c889d977e0f4f11dc0ac87d44a93
+   ihv2=ea60c88958f7e0f4709dc0ac07d44a93
+Found collision in block 443:
+   dm: dm2=ffffff00 
+   ihv1=0e8b3d0d137836912d30326585186ac1
+   ihv2=8e8b3d0d93f83691adb0326505186ac1
+Found collision in block 450:
+   dm: dm2=00000100 
+   ihv1=f6b96b399f543ac13b15ea2252d7962f
+   ihv2=76b96b391ed43ac1ba95ea22d2d7962f
+Found collision in block 457:
+   dm: dm2=00000100 
+   ihv1=ce178ebc1e95811d281a66f79f450582
+   ihv2=4e178ebc9e15811da79a66f71f450582
+Found collision in block 464:
+   dm: dm2=00000100 
+   ihv1=d49f915040bbf22b8b6b39b57016df79
+   ihv2=549f9150c03bf22b0aeb39b5f016df79
+Found collision in block 471:
+   dm: dm2=00000100 
+   ihv1=c8bb8e5fa073fcddf8d507fc00775fc9
+   ihv2=48bb8e5f1ff3fcdd785507fc80775fc9
+Found collision in block 478:
+   dm: dm2=ffffff00 
+   ihv1=1ff05d1a61071048488ee7c72f2300d7
+   ihv2=9ff05d1ae1871048c90ee7c7af2300d7
+Found collision in block 485:
+   dm: dm2=00000100 
+   ihv1=4d6ad6c1f41b54655d9d20ed929f3edb
+   ihv2=cd6ad6c1739b5465dd1d20ed129f3edb
+Found collision in block 492:
+   dm: dm2=00000100 
+   ihv1=52d164f7803a98d7dfc12592fbee391f
+   ihv2=d2d164f7ffba98d75f4125927bee391f
+Found collision in block 499:
+   dm: dm2=00000100 
+   ihv1=f325c4f4101d92cc35f60907d541703a
+   ihv2=7325c4f48f9d92ccb57609075541703a
+Found collision in block 506:
+   dm: dm2=00000100 
+   ihv1=0eca7fc54592b52fd48ce4629f1284a0
+   ihv2=8eca7fc5c512b52f540ce4621f1284a0
+Found collision in block 513:
+   dm: dm2=00000100 
+   ihv1=1a4021f1587752578f0b7e533a6c9e54
+   ihv2=9a4021f1d7f752570e8b7e53ba6c9e54
+Found collision in block 520:
+   dm: dm2=00000100 
+   ihv1=c60a19ca64152924496d2f0263e63ecf
+   ihv2=460a19cae3952924c8ed2f02e3e63ecf
+Found collision in block 527:
+   dm: dm2=ffffff00 
+   ihv1=eb6ab2cba8f5c4bd7b0b3978cc6bbabd
+   ihv2=6b6ab2cb2975c4bdfb8b39784c6bbabd
+Found collision in block 534:
+   dm: dm2=00000100 
+   ihv1=46b38cfc321eb709c1cafb30cd7814ba
+   ihv2=c6b38cfcb19eb709414afb304d7814ba
+Found collision in block 541:
+   dm: dm2=ffffff00 
+   ihv1=8c11daa2b44a98732ac30eccdbb08d5b
+   ihv2=0c11daa234ca9873ab430ecc5bb08d5b
+Found collision in block 548:
+   dm: dm2=00000100 
+   ihv1=1ccfa64cc70c82f6346f901073c47d2e
+   ihv2=9ccfa64c468c82f6b3ef9010f3c47d2e
+Found collision in block 555:
+   dm: dm2=00000100 
+   ihv1=ee2fbf04d24b14fd06f67affbc4c44dc
+   ihv2=6e2fbf0451cb14fd86767aff3c4c44dc
+Found collision in block 562:
+   dm: dm2=00000100 
+   ihv1=7b775636033bb8fc23686c933abecae3
+   ihv2=fb77563682bbb8fca2e86c93babecae3
+Found collision in block 569:
+   dm: dm2=00000100 
+   ihv1=976d2b50d6023b46793a036044e5a6f4
+   ihv2=176d2b5055823b46f8ba0360c4e5a6f4
+Found collision in block 576:
+   dm: dm2=00000100 
+   ihv1=3b4bc214dfaf4cef5c21ed53675c6da7
+   ihv2=bb4bc2145f2f4cefdba1ed53e75c6da7
+Found collision in block 583:
+   dm: dm2=00000100 
+   ihv1=70728ee3ce1d937a867b9653adf09eff
+   ihv2=f0728ee34d9d937a05fb96532df09eff
+Found collision in block 590:
+   dm: dm2=00000100 
+   ihv1=c8f0d7724f83209d6eb35229d60fe9e6
+   ihv2=48f0d772cf03209dee335229560fe9e6
+Found collision in block 597:
+   dm: dm2=00000100 
+   ihv1=e6538a9a001f7f0a4089c7c698eaf6f0
+   ihv2=66538a9a7f9f7f0ac009c7c618eaf6f0
+Found collision in block 604:
+   dm: dm2=00000100 
+   ihv1=3310150a795565fe0af73202eef77abb
+   ihv2=b310150af8d565fe8a7732026ef77abb
+Found collision in block 611:
+   dm: dm2=00000100 
+   ihv1=0ad375cbad60c0afcbbb7361357810b0
+   ihv2=8ad375cb2ce0c0af4b3b7361b57810b0
+Found collision in block 618:
+   dm: dm2=ffffff00 
+   ihv1=d5d110fc39257b49187a51fa32ee3b7e
+   ihv2=55d110fcb9a57b4998fa51fab2ee3b7e
+Found collision in block 625:
+   dm: dm2=00000100 
+   ihv1=909270f42da24d35bf64e9b3a5d3ebc1
+   ihv2=109270f4ad224d353ee4e9b325d3ebc1
+Found collision in block 632:
+   dm: dm2=00000100 
+   ihv1=9de0f3d4fb7c17bd49eabfeeac1f030a
+   ihv2=1de0f3d47afc17bdc96abfee2c1f030a
+Found collision in block 639:
+   dm: dm2=00000100 
+   ihv1=6dea4d8a2b28b54ccdd6b9ad3974f551
+   ihv2=edea4d8aaaa8b54c4d56b9adb974f551
+Found collision in block 646:
+   dm: dm2=00000100 
+   ihv1=9285b22c672de839f4f1edb1b720ee7a
+   ihv2=1285b22ce6ade8397471edb13720ee7a
+Found collision in block 653:
+   dm: dm2=00000100 
+   ihv1=5ab491bcd1da8000cd9cf948c88d2a9b
+   ihv2=dab491bc515a80004d1cf948488d2a9b
+Found collision in block 660:
+   dm: dm2=00000100 
+   ihv1=ac26877fc19ecbca68c9abafea0b1d30
+   ihv2=2c26877f411ecbcae849abaf6a0b1d30
+Found collision in block 667:
+   dm: dm2=ffffff00 
+   ihv1=ef3c436fdc48b17f2e61bdc8c6d13d1a
+   ihv2=6f3c436f5cc8b17faee1bdc846d13d1a
+Found collision in block 674:
+   dm: dm2=00000100 
+   ihv1=750cd341404972f88c66a8696f21e7e7
+   ihv2=f50cd341bfc972f80be6a869ef21e7e7
+Found collision in block 681:
+   dm: dm2=00000100 
+   ihv1=ca73a734c7c3fb5a0379f90738142317
+   ihv2=4a73a7344743fb5a82f9f907b8142317
+Found collision in block 688:
+   dm: dm2=00000100 
+   ihv1=e73f51455bb0f7a98d21f88ebc60bfed
+   ihv2=673f5145db30f7a90ca1f88e3c60bfed
+Found collision in block 695:
+   dm: dm2=ffffff00 
+   ihv1=faa07c2d3f4f9b0ad5085566da155ffd
+   ihv2=7aa07c2dbfcf9b0a558855665a155ffd
+Found collision in block 702:
+   dm: dm2=00000100 
+   ihv1=390d066fc0f4e422bca48c5101bb898c
+   ihv2=b90d066f4074e4223c248c5181bb898c
+Found collision in block 709:
+   dm: dm2=ffffff00 
+   ihv1=3ef21638da65ca78661c688d06c92a91
+   ihv2=bef216385ae5ca78e69c688d86c92a91
+Found collision in block 716:
+   dm: dm2=00000100 
+   ihv1=de4c83de4353c40bf3c1794924a429fd
+   ihv2=5e4c83dec2d3c40b73417949a4a429fd
+Found collision in block 723:
+   dm: dm2=00000100 
+   ihv1=c0e2ca7f1dae02c2519dcdce1e24c5d9
+   ihv2=40e2ca7f9d2e02c2d11dcdce9e24c5d9
+Found collision in block 730:
+   dm: dm2=00000100 
+   ihv1=fc45a5e8a94845651f7d392f7a007701
+   ihv2=7c45a5e828c845659efd392ffa007701
+Found collision in block 737:
+   dm: dm2=00000100 
+   ihv1=6d5de79450c9d4ee807941b89c584863
+   ihv2=ed5de794d049d4eefff941b81c584863
+Found collision in block 744:
+   dm: dm2=00000100 
+   ihv1=34f10a115834ced2314d2cf950c0a865
+   ihv2=b4f10a11d7b4ced2b0cd2cf9d0c0a865
+Found collision in block 751:
+   dm: dm2=00000100 
+   ihv1=e8cd08bc62c28f59cdbfef0e267eebc0
+   ihv2=68cd08bce2428f594d3fef0ea67eebc0
+Found collision in block 758:
+   dm: dm2=00000100 
+   ihv1=9115544836e5eb1e4e66433f3d02191d
+   ihv2=11155448b665eb1ecde6433fbd02191d
+Found collision in block 765:
+   dm: dm2=00000100 
+   ihv1=bac1d64f30b81f8dcd27731bfff0b151
+   ihv2=3ac1d64fb0381f8d4ca7731b7ff0b151
+Found collision in block 772:
+   dm: dm2=00000100 
+   ihv1=544d20892f7ded33277694155ad570dc
+   ihv2=d44d2089aefded33a6f69415dad570dc
+Found collision in block 779:
+   dm: dm2=00000100 
+   ihv1=7ef1144e26928e6f83c013dcfe4b6805
+   ihv2=fef1144ea6128e6f034013dc7e4b6805
+Found collision in block 786:
+   dm: dm2=ffffff00 
+   ihv1=e5c61ea9dc0268b855bd4c5a68467bd5
+   ihv2=65c61ea95c8268b8d63d4c5ae8467bd5
+Found collision in block 793:
+   dm: dm2=00000100 
+   ihv1=45bdf48c452977c6d20a7135214d2dfa
+   ihv2=c5bdf48cc4a977c6518a7135a14d2dfa
+Found collision in block 800:
+   dm: dm2=00000100 
+   ihv1=f474d6107ab341f336de2c43ecce68c5
+   ihv2=7474d610fa3341f3b65e2c436cce68c5
+Found collision in block 807:
+   dm: dm2=00000100 
+   ihv1=601c9bded85bb259a7b2a27b4fe7e3a1
+   ihv2=e01c9bde57dbb2592732a27bcfe7e3a1
+Found collision in block 814:
+   dm: dm2=00000100 
+   ihv1=0108780ae4c64b1004510242a5e8443c
+   ihv2=8108780a64464b1083d1024225e8443c
+Found collision in block 821:
+   dm: dm2=ffffff00 
+   ihv1=4703c9563d1be40f1f30231bff4524fc
+   ihv2=c703c956bd9be40f9fb0231b7f4524fc
+Found collision in block 828:
+   dm: dm2=00000100 
+   ihv1=70bada44d1e2df5b32423c931caa4001
+   ihv2=f0bada445162df5bb1c23c939caa4001
+Found collision in block 835:
+   dm: dm2=00000100 
+   ihv1=5a9cbf42d0dc9ae0517457c9692f6476
+   ihv2=da9cbf42505c9ae0d0f457c9e92f6476
+Found collision in block 842:
+   dm: dm2=00000100 
+   ihv1=9b4d96c10cac5097840828f9063e9fed
+   ihv2=1b4d96c18c2c5097038828f9863e9fed
+Found collision in block 849:
+   dm: dm2=00000100 
+   ihv1=4553d23d48807864979e135fee707c33
+   ihv2=c553d23dc8007864171e135f6e707c33
+Found collision in block 856:
+   dm: dm2=00000100 
+   ihv1=5a8cf1162c3fb8bdedd47fd5963812c2
+   ihv2=da8cf116abbfb8bd6d547fd5163812c2
+Found collision in block 863:
+   dm: dm2=00000100 
+   ihv1=567c8199deda81b3d2a86a7596035a83
+   ihv2=d67c81995e5a81b352286a7516035a83
+Found collision in block 870:
+   dm: dm2=00000100 
+   ihv1=a799a14a7670295f56beb10c0175315b
+   ihv2=2799a14af5f0295fd63eb10c8175315b
+Found collision in block 877:
+   dm: dm2=00000100 
+   ihv1=6d9faf602bb34c9def627f85c19429bb
+   ihv2=ed9faf60ab334c9d6ee27f85419429bb
+Found collision in block 884:
+   dm: dm2=00000100 
+   ihv1=80fb93da7763d48c0ea5eb4ea4fb88e2
+   ihv2=00fb93daf6e3d48c8e25eb4e24fb88e2
+Found collision in block 891:
+   dm: dm2=00000100 
+   ihv1=8e56e2c3244fe5db142ad3595214c49d
+   ihv2=0e56e2c3a3cfe5db93aad359d214c49d
+Found collision in block 898:
+   dm: dm2=00000100 
+   ihv1=698c169fdc623825a5f1869355ccd80c
+   ihv2=e98c169f5be2382525718693d5ccd80c
+Found collision in block 905:
+   dm: dm2=ffffff00 
+   ihv1=fdac6e8f3c2620267542e6732c2f1823
+   ihv2=7dac6e8fbca62026f5c2e673ac2f1823
+Found collision in block 912:
+   dm: dm2=00000100 
+   ihv1=4ce2eb9a585a00aefa56248231588fbf
+   ihv2=cce2eb9ad7da00ae79d62482b1588fbf
+Found collision in block 919:
+   dm: dm2=00000100 
+   ihv1=2e195091c1c254429f0ec2c6114692ce
+   ihv2=ae195091414254421e8ec2c6914692ce
+Found collision in block 926:
+   dm: dm2=00000100 
+   ihv1=b8099775237c91f690d4a0a3680c97fb
+   ihv2=38099775a2fc91f61054a0a3e80c97fb
+Found collision in block 933:
+   dm: dm2=00000100 
+   ihv1=55630cf3d10f4ca3b6b038e8991b3e78
+   ihv2=d5630cf3508f4ca3363038e8191b3e78
+Found collision in block 940:
+   dm: dm2=00000100 
+   ihv1=c6d9b666cff583d8242c60e1c2afac72
+   ihv2=46d9b6664f7583d8a3ac60e142afac72
+Found collision in block 947:
+   dm: dm2=00000100 
+   ihv1=36c726e5e3941fea8bc5b8786c6365bd
+   ihv2=b6c726e563141fea0b45b878ec6365bd
+Found collision in block 954:
+   dm: dm2=00000100 
+   ihv1=ff4073665bc3e0eb7c560629408bd6f1
+   ihv2=7f407366db43e0ebfbd60629c08bd6f1
+Found collision in block 961:
+   dm: dm2=00000100 
+   ihv1=4429d9d201ecd5a12c5fd5d16f0337ef
+   ihv2=c429d9d2816cd5a1abdfd5d1ef0337ef
+Found collision in block 968:
+   dm: dm2=00000100 
+   ihv1=97a90e09c29d916375e0588bde18e8cd
+   ihv2=17a90e09421d9163f560588b5e18e8cd
+Found collision in block 975:
+   dm: dm2=ffffff00 
+   ihv1=267c55ef72f74743a9953ae30a82dcb1
+   ihv2=a67c55eff37747432a153ae38a82dcb1
+Found collision in block 982:
+   dm: dm2=00000100 
+   ihv1=740719c45e32176aa38cccbb22b38ac1
+   ihv2=f40719c4ddb2176a230cccbba2b38ac1
+Found collision in block 989:
+   dm: dm2=00000100 
+   ihv1=d6597a4b057bfb9e375fe337dcf803c3
+   ihv2=56597a4b84fbfb9eb6dfe3375cf803c3
+Found collision in block 996:
+   dm: dm2=00000100 
+   ihv1=7b72c4495d7fae58142d8c815ec963de
+   ihv2=fb72c449dcffae5893ad8c81dec963de
+Found collision in block 1003:
+   dm: dm2=00000100 
+   ihv1=8cc2fcb6f3f4d5fa23e93ae7eb34a1c3
+   ihv2=0cc2fcb67374d5faa3693ae76b34a1c3
+Found collision in block 1010:
+   dm: dm2=00000100 
+   ihv1=d20f4acb0247d53a094ad9a84b222c1e
+   ihv2=520f4acb81c7d53a88cad9a8cb222c1e
+Found collision in block 1017:
+   dm: dm2=00000100 
+   ihv1=3d93ab5f7a7b986d0f1ad478bb8603a5
+   ihv2=bd93ab5ff9fb986d8e9ad4783b8603a5
+Found collision in block 1024:
+   dm: dm2=00000100 
+   ihv1=733666382638cdb9b9a60e1f83e2f9ab
+   ihv2=f3366638a5b8cdb939260e1f03e2f9ab
+Found collision in block 1031:
+   dm: dm2=00000100 
+   ihv1=946e46237c06f71a4c8f9da60ab7431e
+   ihv2=146e4623fb86f71acc0f9da68ab7431e
+Found collision in block 1038:
+   dm: dm2=00000100 
+   ihv1=6f3067a24e56503d059e0855af945003
+   ihv2=ef3067a2cdd6503d851e08552f945003
+Found collision in block 1045:
+   dm: dm2=00000100 
+   ihv1=0712050a253a105dc42df239a9f4819b
+   ihv2=8712050aa4ba105d43adf23929f4819b
+Found collision in block 1052:
+   dm: dm2=00000100 
+   ihv1=148609235fa1f9c8b7264c078b88ac60
+   ihv2=94860923df21f9c836a64c070b88ac60
+Found collision in block 1059:
+   dm: dm2=ffffff00 
+   ihv1=064f20d1ab025bc3eba1c0a48fc78215
+   ihv2=864f20d12b825bc36c21c0a40fc78215
+Found collision in block 1066:
+   dm: dm2=ffffff00 
+   ihv1=12eb7d34a8050ee80aedb2fb420d6f87
+   ihv2=92eb7d3428850ee88b6db2fbc20d6f87
+Found collision in block 1073:
+   dm: dm2=ffffff00 
+   ihv1=1a44ac9b4362fb99d0dbeef40a1aead2
+   ihv2=9a44ac9bc3e2fb99515beef48a1aead2
+Found collision in block 1080:
+   dm: dm2=00000100 
+   ihv1=5cde45fca9a54bada8ca641248b1c1f6
+   ihv2=dcde45fc29254bad284a6412c8b1c1f6
+Found collision in block 1087:
+   dm: dm2=00000100 
+   ihv1=1b018920bfabda09fe10327887e7a082
+   ihv2=9b0189203f2bda097d90327807e7a082
+Found collision in block 1094:
+   dm: dm2=00000100 
+   ihv1=346278a2ea091586c2e9179d197d5a2a
+   ihv2=b46278a2698915864269179d997d5a2a
+Found collision in block 1101:
+   dm: dm2=ffffff00 
+   ihv1=693d3884a280c4e60be1e1c5d1c1c142
+   ihv2=e93d38842300c4e68c61e1c551c1c142
+Found collision in block 1108:
+   dm: dm2=00000100 
+   ihv1=96565df27882dffb1569b3ad42127a81
+   ihv2=16565df2f802dffb94e9b3adc2127a81
+Found collision in block 1115:
+   dm: dm2=ffffff00 
+   ihv1=60c7a0e111f72f8652690d577fec8172
+   ihv2=e0c7a0e192772f86d2e90d57ffec8172
+Found collision in block 1122:
+   dm: dm2=00000100 
+   ihv1=ef8364aad7ce95579beb8273f4d28ff2
+   ihv2=6f8364aa574e95571b6b827374d28ff2
+Found collision in block 1129:
+   dm: dm2=00000100 
+   ihv1=7d2ff06406c5586fefd379dac2c672b0
+   ihv2=fd2ff0648645586f6f5379da42c672b0
+Found collision in block 1136:
+   dm: dm2=00000100 
+   ihv1=3eab03bba491f13a908a4c67dd1c08ce
+   ihv2=beab03bb2411f13a100a4c675d1c08ce
+Found collision in block 1143:
+   dm: dm2=ffffff00 
+   ihv1=d3bfaef3c656baab931c0671a47f93d0
+   ihv2=53bfaef346d6baab139c0671247f93d0
+Found collision in block 1150:
+   dm: dm2=00000100 
+   ihv1=938462337b2c23f024949742a202c5d2
+   ihv2=13846233faac23f0a41497422202c5d2
+Found collision in block 1157:
+   dm: dm2=00000100 
+   ihv1=aa4dbf587561d324f980004a0e609491
+   ihv2=2a4dbf58f4e1d3247900004a8e609491
+Found collision in block 1164:
+   dm: dm2=00000100 
+   ihv1=28b8db2da44923334b0d1c04f014d8f3
+   ihv2=a8b8db2d23c92333ca8d1c047014d8f3
+Found collision in block 1171:
+   dm: dm2=ffffff00 
+   ihv1=d0286928c70c270c02c92e0316c6cdfd
+   ihv2=50286928478c270c83492e0396c6cdfd
+Found collision in block 1178:
+   dm: dm2=00000100 
+   ihv1=7deb97d5be4610e3b7b9b479dc44d8c6
+   ihv2=fdeb97d53dc610e33739b4795c44d8c6
+Found collision in block 1185:
+   dm: dm2=ffffff00 
+   ihv1=919f38e889f2a9ab68b68f1f9e063372
+   ihv2=119f38e80a72a9abe9368f1f1e063372
+Found collision in block 1192:
+   dm: dm2=00000100 
+   ihv1=9d5326c77e75527c3c26faac474f0ce7
+   ihv2=1d5326c7fdf5527cbba6faacc74f0ce7
+Found collision in block 1199:
+   dm: dm2=00000100 
+   ihv1=40e420c0ae62f3c5a97508e4dffab069
+   ihv2=c0e420c02de2f3c528f508e45ffab069
+Found collision in block 1206:
+   dm: dm2=00000100 
+   ihv1=bf2fe19327c1654d6ec2fb75e5739322
+   ihv2=3f2fe193a741654dee42fb7565739322
+Found collision in block 1213:
+   dm: dm2=ffffff00 
+   ihv1=32550a424486a4ab3d57bfa738741fd2
+   ihv2=b2550a42c506a4abbdd7bfa7b8741fd2
+Found collision in block 1220:
+   dm: dm2=00000100 
+   ihv1=0c7dba84f2850a62abcbffcd09c796ef
+   ihv2=8c7dba8472050a622b4bffcd89c796ef
+Found collision in block 1227:
+   dm: dm2=00000100 
+   ihv1=12007ea6b20c0063290cb927ab65bda3
+   ihv2=92007ea6318c0063a88cb9272b65bda3
+Found collision in block 1234:
+   dm: dm2=00000100 
+   ihv1=b2129f735aa386b73ae9655186ffd002
+   ihv2=32129f73da2386b7ba69655106ffd002
+Found collision in block 1241:
+   dm: dm2=00000100 
+   ihv1=dd053432ed0c64eed87e59e5e0ec3ca3
+   ihv2=5d0534326c8c64ee57fe59e560ec3ca3
+Found collision in block 1248:
+   dm: dm2=00000100 
+   ihv1=8081f76180b84e82269dd0f49c078b72
+   ihv2=0081f76100384e82a61dd0f41c078b72
+Found collision in block 1255:
+   dm: dm2=ffffff00 
+   ihv1=95a851a9e0c5f75877a5caa034b9a4ee
+   ihv2=15a851a96145f758f825caa0b4b9a4ee
+Found collision in block 1262:
+   dm: dm2=00000100 
+   ihv1=595a8554f1e6efd42da5cb0a205727b3
+   ihv2=d95a85547166efd4ad25cb0aa05727b3
+Found collision in block 1269:
+   dm: dm2=00000100 
+   ihv1=953e7e8d4c0a730821525c8d57980824
+   ihv2=153e7e8dcb8a7308a0d25c8dd7980824
+Found collision in block 1276:
+   dm: dm2=ffffff00 
+   ihv1=f92b8b3581ee17513e080ca32cc4bd11
+   ihv2=792b8b35026e1751be880ca3acc4bd11
+Found collision in block 1283:
+   dm: dm2=00000100 
+   ihv1=4202580c2302b8cfa0d5621ef114f9f1
+   ihv2=c202580ca282b8cf2055621e7114f9f1
+Found collision in block 1290:
+   dm: dm2=00000100 
+   ihv1=d5e2714c85093d4eb256d3b2d0800428
+   ihv2=55e2714c04893d4e31d6d3b250800428
+Found collision in block 1297:
+   dm: dm2=00000100 
+   ihv1=41b9ee4ce29a5de48dc64cd8e2369f4a
+   ihv2=c1b9ee4c621a5de40d464cd862369f4a
+Found collision in block 1304:
+   dm: dm2=00000100 
+   ihv1=40cef8741b8fa28db7b35ee09d02c087
+   ihv2=c0cef8749b0fa28d37335ee01d02c087
+Found collision in block 1311:
+   dm: dm2=00000100 
+   ihv1=604ace208ba159217d85728b31d9dac7
+   ihv2=e04ace200b215921fd05728bb1d9dac7
+Found collision in block 1318:
+   dm: dm2=00000100 
+   ihv1=c77622daf35372e1914f51fbd6016683
+   ihv2=477622da72d372e110cf51fb56016683
+Found collision in block 1325:
+   dm: dm2=00000100 
+   ihv1=d1da635b1e555e1e9018608a26861898
+   ihv2=51da635b9dd55e1e0f98608aa6861898
+Found collision in block 1332:
+   dm: dm2=00000100 
+   ihv1=941ca30c9d07d4e8a2a19e7794347541
+   ihv2=141ca30c1c87d4e822219e7714347541
+Found collision in block 1339:
+   dm: dm2=00000100 
+   ihv1=e45c4c4fb318c653411dc6a6f608c4d2
+   ihv2=645c4c4f3298c653c09dc6a67608c4d2
