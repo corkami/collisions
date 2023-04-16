@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Sets the value of Evan's NES hashquine
+# Sets the value of Greg's PS hashquine
 
 # Ange Albertini 2022-2023
 
@@ -12,11 +12,11 @@ from collisions import setFastcoll
 
 HEX_BASE = 16
 MD5_LEN = 32
-HEADER_S = 0x6180
-HEADER_MD5 = "5ec939f775d49bff5fbb3b1e7f9de1c2"
-FULL_MD5 = 'db669e2f3eb62615b7b80e6d862c5822'
+HEADER_S = 41344
+HEADER_MD5 = '54add7e1da7b2a31b5a5900be13622df'
+FULL_MD5 = '768d9d89d2bc825a319eb8962ad30580'
 # This hashquine has 128 evenly spaced collisions.
-block_idx = lambda i:134 + i * 2
+block_idx = lambda i: 9 + i * 5
 
 
 def get_bits(s):
@@ -25,7 +25,7 @@ def get_bits(s):
 
 def flip_bits(d, bits):
     for i, j in enumerate(bits):
-        d, _ = setFastcoll(d, block_idx(i), sideB=j == "0")
+        d, _ = setFastcoll(d, block_idx(i), sideB=j == "1")
     return d
 
 
@@ -65,11 +65,11 @@ def main():
         hex_value = hashlib.md5(data).hexdigest()
         print("Encoding file MD5: `%s` (len:%i)" % (hex_value, len(hex_value)))
 
-    reset_bits = get_bits(hex_value)
+    reset_bits = get_bits(hex_value)[::-1]
     data = flip_bits(data, reset_bits)
 
     assert hashlib.md5(data).hexdigest() == FULL_MD5
-    with open("output.nes", "wb") as f:
+    with open("output.ps", "wb") as f:
         f.write(data)
 
 

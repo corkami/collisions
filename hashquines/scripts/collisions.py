@@ -1,61 +1,152 @@
 #!/usr/bin/env python3
 
-# flip or reset collision blocks
+# Flip or reset collision blocks - unicoll and fastcoll
 
-# Ange Albertini 2022
+# Ange Albertini 2022-2023
 
 import sys
 import hashlib
 
 BLOCK_SIZE = 0x40
 
-def read_dword(d, offset):
-	return int.from_bytes(d[offset:offset + 4], "little")
+
+def read_dword(data: bytearray, offset: int):
+    return int.from_bytes(data[offset:offset + 4], "little")
 
 
-def write_dword(d, val, offset):
-	for i in range(4):
-		d[offset + i] = (val >> (i*8)) & 0xFF
-	return d
+def write_dword(data: bytearray, value: int, offset: int):
+    for i in range(4):
+        data[offset + i] = (value >> (i * 8)) & 0xFF
+    return data
 
 
-def swap_fccoll(d, i, side=None):
-	# get FastColl other side of the collision
-	# return a specific side if requested
-	idx = i * BLOCK_SIZE
-	oldmd5 = hashlib.md5(d).hexdigest()
-	old = bytearray([el for el in d])
+def setFastcoll(data: bytearray, block_idx: int, sideB: bool = None):
+    # get a given 'side' of fastcoll (False = left, True = right)
+    # Get the other side of the collision if no side if specified
+    XOR_MASK = 0x80
+    XOR_OFFSETS = [0x13, 0x3b]
+    block_off = block_idx * BLOCK_SIZE
+    assert block_off + 0x80 <= len(data)
+    md5_old = hashlib.md5(data).hexdigest()
+    data_old = bytearray(data)
+    data_new = bytearray(data)
 
-	for off in [0x13, 0x3b]:
-		d[idx + off] = 0x80 ^ d[idx  + off]
-		off += BLOCK_SIZE
-		d[idx + off] = 0x80 ^ d[idx  + off]
-	
-	dw1_1 = read_dword(d, idx + 0x2c)
-	dw1_2 = read_dword(d, idx + 0x6c)
+    for offset in XOR_OFFSETS:
+        data_new[block_off + offset] = XOR_MASK ^ data_new[block_off + offset]
+        offset += BLOCK_SIZE
+        data_new[block_off + offset] = XOR_MASK ^ data_new[block_off + offset]
 
-  # from File2 to File1
-	dw2_1 = dw1_1 + 0x8000
-	dw2_2 = dw1_2 - 0x8000
-	d = write_dword(d, dw2_1, 0x2c + idx)
-	d = write_dword(d, dw2_2, 0x6c + idx)
-	if hashlib.md5(d).hexdigest() == oldmd5:
-		d_1 = d
-		d_2 = old
-	else:
-		# didn't work? Confirm was the other way around
-		dw2_1 = dw1_1 - 0x8000
-		dw2_2 = dw1_2 + 0x8000
-		d = write_dword(d, dw2_1, 0x2c + idx)
-		d = write_dword(d, dw2_2, 0x6c + idx)
-		d_1 = old
-		d_2 = d
+    dword1_1 = read_dword(data_new, block_off + 0x2c)
+    dword1_2 = read_dword(data_new, block_off + 0x6c)
 
-	assert hashlib.md5(d).hexdigest() == oldmd5
+    # from File2 to File1
+    dword2_1 = dword1_1 + 0x8000
+    dword2_2 = dword1_2 - 0x8000
+    data_new = write_dword(data_new, dword2_1, 0x2c + block_off)
+    data_new = write_dword(data_new, dword2_2, 0x2c + block_off + BLOCK_SIZE)
+    if hashlib.md5(data_new).hexdigest() == md5_old:
+        foundSizeB = True
+        data1 = data_new
+        data2 = data_old
+    else:
+        # didn't work? Do it the other way around
+        foundSizeB = False
+        dword2_1 = dword1_1 - 0x8000
+        dword2_2 = dword1_2 + 0x8000
+        data_new = write_dword(data_new, dword2_1, 0x2c + block_off)
+        data_new = write_dword(data_new, dword2_2,
+                               0x2c + block_off + BLOCK_SIZE)
+        data1 = data_old
+        data2 = data_new
 
-	# return the specified side
-	if side == 1:
-		return d_1
-	elif side == 2:
-		return d_2
-	return d
+    assert hashlib.md5(data1).hexdigest() == md5_old
+    assert hashlib.md5(data2).hexdigest() == md5_old
+
+    # return the specified side if any
+    if sideB is None:
+        return data_new, foundSizeB
+    if sideB == False:
+        return data1, foundSizeB
+    elif sideB == True:
+        return data2, foundSizeB
+
+
+def getFastColls(data: bytearray):
+    BLOCK_SIZE = 0x40
+    l = len(data)
+    block_count = (l - l % BLOCK_SIZE) // BLOCK_SIZE
+    indexes = []
+    sidesB = []  # type: list[int]
+    for i in range(block_count):
+        try:
+            _, sideB = setFastcoll(data, i)
+        except AssertionError:
+            continue
+        indexes += [i]
+        if sideB:
+            sidesB += [i]
+    return indexes, sidesB
+
+
+def add4(data, offset, operand):
+    value = int.from_bytes(data[offset:offset + 4], "little")
+    value += operand
+    value %= 0x100000000
+    return data[:offset] + value.to_bytes(4, "little") + data[offset + 4:]
+
+
+def setUniColl(data: bytearray, block_idx: int, sideB: bool = None):
+    # get a given 'side' of a Unicoll (False = left, True = right)
+    # Get the other side of the collision if no side if specified
+
+    # That's UniColl #1
+    OFFSET = +8
+    DELTA = 0x100
+
+    block_off = block_idx * BLOCK_SIZE
+    assert block_off + 0x80 <= len(data)
+    md5_old = hashlib.md5(data).hexdigest()
+    data_old = bytearray(data)
+
+    # File2 to File1 ?
+    data_new = add4(data_old, block_off + OFFSET, DELTA)
+    data_new = add4(data_new, block_off + OFFSET + BLOCK_SIZE, -DELTA)
+    if hashlib.md5(data_new).hexdigest() == md5_old:
+        foundSizeB = True
+        data1 = data_new
+        data2 = data_old
+    else:
+        # File1 to File 2 ?
+        foundSizeB = False
+        data_new = add4(data_old, block_off + OFFSET, -DELTA)
+        data_new = add4(data_new, block_off + OFFSET + BLOCK_SIZE, +DELTA)
+        data1 = data_old
+        data2 = data_new
+
+    assert hashlib.md5(data1).hexdigest() == md5_old
+    assert hashlib.md5(data2).hexdigest() == md5_old
+
+    # return the specified side if any
+    if sideB is None:
+        return data_new, foundSizeB
+    if sideB == False:
+        return data1, foundSizeB
+    elif sideB == True:
+        return data2, foundSizeB
+
+
+def getUniColls(data: bytearray):
+    BLOCK_SIZE = 0x40
+    l = len(data)
+    block_count = (l - l % BLOCK_SIZE) // BLOCK_SIZE
+    indexes = []
+    sidesB = []  # type: list[int]
+    for i in range(block_count):
+        try:
+            _, sideB = setUniColl(data, i)
+        except AssertionError:
+            continue
+        indexes += [i]
+        if sideB:
+            sidesB += [i]
+    return indexes, sidesB

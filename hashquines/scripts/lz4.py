@@ -1,36 +1,27 @@
 #!/usr/bin/env python3
 
-# Sets the value of Evan's NES hashquine
+# Sets the hex value of my LZ4 hashquine
 
-# Ange Albertini 2022-2023
+# Ange Albertini 2023
 
 import hashlib
 import random
 
-from argparse import ArgumentParser
-from collisions import setFastcoll
-
 HEX_BASE = 16
 MD5_LEN = 32
-HEADER_S = 0x6180
-HEADER_MD5 = "5ec939f775d49bff5fbb3b1e7f9de1c2"
-FULL_MD5 = 'db669e2f3eb62615b7b80e6d862c5822'
-# This hashquine has 128 evenly spaced collisions.
-block_idx = lambda i:134 + i * 2
 
+from argparse import ArgumentParser
+from collisions import *
 
-def get_bits(s):
-    return '{md5:0>128b}'.format(md5=int("0x" + s, 16))
-
-
-def flip_bits(d, bits):
-    for i, j in enumerate(bits):
-        d, _ = setFastcoll(d, block_idx(i), sideB=j == "0")
-    return d
+FULL_MD5 = '1690738ac079d914645ade5693ab019b'
+HEADER_S = 71424
+HEADER_MD5 = 'fab0c435f531fe109f9c5f43e9b2a035'
+# 160 UniColls, each 7-block spaced
+block_indexes = [1 + 7 * i for i in range(160)]
 
 
 def main():
-    parser = ArgumentParser(description="Sets value in Evan's NES hashquine")
+    parser = ArgumentParser(description="Set value in Ange's LZ4 hashquine.")
     parser.add_argument('-v',
                         '--value',
                         type=str,
@@ -44,13 +35,9 @@ def main():
     fn = args.filename
     with open(fn, "rb") as f:
         data = bytearray(f.read())
+
     assert hashlib.md5(data).hexdigest() == FULL_MD5
-
-    # check we have the right file
     assert hashlib.md5(data[:HEADER_S]).hexdigest() == HEADER_MD5
-    print('Original NES hashquine file found')
-    print('Resetting Fastcoll blocks')
-
     if args.value is not None:
         if args.value == random:
             hex_value = "".join(
@@ -65,11 +52,28 @@ def main():
         hex_value = hashlib.md5(data).hexdigest()
         print("Encoding file MD5: `%s` (len:%i)" % (hex_value, len(hex_value)))
 
-    reset_bits = get_bits(hex_value)
-    data = flip_bits(data, reset_bits)
+    # not all MD5s can be encoded via 160 collisions,
+    # so the value is encoded until running out of collisions
+    collcount = len(block_indexes)
+    HEXRANGE = "0123456789abcdef"
+    VALUES = HEXRANGE * (collcount // 16) + \
+        HEXRANGE[:collcount % 16]
+    assert len(VALUES) == collcount
 
+    targetidx = 0
+    output = ""
+    for i, index in enumerate(block_indexes):
+        if (targetidx < len(hex_value)) and (hex_value[targetidx]
+                                             == VALUES[i]):
+            output += VALUES[i]
+            data, _ = setUniColl(data, index, True)
+            targetidx += 1
+        else:
+            data, _ = setUniColl(data, index, False)
+
+    print("Output value: '%s' (length:%i)" % (output, len(output)))
     assert hashlib.md5(data).hexdigest() == FULL_MD5
-    with open("output.nes", "wb") as f:
+    with open("output.lz4", "wb") as f:
         f.write(data)
 
 
