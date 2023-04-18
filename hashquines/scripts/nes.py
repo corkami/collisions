@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Sets the value of Evan's NES hashquine
+DESCRIPTION = "Set rendered hex value in Evan's NES hashquine."
 
 # Ange Albertini 2022-2023
 
@@ -12,11 +12,12 @@ from collisions import setFastcoll
 
 HEX_BASE = 16
 MD5_LEN = 32
+
 HEADER_S = 0x6180
 HEADER_MD5 = "5ec939f775d49bff5fbb3b1e7f9de1c2"
-FULL_MD5 = 'db669e2f3eb62615b7b80e6d862c5822'
-# This hashquine has 128 evenly spaced collisions.
-block_idx = lambda i:134 + i * 2
+
+# 128 evenly-spaced collisions.
+block_idx = lambda i: 134 + i * 2
 
 
 def get_bits(s):
@@ -30,7 +31,7 @@ def flip_bits(d, bits):
 
 
 def main():
-    parser = ArgumentParser(description="Sets value in Evan's NES hashquine")
+    parser = ArgumentParser(description=DESCRIPTION)
     parser.add_argument('-v',
                         '--value',
                         type=str,
@@ -44,7 +45,6 @@ def main():
     fn = args.filename
     with open(fn, "rb") as f:
         data = bytearray(f.read())
-    assert hashlib.md5(data).hexdigest() == FULL_MD5
 
     # check we have the right file
     assert hashlib.md5(data[:HEADER_S]).hexdigest() == HEADER_MD5
@@ -68,7 +68,6 @@ def main():
     reset_bits = get_bits(hex_value)
     data = flip_bits(data, reset_bits)
 
-    assert hashlib.md5(data).hexdigest() == FULL_MD5
     with open("output.nes", "wb") as f:
         f.write(data)
 

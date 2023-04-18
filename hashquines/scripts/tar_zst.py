@@ -1,32 +1,36 @@
 #!/usr/bin/env python3
 
+DESCRIPTION = "Create a 'self-checking' tar.zst out of a tar archive."
+
 # takes a tar-based archive
 # creates a .tar.zst with a hash.md5 containing the MD5 of all files in the archive
 # as well as the MD5 of the .tar.zst archive itself,
-# using Retroid's Zstandard hashquine.
+# using Retroid's Zstandard 'hashquine'.
 
 # Ange Albertini 2023
 
 import hashlib
 import struct
+import io
+import os
+import tarfile
+import zstandard
+from argparse import ArgumentParser
+from collisions import *
 
 # 1. take a .tar.(something)
-# 2. extract file paths and their MD5
-# 3. generate hash.md5 with a placeholder for the archive
+# 2. extract file paths and their MD5 [check if binary]
+# 3. generate hash.md5 with a placeholder value for the archive
 # 4. make a tar out of everything
-#   - get hash.md5 length
-#   - get tar header checksum
-# 6. adjust everything
+# 5. encode hash.md5 length
+# 6. encode tar header checksum
+# 7. encode archive hash
 
 HEX_BASE = 16
 MD5_LEN = 32
 
-from argparse import ArgumentParser
-from collisions import *
-import tarfile
-import io
-import zstandard
-import os
+HEADER_S = 292288
+HEADER_MD5 = 'a7b9c184887213304fd55f9fb06686aa'
 
 block_indexes = [
     1, 8, 15, 22, 29, 36, 43, 50, 57, 64, 71, 78, 85, 92, 99, 106, 113, 120,
@@ -82,14 +86,12 @@ block_indexes = [
     4418, 4425, 4432, 4439, 4446, 4453, 4460, 4467, 4474, 4481, 4488, 4495,
     4502, 4509, 4516, 4523, 4530, 4537, 4544, 4551, 4558, 4565
 ]
-HEADER_S = 292288
-HEADER_MD5 = 'a7b9c184887213304fd55f9fb06686aa'
 
 
 def main():
-    parser = ArgumentParser(
-        description="Set value in Retroid's ZST hashquine.")
-    parser.add_argument("hashquine", help="a copy of Retroid's hashquine")
+    parser = ArgumentParser(description=DESCRIPTION)
+    parser.add_argument("hashquine",
+                        help="a copy of Retroid's Zstandard hashquine")
     parser.add_argument(
         "tarfile", help="a Tar-based archive (tgz, tbz2... will work too)")
     args = parser.parse_args()
@@ -97,16 +99,25 @@ def main():
     fn = args.tarfile
     outname = os.path.basename(fn).split(".")[0] + ".tar.zst"
 
-    # why a star ?
-    hashes = [b" *".join([b"0" * 32, outname.encode()])]
+    # hashes separator:
+    # " ", then:
+    # - " ": text file
+    # - "*": binary file
+
+    # Can't we force everything to binary ?
+    # textchars = bytearray({7, 8, 9, 10, 12, 13, 27}
+    #                     | set(range(0x20, 0x100)) - {0x7f})
+    # is_binary = lambda bytes: bool(bytes.translate(None, textchars))
+    SEPARATOR = b" *"
+    hashes = [SEPARATOR.join([b"0" * 32, outname.encode()])]
     bio = io.BytesIO()
     with tarfile.open(fn, 'r') as tfi:
         for member in tfi:
             f = tfi.extractfile(member.name)
             if f is not None:
                 data = f.read()
-                md5 = hashlib.md5(data).hexdigest()
-                hashes += ["  ".join([md5, member.name]).encode()]
+                md5 = hashlib.md5(data).hexdigest().encode()
+                hashes += [SEPARATOR.join([md5, member.name.encode("ascii")])]
         hashfile = b"\n".join(hashes)
         hashlength = len(hashfile)
 

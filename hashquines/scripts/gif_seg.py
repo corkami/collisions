@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 
-# Sets the hex value of SPQ's Gif 2*8 segment display hashquine
+DESCRIPTION = "Set rendered hex value in SPQ's 'segments display' GIF hashquine."
 
 # Ange Albertini 2023
 
 import hashlib
 import random
 
-HEX_BASE = 16
-MD5_LEN = 32
-HEADER_S = 85376
-HEADER_MD5 = '6cc83e8357bd1a75b9f2005ba6fab928'
-
 from argparse import ArgumentParser
 from collisions import *
+
+HEX_BASE = 16
+MD5_LEN = 32
+
+HEADER_S = 85376
+HEADER_MD5 = '6cc83e8357bd1a75b9f2005ba6fab928'
 
 #  1
 # 2 3
@@ -87,22 +88,8 @@ block_indexes = [
 ]
 
 
-def get_flips():
-    flips = []
-    FULL_HASH = "f5ca4f935d44b85c431a8bf788c0eaca"
-    for letter_index, letter in enumerate(FULL_HASH):
-        segments = display[letter]
-        for bit_index, bit in enumerate(segments):
-            if bit == "1":
-                flips += [letter_index * 7 + bit_index]
-    return flips
-
-
 def main():
-    flips = get_flips()
-
-    parser = ArgumentParser(
-        description="Set values in SPQ's 'display' GIF hashquine.")
+    parser = ArgumentParser(description=DESCRIPTION)
     parser.add_argument('-v',
                         '--value',
                         type=str,

@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 
-# Flip or reset collision blocks - unicoll and fastcoll
+# Flip or reset collision blocks for Unicoll or Fastcoll
 
 # Ange Albertini 2022-2023
 
-import sys
 import hashlib
 
 BLOCK_SIZE = 0x40

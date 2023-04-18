@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Sets the value of Greg's PS hashquine
+DESCRIPTION = "Set rendered hex value in Greg's PostScript hashquine."
 
 # Ange Albertini 2022-2023
 
@@ -12,9 +12,10 @@ from collisions import setFastcoll
 
 HEX_BASE = 16
 MD5_LEN = 32
+
 HEADER_S = 41344
 HEADER_MD5 = '54add7e1da7b2a31b5a5900be13622df'
-FULL_MD5 = '768d9d89d2bc825a319eb8962ad30580'
+
 # This hashquine has 128 evenly spaced collisions.
 block_idx = lambda i: 9 + i * 5
 
@@ -30,7 +31,7 @@ def flip_bits(d, bits):
 
 
 def main():
-    parser = ArgumentParser(description="Sets value in Evan's NES hashquine")
+    parser = ArgumentParser(description=DESCRIPTION)
     parser.add_argument('-v',
                         '--value',
                         type=str,
@@ -44,7 +45,6 @@ def main():
     fn = args.filename
     with open(fn, "rb") as f:
         data = bytearray(f.read())
-    assert hashlib.md5(data).hexdigest() == FULL_MD5
 
     # check we have the right file
     assert hashlib.md5(data[:HEADER_S]).hexdigest() == HEADER_MD5
@@ -68,7 +68,6 @@ def main():
     reset_bits = get_bits(hex_value)[::-1]
     data = flip_bits(data, reset_bits)
 
-    assert hashlib.md5(data).hexdigest() == FULL_MD5
     with open("output.ps", "wb") as f:
         f.write(data)
 

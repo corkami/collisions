@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 
-# Sets the hex value of Retroid's Zstandard [+Tar] hashquine
+DESCRIPTION = "Set rendered hex value in Retroid's ZST [+Tar] hashquine."
 
 # Ange Albertini 2023
 
 import hashlib
 import random
 
+from argparse import ArgumentParser
+from collisions import *
+
 HEX_BASE = 16
 MD5_LEN = 32
 
-from argparse import ArgumentParser
-from collisions import *
+HEADER_S = 292288
+HEADER_MD5 = 'a7b9c184887213304fd55f9fb06686aa'
 
 block_indexes = [
     1, 8, 15, 22, 29, 36, 43, 50, 57, 64, 71, 78, 85, 92, 99, 106, 113, 120,
@@ -67,13 +70,10 @@ block_indexes = [
     4418, 4425, 4432, 4439, 4446, 4453, 4460, 4467, 4474, 4481, 4488, 4495,
     4502, 4509, 4516, 4523, 4530, 4537, 4544, 4551, 4558, 4565
 ]
-HEADER_S = 292288
-HEADER_MD5 = 'a7b9c184887213304fd55f9fb06686aa'
 
 
 def main():
-    parser = ArgumentParser(
-        description="Set value in Retroid's ZST hashquine.")
+    parser = ArgumentParser(description=DESCRIPTION)
     parser.add_argument('-v',
                         '--value',
                         type=str,

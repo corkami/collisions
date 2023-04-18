@@ -1,24 +1,22 @@
 #!/usr/bin/env python3
 
-# Sets the hex value of SPQ's Gif AVP Hashquine
-# 512 fastcolls - 1 to display a different nibble - Even nibbles have a longer delay.
+DESCRIPTION = "Set rendered hex value in SPQ's 'AVP' GIF hashquine."
 
 # Ange Albertini 2023
 
 import hashlib
 import random
 
-HEX_BASE = 16
-MD5_LEN = 32
-
 from argparse import ArgumentParser
 from collisions import *
 
+HEX_BASE = 16
+MD5_LEN = 32
+
 HEADER_S = 398016
 HEADER_MD5 = "136e622f9d89c84f35729d2354ca3017"
-FULL_MD5 = '8895af74c2b5478c547cfb85f7475f0b'
 
-# 512 fastcolls
+# 512 fastcolls - 1 to display a different nibble - Even nibbles have a longer delay.
 block_indexes = [
     1613, 1622, 1632, 1641, 1649, 1658, 1666, 1674, 1683, 1692, 1702, 1711,
     1721, 1730, 1739, 1748, 1757, 1766, 1775, 1783, 1791, 1800, 1809, 1818,
@@ -65,10 +63,55 @@ block_indexes = [
     6152, 6161, 6170, 6179, 6188, 6197, 6207, 6217
 ]
 
+reset_sidesB = [
+    1613, 1632, 1641, 1649, 1674, 1692, 1702, 1711, 1730, 1783, 1800, 1818,
+    1828, 1837, 1873, 1890, 1909, 1955, 1982, 1991, 2009, 2028, 2037, 2046,
+    2055, 2063, 2081, 2091, 2108, 2118, 2127, 2154, 2192, 2209, 2217, 2226,
+    2234, 2250, 2260, 2269, 2277, 2297, 2305, 2315, 2325, 2361, 2414, 2430,
+    2449, 2478, 2486, 2495, 2531, 2539, 2557, 2566, 2604, 2613, 2623, 2640,
+    2657, 2666, 2675, 2683, 2693, 2701, 2709, 2745, 2753, 2762, 2771, 2799,
+    2807, 2817, 2827, 2835, 2844, 2852, 2861, 2879, 2898, 2915, 2933, 2951,
+    2969, 3005, 3014, 3023, 3040, 3076, 3094, 3103, 3112, 3122, 3132, 3205,
+    3223, 3232, 3241, 3260, 3269, 3278, 3287, 3295, 3330, 3340, 3358, 3393,
+    3410, 3418, 3462, 3490, 3519, 3528, 3537, 3582, 3591, 3618, 3637, 3680,
+    3689, 3698, 3715, 3724, 3743, 3752, 3761, 3770, 3788, 3797, 3807, 3816,
+    3825, 3853, 3861, 3870, 3890, 3916, 3935, 3954, 3963, 3990, 4007, 4015,
+    4024, 4033, 4042, 4052, 4087, 4113, 4121, 4147, 4175, 4185, 4195, 4204,
+    4230, 4238, 4265, 4292, 4300, 4310, 4319, 4336, 4346, 4355, 4365, 4375,
+    4384, 4393, 4412, 4439, 4447, 4466, 4475, 4484, 4493, 4520, 4529, 4549,
+    4567, 4577, 4586, 4595, 4604, 4623, 4632, 4641, 4650, 4668, 4685, 4702,
+    4712, 4720, 4728, 4746, 4754, 4791, 4799, 4817, 4835, 4843, 4871, 4899,
+    4907, 4934, 4943, 4952, 4970, 4988, 5006, 5016, 5026, 5045, 5054, 5062,
+    5078, 5087, 5096, 5106, 5116, 5125, 5135, 5143, 5161, 5170, 5190, 5199,
+    5209, 5218, 5235, 5261, 5269, 5278, 5296, 5322, 5332, 5350, 5377, 5396,
+    5422, 5431, 5448, 5456, 5465, 5484, 5493, 5530, 5539, 5558, 5568, 5577,
+    5594, 5603, 5629, 5648, 5657, 5665, 5673, 5718, 5746, 5756, 5775, 5785,
+    5794, 5802, 5810, 5828, 5864, 5909, 5919, 5928, 5946, 5972, 5981, 5999,
+    6008, 6016, 6034, 6043, 6061, 6070, 6125, 6133, 6143, 6152, 6170, 6179,
+    6188, 6207, 6217
+]
+
+
+def reset(data):
+    # manual reset from hashquine file state
+    FULL_MD5 = "8895af74c2b5478c547cfb85f7475f0b"
+
+    for letter_index, letter in enumerate(FULL_MD5):
+        value = int(letter, HEX_BASE)
+        block_index = letter_index * 16 + value
+        data, _ = setFastcoll(data, block_indexes[block_index])
+
+    # peeking collision reset state
+    reset_sidesB = []
+    for block_index in block_indexes:
+        _, sideB = setFastcoll(data, block_index)
+        if sideB:
+            reset_sidesB += [block_index]
+    print(reset_sidesB)
+
 
 def main():
-    parser = ArgumentParser(
-        description="Set value in SPQ's 'AVP' GIF hashquine.")
+    parser = ArgumentParser(description=DESCRIPTION)
     parser.add_argument('-v',
                         '--value',
                         type=str,
@@ -98,11 +141,13 @@ def main():
         hex_value = hashlib.md5(data).hexdigest()
         print("Encoding file MD5: `%s` (len:%i)" % (hex_value, len(hex_value)))
 
-    for letter_index, letter in enumerate(FULL_MD5):
-        value = int(letter, HEX_BASE)
-        block_index = letter_index * 16 + value
-        data, _ = setFastcoll(data, block_indexes[block_index])
+    # reset collisions
+    for block_index in block_indexes:
+        data, _ = setFastcoll(data,
+                              block_index,
+                              sideB=(block_index in reset_sidesB))
 
+    # set value
     for letter_index, letter in enumerate(hex_value):
         value = int(letter, HEX_BASE)
         block_index = letter_index * 16 + value

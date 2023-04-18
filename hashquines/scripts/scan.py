@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Shows the IPC MD5s collision (Unicolls, Fastcolls) of a given file
+DESCRIPTION = "Shows IPC MD5 collisions (Fastcolls and Unicolls) of a given file."
 
 # Ange Albertini 2023
 
@@ -11,11 +11,11 @@ from collisions import *
 
 
 def main():
-    parser = ArgumentParser(description="Shows Fastcolls of a given file.")
+    parser = ArgumentParser(description=DESCRIPTION)
     parser.add_argument('-a',
                         '--all',
                         action='store_true',
-                        help='Show all values')
+                        help='Show all collision indexes')
     parser.add_argument(
         '-f',
         '--flip',
@@ -31,7 +31,7 @@ def main():
     with open(fn, "rb") as f:
         data = bytearray(f.read())
     FULL_MD5 = hashlib.md5(data).hexdigest()
-    print("FULL_MD5 = '%s'" % (FULL_MD5))
+    # print("FULL_MD5 = '%s'" % (FULL_MD5))
 
     fc_blkidxs, fc_sidesB = getFastColls(data)
     print("Found %i FastColls." % (len(fc_blkidxs)))

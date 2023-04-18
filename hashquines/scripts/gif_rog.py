@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
 
-# Sets the hex value of Rogdham's Gif Hashquine
+DESCRIPTION = "Set rendered hex value in Rogdham's GIF hashquine."
 
 # Ange Albertini 2023
 
 import hashlib
 import random
 
+from argparse import ArgumentParser
+from collisions import *
+
 HEX_BASE = 16
 MD5_LEN = 32
 VALUES_PER_NIBBLE = 16
 
-from argparse import ArgumentParser
-from collisions import *
+HEADER_S = 155072
+HEADER_MD5 = 'eb34bbfe1c8e07c7f64f285e5c9bc10d'
 
 # 416 fastcolls (= 26*16 - 26 characters, 6 are set by "M*d5* is *dead*")
 block_indexes = [
@@ -75,10 +78,6 @@ def expand(input):
     return output
 
 
-FULL_MD5 = '22d058dd8aad588cadeadf33e6c9977e'
-HEADER_S = 155072
-HEADER_MD5 = 'eb34bbfe1c8e07c7f64f285e5c9bc10d'
-
 # Block indexes that are on side B on reset
 reset_sidesB = [
     79, 90, 114, 119, 131, 137, 147, 153, 158, 170, 176, 187, 199, 222, 245,
@@ -99,8 +98,7 @@ reset_sidesB = [
 
 
 def main():
-    parser = ArgumentParser(
-        description="Set value in Rogdham's GIF hashquine.")
+    parser = ArgumentParser(description=DESCRIPTION)
     parser.add_argument('-v',
                         '--value',
                         type=str,

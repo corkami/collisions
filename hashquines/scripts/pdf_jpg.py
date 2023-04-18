@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 
-# Sets the value of Mako's JPG+PDF hashquine
+DESCRIPTION = "Set rendered hex value in Mako's JPG+PDF hashquine."
 
 # Ange Albertini 2023
 
 import hashlib
-from argparse import ArgumentParser
 import random
+
+from argparse import ArgumentParser
+from collisions import setFastcoll
 
 HEX_BASE = 16
 MD5_LEN = 32
-from collisions import setFastcoll
 
-HEADER_s = 0x140
+HEADER_S = 0x140
 MD5_HEADER = "d43cd6b1241cd3e9c5ed237da1656ef3"
-MD5_FULL = "71aa13f4b83b424807e3db3260ffe20b"
 
 # index of the 2nd fastcoll block
 block_indexes = [
@@ -80,11 +80,13 @@ flipped = [
 
 
 def reset(input):
+    MD5_FULL = "71aa13f4b83b424807e3db3260ffe20b"
     output = bytearray(input)
     if hashlib.sha1(
             output).hexdigest() == "7c2de0f18535ea4cc69780ac16df1c5f65ae79e9":
         print('Hasquine configuration found, resetting')
         for i, c in enumerate(MD5_FULL):
+
             v = int(c, HEX_BASE)
             if v < 15:
                 output, _ = setFastcoll(output, block_indexes[i * 15 + v] - 1)
@@ -107,8 +109,7 @@ def getSides(data):
 
 
 def main():
-    parser = ArgumentParser(
-        description="Sets value in the JPG+PDF hashquine")
+    parser = ArgumentParser(description=DESCRIPTION)
     parser.add_argument('-v',
                         '--value',
                         type=str,
@@ -122,13 +123,9 @@ def main():
     fn = args.filename
     with open(fn, "rb") as f:
         data = bytearray(f.read())
-    old_md5 = hashlib.md5(data).digest()
 
     # check we have the right file
-    assert hashlib.md5(data[:HEADER_s]).hexdigest() == MD5_HEADER
-    assert hashlib.md5(data).hexdigest() == MD5_FULL
-
-    print('Correct JPG/PDF hashquine file found')
+    assert hashlib.md5(data[:HEADER_S]).hexdigest() == MD5_HEADER
 
     if args.value is not None:
         if args.value == random:
@@ -150,11 +147,14 @@ def main():
         for j in range(15):
             idx = char_index * 15 + j
             if idx in flipped:
-                data, _ = setFastcoll(data, block_indexes[idx] - 1, sideB=j >= v)
+                data, _ = setFastcoll(data,
+                                      block_indexes[idx] - 1,
+                                      sideB=j >= v)
             else:
-                data, _ = setFastcoll(data, block_indexes[idx] - 1, sideB=j < v)
+                data, _ = setFastcoll(data,
+                                      block_indexes[idx] - 1,
+                                      sideB=j < v)
 
-    assert old_md5 == hashlib.md5(data).digest()
     with open("output.pdf", "wb") as f:
         f.write(data)
 

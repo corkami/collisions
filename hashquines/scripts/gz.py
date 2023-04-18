@@ -1,28 +1,27 @@
 #!/usr/bin/env python3
 
-# Sets the hex value of my Gzip hashquine
+DESCRIPTION = "Set rendered hex value in Ange's GZIP hashquine."
 
 # Ange Albertini 2023
 
 import hashlib
 import random
 
-HEX_BASE = 16
-MD5_LEN = 32
-
 from argparse import ArgumentParser
 from collisions import *
 
+HEX_BASE = 16
+MD5_LEN = 32
+
 HEADER_S = 85760
 HEADER_MD5 = 'de4a4312a137a2b95c3dfaa3dceb6520'
-FULL_MD5 = 'ad5de2581f4bd8f35051b789df379d36'
 
 # 192 Unicolls, evenly spaced
 block_indexes = [1 + 7 * i for i in range(192)]
 
 
 def main():
-    parser = ArgumentParser(description="Set value in Ange's GZIP hashquine.")
+    parser = ArgumentParser(description=DESCRIPTION)
     parser.add_argument('-v',
                         '--value',
                         type=str,
@@ -37,7 +36,6 @@ def main():
     with open(fn, "rb") as f:
         data = bytearray(f.read())
 
-    assert hashlib.md5(data).hexdigest() == FULL_MD5
     assert hashlib.md5(data[:HEADER_S]).hexdigest() == HEADER_MD5
     if args.value is not None:
         if args.value == random:
@@ -71,7 +69,6 @@ def main():
             data, _ = setUniColl(data, index, False)
 
     print("Output value: '%s' (length:%i)" % (output, len(output)))
-    assert hashlib.md5(data).hexdigest() == FULL_MD5
     with open("output.gz", "wb") as f:
         f.write(data)
 

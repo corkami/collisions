@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 
-# Sets the value of Mako's Txt+PDF hashquine
+DESCRIPTION = "Set rendered hex value in Mako's TEXT+PDF hashquine."
 
 # Ange Albertini 2023
 
 import hashlib
-from argparse import ArgumentParser
 import random
+
+from argparse import ArgumentParser
+from collisions import *
 
 HEX_BASE = 16
 MD5_LEN = 32
-from collisions import *
 
 HEADER_S = 124864
 HEADER_MD5 = '7e1e2da0c4f144bb0d749b8eb7982cb3'
-MD5_FULL = "66da5e07c0fd4c921679a65931ff8393"
 
 # 480 fastcolls
 block_indexes = [
@@ -86,7 +86,7 @@ mapping = {
 
 
 def main():
-    parser = ArgumentParser(description="Sets value in the TEXT+PDF hashquine")
+    parser = ArgumentParser(description=DESCRIPTION)
     parser.add_argument('-v',
                         '--value',
                         type=str,
@@ -100,13 +100,7 @@ def main():
     fn = args.filename
     with open(fn, "rb") as f:
         data = bytearray(f.read())
-    old_md5 = hashlib.md5(data).digest()
-
-    # check we have the right file
     assert hashlib.md5(data[:HEADER_S]).hexdigest() == HEADER_MD5
-    assert hashlib.md5(data).hexdigest() == MD5_FULL
-
-    print('Correct TXT/PDF hashquine file found')
 
     if args.value is not None:
         if args.value == random:
@@ -129,7 +123,7 @@ def main():
                                   block_indexes[bit_idx + letter_index * 15],
                                   sideB=bit == "1")
     # assert pdftext(data) == hex_value.upper()
-    assert old_md5 == hashlib.md5(data).digest()
+
     with open("text.pdf", "wb") as f:
         f.write(data)
 

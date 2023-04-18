@@ -1,27 +1,27 @@
 #!/usr/bin/env python3
 
-# Sets the hex value of my LZ4 hashquine
+DESCRIPTION = "Set rendered hex value in Ange's LZ4 hashquine."
 
 # Ange Albertini 2023
 
 import hashlib
 import random
 
-HEX_BASE = 16
-MD5_LEN = 32
-
 from argparse import ArgumentParser
 from collisions import *
 
-FULL_MD5 = '1690738ac079d914645ade5693ab019b'
+HEX_BASE = 16
+MD5_LEN = 32
+
 HEADER_S = 71424
 HEADER_MD5 = 'fab0c435f531fe109f9c5f43e9b2a035'
+
 # 160 UniColls, each 7-block spaced
 block_indexes = [1 + 7 * i for i in range(160)]
 
 
 def main():
-    parser = ArgumentParser(description="Set value in Ange's LZ4 hashquine.")
+    parser = ArgumentParser(description=DESCRIPTION)
     parser.add_argument('-v',
                         '--value',
                         type=str,
@@ -36,7 +36,6 @@ def main():
     with open(fn, "rb") as f:
         data = bytearray(f.read())
 
-    assert hashlib.md5(data).hexdigest() == FULL_MD5
     assert hashlib.md5(data[:HEADER_S]).hexdigest() == HEADER_MD5
     if args.value is not None:
         if args.value == random:
@@ -72,7 +71,6 @@ def main():
             data, _ = setUniColl(data, index, False)
 
     print("Output value: '%s' (length:%i)" % (output, len(output)))
-    assert hashlib.md5(data).hexdigest() == FULL_MD5
     with open("output.lz4", "wb") as f:
         f.write(data)
 
