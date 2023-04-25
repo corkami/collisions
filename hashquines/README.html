@@ -183,9 +183,8 @@ Ange Albertini 2023
 $ lz4 -c hashquine.lz4
 1690738ac079d914645ade5693ab019b
 </code></pre>
-<ul>
-<li>a Zstandard hashquine by <em>David 'Retr0id' Buchanan</em>. (scripts: <a href="scripts/zst.py">zst</a>, <a href="scripts/tar_zst.py">tar.zst</a>)</li>
-</ul>
+<h3 id="retroids-zstandard-file">Retroid's Zstandard file</h3>
+<p>A clever Zstandard hashquine++ by <em>David 'Retr0id' Buchanan</em>. (scripts: <a href="scripts/zst.py">zst</a>, <a href="scripts/tar_zst.py">tar.zst</a>)</p>
 <p>As a pure <a href="pocs/hashquine.zst">ZStandard</a> file:</p>
 <pre><code>$ md5sum hashquine.zst
 720ca7f6842f1a608fcb924f5811ebb9 *hashquine.zst
@@ -202,12 +201,47 @@ $ tar -Oxf hashquine.tar.zst hash.md5
 The MD5 of hashquine.tar.zst is:
 703911cf9e409965cebd05392acc1503
 </code></pre>
-<p>Both files are Zstandard-streams via the same prefix with 653 collisions (!):</p>
-<ul>
-<li>17*8 for the octal digits of the tar header (file length + header checksum)</li>
-<li>32*16 for the hex digits of the hash strings</li>
-<li>5 extra collisions for switching the tar header, and the &quot;the MD5 of ...&quot; prefix strings.</li>
-</ul>
+<p>As a self-checked 'auto-manifest' <a href="pocs/self.tar.zst">Tar.zst</a> (this is generic: make <a href="scripts/tar_zst.py">your own</a> from any given Tar!):</p>
+<pre><code>$ md5sum self.tar.zst
+f068d54fabb12dbb1b359745a80d78fc *self.tar.zst
+</code></pre>
+<pre><code>$ tar -xvf self.tar.zst
+x hash.md5
+x hello.txt
+</code></pre>
+<pre><code>$ cat hash.md5
+f068d54fabb12dbb1b359745a80d78fc *self.tar.zst
+ed076287532e86365e841e92bfc50d8c *hello.txt
+</code></pre>
+<pre><code>$ md5sum -c hash.md5
+self.tar.zst: OK
+hello.txt: OK
+</code></pre>
+<p>All these files are Zstandard-streams via the same prefix with 653 collisions (!):</p>
+<ol>
+<li><p>Tar Header (entirely optional and generic for <code>hash.md5</code> contents):</p>
+<ol>
+<li><code>1</code> for the Tar header start <code>hash.md5 [...] 0000644 0000000 0000000</code> (constant)</li>
+<li><code>8*11</code> for the <code>hash.md5</code> file size, in octal.</li>
+<li><code>1</code> for a Tar timestamp: <code>14412572240</code> (constant)</li>
+<li><code>8*6</code> tar header checksum, in octal</li>
+<li><code>1</code> for the rest of the Tar header <code>0 [...] ustar 00root [...] root [...] 0000000 0000000 [...]</code> (constant)</li>
+</ol></li>
+<li><p>File contents:</p></li>
+</ol>
+<p>Optional text prefixes:</p>
+<ol start="6">
+<li><code>1</code> for the prefix &quot;The MD5 of hashquine.tar.zst is&quot; (constant)</li>
+<li><code>1</code> for the prefix &quot;The MD5 of hashquine.zst is&quot; (constant)</li>
+</ol>
+<p>Hashquine:</p>
+<ol start="8">
+<li><code>32*16</code> MD5 hash (all nibble possibilities)</li>
+</ol>
+<p>So this file archive prefix can be set to be decompressed as a tar archive or not, as the tar header is entirely optional, and the tar header checksum can be adjusted. Since all the collisions make each compressed frame optional, they can be set to decompress as a 292kB <a href="pocs/empty.zst">empty Zstandard archive</a>:</p>
+<pre><code>$ zstd -d empty.zst
+empty.zst           : 0 bytes
+</code></pre>
 <h1 id="notes">Notes</h1>
 <h2 id="custom-fastcoll">Custom FastColl</h2>
 <p>For these hashquines, new forms of hash collisions were introduced by <em>Mako</em>:</p>

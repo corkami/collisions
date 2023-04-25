@@ -146,7 +146,9 @@ $ lz4 -c hashquine.lz4
 1690738ac079d914645ade5693ab019b
 ```
 
-- a Zstandard hashquine by *David 'Retr0id' Buchanan*.  (scripts: [zst](scripts/zst.py), [tar.zst](scripts/tar_zst.py))
+### Retroid's Zstandard file
+
+A clever Zstandard hashquine++ by *David 'Retr0id' Buchanan*.  (scripts: [zst](scripts/zst.py), [tar.zst](scripts/tar_zst.py))
 
 As a pure [ZStandard](pocs/hashquine.zst) file:
 
@@ -170,11 +172,57 @@ The MD5 of hashquine.tar.zst is:
 703911cf9e409965cebd05392acc1503
 ```
 
-Both files are Zstandard-streams via the same prefix with 653 collisions (!):
-- 17*8 for the octal digits of the tar header (file length + header checksum)
-- 32*16 for the hex digits of the hash strings
-- 5 extra collisions for switching the tar header, and the "the MD5 of ..."  prefix strings.
+As a self-checked 'auto-manifest' [Tar.zst](pocs/self.tar.zst) (this is generic: make [your own](scripts/tar_zst.py) from any given Tar!):
 
+```
+$ md5sum self.tar.zst
+f068d54fabb12dbb1b359745a80d78fc *self.tar.zst
+```
+
+```
+$ tar -xvf self.tar.zst
+x hash.md5
+x hello.txt
+```
+
+```
+$ cat hash.md5
+f068d54fabb12dbb1b359745a80d78fc *self.tar.zst
+ed076287532e86365e841e92bfc50d8c *hello.txt
+```
+
+```
+$ md5sum -c hash.md5
+self.tar.zst: OK
+hello.txt: OK
+```
+
+All these files are Zstandard-streams via the same prefix with 653 collisions (!):
+
+1. Tar Header (entirely optional and generic for `hash.md5` contents):
+   1. `1` for the Tar header start `hash.md5 [...] 0000644 0000000 0000000` (constant)
+   2. `8*11` for the `hash.md5` file size, in octal.
+   3. `1` for a Tar timestamp: ` 14412572240 ` (constant)
+   4. `8*6` tar header checksum, in octal
+   5. `1` for the rest of the Tar header `  0 [...] ustar 00root [...] root [...] 0000000 0000000 [...] ` (constant)
+
+2. File contents:
+
+  Optional text prefixes:
+ 
+   6. `1` for the prefix "The MD5 of hashquine.tar.zst is" (constant)
+   7. `1` for the prefix "The MD5 of hashquine.zst is" (constant)
+
+  Hashquine:
+
+   8. `32*16` MD5 hash (all nibble possibilities)
+
+So this file archive prefix can be set to be decompressed as a tar archive or not, as the tar header is entirely optional, and the tar header checksum can be adjusted. Since all the collisions make each compressed frame optional, they can be set to decompress as a 292kB [empty Zstandard archive](pocs/empty.zst):
+
+```
+$ zstd -d empty.zst
+empty.zst           : 0 bytes
+```
 
 # Notes
 
