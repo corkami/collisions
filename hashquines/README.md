@@ -90,7 +90,7 @@ $ md5sum md5text.pdf
 
 <img src=pics/nes.png height=200></img>
 
-- [Poc||GTFO 0x14](https://github.com/angea/pocorgtfo#0x14) is a polyglot file: simultaneously a JPG in PDF hashquine and a NES hashquine, with also a hidden cover while keeping the same MD5 - a classic collision, albeit the JPG picture has a lot of custom scans.
+- [Poc||GTFO 0x14](https://github.com/angea/pocorgtfo#0x14) is a polyglot file: simultaneously a JPG in PDF hashquine and a NES hashquine, with also a hidden cover while keeping the same MD5 - a classic collision, albeit the JPG picture has a lot of custom scans. ([script](scripts/pocorgtfo14.py))
 
 <img src=pics/pocorgtfo14.png height=400></img>
 
