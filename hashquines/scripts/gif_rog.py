@@ -4,11 +4,10 @@ DESCRIPTION = "Set rendered hex value in Rogdham's GIF hashquine."
 
 # Ange Albertini 2023
 
-import hashlib
-import random
-
-from argparse import ArgumentParser
 from collisions import *
+from argparse import ArgumentParser
+import random
+import hashlib
 
 HEX_BASE = 16
 MD5_LEN = 32
@@ -78,25 +77,6 @@ def expand(input):
     return output
 
 
-# Block indexes that are on side B on reset
-reset_sidesB = [
-    79, 90, 114, 119, 131, 137, 147, 153, 158, 170, 176, 187, 199, 222, 245,
-    256, 261, 267, 285, 291, 296, 328, 333, 338, 350, 362, 379, 397, 409, 462,
-    474, 491, 507, 518, 534, 551, 556, 561, 571, 594, 600, 624, 635, 640, 662,
-    668, 680, 692, 709, 715, 738, 749, 755, 760, 766, 772, 784, 806, 811, 839,
-    844, 866, 872, 877, 883, 900, 917, 923, 929, 941, 970, 993, 1004, 1014,
-    1025, 1049, 1060, 1078, 1083, 1100, 1127, 1133, 1139, 1145, 1151, 1162,
-    1168, 1180, 1191, 1196, 1213, 1231, 1236, 1246, 1251, 1257, 1273, 1279,
-    1318, 1323, 1333, 1353, 1370, 1376, 1397, 1415, 1427, 1439, 1449, 1465,
-    1477, 1534, 1539, 1573, 1591, 1603, 1632, 1638, 1644, 1691, 1714, 1719,
-    1725, 1742, 1747, 1765, 1771, 1810, 1827, 1849, 1859, 1865, 1883, 1888,
-    1900, 1928, 1934, 1944, 1955, 1961, 1967, 1973, 1979, 1989, 2007, 2013,
-    2025, 2031, 2037, 2072, 2077, 2088, 2093, 2099, 2116, 2128, 2134, 2140,
-    2168, 2174, 2180, 2191, 2197, 2203, 2231, 2242, 2248, 2259, 2265, 2277,
-    2288, 2311, 2327, 2350, 2356, 2361, 2367, 2379, 2385, 2397, 2415
-]
-
-
 def main():
     parser = ArgumentParser(description=DESCRIPTION)
     parser.add_argument('-v',
@@ -131,10 +111,11 @@ def main():
     print("Patched hex value: %s" % (expand(reduce(hex_value))))
 
     for block_index in block_indexes:
-        data, _ = setFastcoll(data,
-                              block_index,
-                              sideB=(block_index in reset_sidesB))
-
+        data = setFastCollbySize(data,
+                                 block_index,
+                                 bSmaller=False,
+                                 DIFF_BYTE=0x7B)
+        
     for letter_index, letter in enumerate(reduce(hex_value)):
         value = int(letter, HEX_BASE)
         block_index = letter_index * VALUES_PER_NIBBLE + value

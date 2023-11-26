@@ -25,6 +25,10 @@ def setFastCollbySize(data: bytearray, block_idx: int, bSmaller=True, DIFF_BYTE=
     """
     XOR_MASK = 0x80
     XOR_OFFSETS = [0x13, 0x3b]
+    assert DIFF_BYTE in [
+        0x13, 0x2D, 0x3B,
+        0x40 + 0x13, 0x40 + 0x2D, 0x40 + 0x3B,
+    ]
     block_off = block_idx * BLOCK_SIZE
     assert block_off + 0x80 <= len(data)
     md5_old = hashlib.md5(data).hexdigest()

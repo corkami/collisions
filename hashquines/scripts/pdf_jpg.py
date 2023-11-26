@@ -4,11 +4,10 @@ DESCRIPTION = "Set rendered hex value in Mako's JPG+PDF hashquine."
 
 # Ange Albertini 2023
 
-import hashlib
-import random
-
+from collisions import setFastCollbySize
 from argparse import ArgumentParser
-from collisions import setFastcoll
+import random
+import hashlib
 
 HEX_BASE = 16
 MD5_LEN = 32
@@ -57,25 +56,6 @@ block_indexes = [
     5713, 5724, 5734, 5744, 5754, 5766, 5778, 5790, 5802, 5814, 5826, 5838,
     5850, 5861, 5872, 5903, 5913, 5924, 5936, 5948, 5960, 5971, 5982, 5994,
     6005, 6017, 6029, 6041, 6053, 6064
-]
-
-# This hashquine has a non-obvious reset configuration for its collision blocks.
-# N-th index that needs to be flipped
-# print('flipped = ', getSides(reset(data)))
-flipped = [
-    0, 1, 2, 3, 5, 11, 14, 15, 18, 19, 20, 22, 24, 30, 31, 33, 35, 36, 38, 48,
-    49, 50, 51, 54, 55, 59, 61, 65, 66, 77, 79, 80, 84, 86, 87, 88, 90, 92, 93,
-    94, 96, 97, 101, 102, 103, 112, 114, 116, 117, 119, 120, 122, 123, 124,
-    127, 128, 130, 132, 138, 139, 141, 142, 144, 149, 151, 155, 163, 164, 169,
-    171, 173, 177, 180, 181, 183, 189, 194, 197, 198, 201, 203, 207, 208, 210,
-    211, 212, 213, 216, 217, 218, 219, 220, 221, 224, 232, 235, 236, 238, 239,
-    241, 242, 244, 245, 246, 248, 249, 250, 253, 254, 256, 258, 259, 260, 261,
-    267, 269, 271, 273, 278, 279, 283, 284, 286, 287, 289, 290, 291, 292, 297,
-    298, 299, 300, 303, 307, 308, 310, 312, 313, 315, 317, 319, 320, 321, 322,
-    323, 324, 325, 332, 343, 345, 350, 361, 362, 364, 365, 367, 368, 370, 372,
-    377, 382, 383, 384, 386, 391, 392, 394, 398, 399, 400, 406, 407, 408, 412,
-    413, 414, 417, 419, 420, 422, 424, 425, 428, 431, 432, 434, 442, 443, 446,
-    449, 450, 451, 452, 453, 462, 463, 464, 465, 466, 470, 473
 ]
 
 
@@ -146,14 +126,9 @@ def main():
         v = int(char, HEX_BASE)
         for j in range(15):
             idx = char_index * 15 + j
-            if idx in flipped:
-                data, _ = setFastcoll(data,
-                                      block_indexes[idx] - 1,
-                                      sideB=j >= v)
-            else:
-                data, _ = setFastcoll(data,
-                                      block_indexes[idx] - 1,
-                                      sideB=j < v)
+            data = setFastCollbySize(data,
+                                     block_indexes[idx] - 1,
+                                     bSmaller=(j < v))
 
     with open("output.pdf", "wb") as f:
         f.write(data)

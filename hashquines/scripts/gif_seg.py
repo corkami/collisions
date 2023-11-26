@@ -4,11 +4,10 @@ DESCRIPTION = "Set rendered hex value in SPQ's 'segments display' GIF hashquine.
 
 # Ange Albertini 2023
 
-import hashlib
-import random
-
-from argparse import ArgumentParser
 from collisions import *
+from argparse import ArgumentParser
+import random
+import hashlib
 
 HEX_BASE = 16
 MD5_LEN = 32
@@ -54,19 +53,6 @@ def test_segments():
         print(" - " if segments[6] == '1' else "   ")
         print()
 
-
-flips = [
-    0, 1, 3, 4, 7, 8, 10, 12, 13, 14, 15, 18, 20, 21, 22, 23, 24, 25, 26, 29,
-    30, 31, 33, 35, 36, 38, 39, 42, 43, 44, 45, 47, 48, 49, 51, 52, 54, 55, 56,
-    57, 59, 61, 62, 65, 66, 67, 68, 69, 71, 72, 73, 75, 78, 79, 80, 82, 85, 87,
-    88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 101, 103, 104, 105, 106,
-    109, 111, 113, 114, 115, 117, 119, 121, 122, 124, 125, 128, 131, 133, 134,
-    135, 136, 137, 138, 140, 141, 142, 143, 144, 145, 146, 148, 150, 151, 152,
-    153, 154, 155, 157, 158, 161, 162, 163, 166, 168, 169, 170, 171, 172, 173,
-    174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 186, 188, 189, 190, 191,
-    193, 194, 195, 196, 197, 199, 200, 202, 203, 204, 205, 206, 207, 208, 210,
-    211, 214, 216, 217, 218, 219, 220, 221, 222
-]
 
 block_indexes = [
     86, 92, 98, 104, 110, 116, 122, 128, 134, 140, 145, 151, 156, 161, 167,
@@ -122,8 +108,10 @@ def main():
     for letter_index, letter in enumerate(hex_value):
         for segment_index, segment in enumerate(display[letter]):
             block_index = letter_index * 7 + segment_index
-            if (block_index not in flips) == (segment == '1'):
-                data, _ = setFastcoll(data, block_indexes[block_index])
+            data = setFastCollbySize(data,
+                                     block_indexes[block_index],
+                                     bSmaller=(segment != '1'),
+                                     DIFF_BYTE=0x7B)
 
     with open("output.gif", "wb") as f:
         f.write(data)
