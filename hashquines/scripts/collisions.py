@@ -19,8 +19,54 @@ def write_dword(data: bytearray, value: int, offset: int):
     return data
 
 
+def setFastCollbySize(data: bytearray, block_idx: int, bSmaller=True, DIFF_BYTE=0x3b):
+    """Set a FastColl depending on the size (small or big)
+    of a byte value encoded at a specific offset
+    """
+    XOR_MASK = 0x80
+    XOR_OFFSETS = [0x13, 0x3b]
+    block_off = block_idx * BLOCK_SIZE
+    assert block_off + 0x80 <= len(data)
+    md5_old = hashlib.md5(data).hexdigest()
+    data_old = bytearray(data)
+    data_new = bytearray(data)
+
+    for offset in XOR_OFFSETS:
+        data_new[block_off + offset] = XOR_MASK ^ data_new[block_off + offset]
+        offset += BLOCK_SIZE
+        data_new[block_off + offset] = XOR_MASK ^ data_new[block_off + offset]
+
+    dword1_1 = read_dword(data_new, block_off + 0x2c)
+    dword1_2 = read_dword(data_new, block_off + 0x6c)
+
+    # from File2 to File1
+    dword2_1 = dword1_1 + 0x8000
+    dword2_2 = dword1_2 - 0x8000
+    data_new = write_dword(data_new, dword2_1, 0x2c + block_off)
+    data_new = write_dword(data_new, dword2_2, 0x2c + block_off + BLOCK_SIZE)
+    if hashlib.md5(data_new).hexdigest() == md5_old:
+        data1 = data_new
+        data2 = data_old
+    else:
+        # didn't work? Do it the other way around
+        dword2_1 = dword1_1 - 0x8000
+        dword2_2 = dword1_2 + 0x8000
+        data_new = write_dword(data_new, dword2_1, 0x2c + block_off)
+        data_new = write_dword(data_new, dword2_2,
+                               0x2c + block_off + BLOCK_SIZE)
+        data1 = data_old
+        data2 = data_new
+
+    assert hashlib.md5(data1).hexdigest() == md5_old
+    assert hashlib.md5(data2).hexdigest() == md5_old
+
+    assert data1[block_off + DIFF_BYTE] != (data2[block_off + DIFF_BYTE])
+
+    return data1 if bSmaller == (data1[block_off + DIFF_BYTE] < (data2[block_off + DIFF_BYTE])) else data2
+
+
 def setFastcoll(data: bytearray, block_idx: int, sideB: bool = None):
-    """Set a given 'side' of fastcoll (False = left, True = right)
+    """Set a given 'side' of FastColl (False = left, True = right)
     Get the other side of the collision if no side if specified
     """
     XOR_MASK = 0x80
