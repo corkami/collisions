@@ -4,8 +4,10 @@ Detectcoll (unsafe) outputs.
 - FastColl: `dm4=80000000 dm11=00008000 dm14=80000000` / `dm4=80000000 dm11=ffff8000 dm14=80000000` (Wang, Flame(!) too)
 
 - Unicoll1: `dm2=00000100` / `dm2=ffffff00`
-- Unicoll2: no output
+- Unicoll2: no detection
 - Unicoll3: `dm6=00000100 dm9=80000000 dm15=80000000`/ `dm6=ffffff00 dm9=80000000 dm15=80000000`
+
+- Apop: no dm, but ihv, ihv: 7,7,7,7
 
 - Single block IPC: `dm8=02000000 dm13=80000000` / `dm8=fe000000 dm13=80000000`
 
@@ -13,6 +15,7 @@ Hashclash CPC:
 - pe: `dm11=00000004` / `dm11=fffffffc`
 - jpg/pe: `dm11=00000008` / `dm11=fffffff8`
 - pdf/pe: `dm11=40000000` / `dm11=c0000000`
+- ca.der: `dm11=fffffe00` / `dm11=00000200`
 - Zinsider:
   - 3mf: `dm11=ffe00000` / `dm11=00200000`
   - docx: `dm11=ffe00000` / `dm11=00200000`
