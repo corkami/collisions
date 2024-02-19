@@ -1,39 +1,52 @@
 Detectcoll (unsafe) outputs.
 
 # MD5
-- FastColl: `dm4=80000000 dm11=00008000 dm14=80000000` / `dm4=80000000 dm11=ffff8000 dm14=80000000` (Wang, Flame(!) too)
 
-- Unicoll1: `dm2=00000100` / `dm2=ffffff00`
+Typical output:
+```
+Found collision in block 1:
+   dm: dm2=ffffff00 dm4=80000000 dm11=ffff8000 dm14=80000000
+   ihv1=8efacc06affe94f47b23192c60b5f20a
+   ihv2=8efacbe6daacdcd47de3190c62b5f1ea
+*coll* d320b6433d8ebc1ac65711705721c2e1 single-cpc1.bin
+ae6588e7d5ae38f2cb28bdbc427fc2c55597abbe single-cpc1.bin
+```
+
+
+## IPC
+
+- FastColl: dm: `4,11,14` / dihv: `7,76,76,76` (Wang)
+
+- Unicoll1: dm: `2` / dihv: `7,75,765,7`
 - Unicoll2: no detection
-- Unicoll3: `dm6=00000100 dm9=80000000 dm15=80000000`/ `dm6=ffffff00 dm9=80000000 dm15=80000000`
+- Unicoll3: dm: `6,9, 15` / dihv: `765,7650,750,7650`
 
-- Apop: no dm, but ihv, ihv: 7,7,7,7
+- Apop: dm: ` ` / dihv: `7,7,7,7`
 
-- Single block IPC: `dm8=02000000 dm13=80000000` / `dm8=fe000000 dm13=80000000`
+- Single block IPC: dm: `8, 13` / 'dihv: `,,,`
 
-Hashclash CPC:
-- pe: `dm11=00000004` / `dm11=fffffffc`
-- jpg/pe: `dm11=00000008` / `dm11=fffffff8`
-- pdf/pe: `dm11=40000000` / `dm11=c0000000`
-- ca.der: `dm11=fffffe00` / `dm11=00000200`
-- Zinsider:
-  - 3mf: `dm11=ffe00000` / `dm11=00200000`
-  - docx: `dm11=ffe00000` / `dm11=00200000`
-  - epub: `dm11=ffe00000` / `dm11=00200000`
-  - xps: `dm11=fffc0000` / `dm11=00040000`
-  - xlsx: `dm11=00080000` / `dm11=fff80000`
-  - pptx: `dm11=10000000` / `dm11=f0000000`
-  - oxps: `dm11=fe000000` / `dm11=02000000`
-- pileup
-  - pdf: block10: `dm11=00200000` / block20: `dm11=20000000`
-  - mp4: block10: `dm11=ffe00000` / block20: `dm11=20000000`
-  - pe: block10: `dm11=ffff0000` / block20: `dm11=e0000000`
-  - png: block10: `dm11=00010000` / block20: `dm11=e0000000`
 
-- single block CPC: `dm2=00000100 dm4=80000000 dm11=00008000 dm14=80000000` / `dm2=ffffff00 dm4=80000000 dm11=ffff8000 dm14=80000000`
+## CPC
+- Flame: dm: `4,11,14` / dihv: `7,63210,765432,765432`
+
+Hashclash CPC: dm: `11` / dihv: `,643,,6`
+- pe, jpg/pe, pdf/pe, ca, Zinsider (3mf / docx / epub / xps / xlsx / pptx / oxps), pileup (block 10 & block 20)
+
+- single block CPC: dm: `2,4,11,14` / dihv: `21,7654321,651,621`
 
 # SHA1
-Shattered (IPC):
+
+Output:
+
+```
+Partial collision found
+Found collision in block 3 using DV II(52,0):
+   dm: dm0=0c000002 dm1=3ffffff0 dm2=abfffff4 dm3=fbfffffc dm4=4c00000a dm5=dffffff0 dm6=e400001c dm7=d4000014 dm8=fbfffffe dm9=bffffff0 dm10=8c000004 dm11=e4000004 dm12=84000008 dm13=affffff0 dm14=00000004 dm15=47fffff0
+   ihv1=4ea962697c876e2674d107f0fec6798414f5bf45
+   ihv2=4ea962697c876e2674d107f0fec6798414f5bf45
+```
+
+Shattered (IPC): dm: `0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15`
 - `dm0=0c000002 dm1=3ffffff0 dm2=abfffff4 dm3=fbfffffc dm4=4c00000a dm5=dffffff0 dm6=e400001c dm7=d4000014 dm8=fbfffffe dm9=bffffff0 dm10=8c000004 dm11=e4000004 dm12=84000008 dm13=affffff0 dm14=00000004 dm15=47fffff0` side A, block +0
 - `dm0=f3fffffe dm1=bffffff0 dm2=8c00001c dm3=ec000004 dm4=43fffff6 dm5=dffffff0 dm6=1bffffe4 dm7=ec000014 dm8=fc000002 dm9=40000010 dm10=54000004 dm11=e4000004 dm12=83fffff8 dm13=90000010 dm14=00000004 dm15=47fffff0` side A, block +1
 - `dm0=f3fffffe dm1=c0000010 dm2=5400000c dm3=04000004 dm4=b3fffff6 dm5=20000010 dm6=1bffffe4 dm7=2bffffec dm8=04000002 dm9=40000010 dm10=73fffffc dm11=1bfffffc dm12=7bfffff8 dm13=50000010 dm14=fffffffc dm15=b8000010` side B, block +0
