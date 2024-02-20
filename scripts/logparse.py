@@ -13,26 +13,25 @@ import sys
 # Warning: there could be... collisions (!) in dIhv sigs.
 sigs = {  # dMsg, dIhv
     "APop": ["", "31,31,31,31"],
-    "Wang": ["4,11,14", "31,31,25,31,26,25,31,25"],
     "FastColl": ["4,11,14", "31,31,25,31,25,31,25"],
-    "Unicoll1": ["2", None],
-    "Unicoll3": ["6,9,15", None],
+    "Unicoll1": ["2", "31,31,23,31,23,31"],
+    "Unicoll3": ["6,9,15", '31,23,31,23,1,31,23,1,31,23,1'],
     "HashClashCPC": ["11", None],
-    "SingleCPC": ["2,4,11,14", "10,9,8,7,6,5,30,29,28,26,24,22,20,17,14,11,5,26,25,23,22,5,25,9,8,7,6,5"],
+    "SingleCPC": ["2,4,11,14", None],
     "SingleIPC": ["8,13", ""],
-    "SHAttered0": ["0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15", ""],
-    "SHAttered1": ["0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15", "12,11,10,9,5,4,2,1,8,7,5,4,1,31"],
-    "Shambles": ["0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15", "12,9,7,6,5,4,1,8,7,5,4,1,1,31"],
+    "SHAttered/Shambles": ["0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15", None],
 }
 
 
 def make_dihv_sig(ihv1: str, ihv2: str) -> str:
     indexes = []
     for index in range(0, len(ihv1), 8):
-        word1 = format(int(ihv1[index: index+8], 16), '032b')
-        word2 = format(int(ihv2[index: index+8], 16), '032b')
-        for index, char in enumerate(word1):
-            if char != word2[index]:
+        x = (int(ihv1[index: index+8], 16) -
+             int(ihv2[index: index+8], 16)) % 2**32
+        x1 = format(x >> 1, '032b')
+        x2 = format((x >> 1) + x, '032b')
+        for index, char in enumerate(x1):
+            if char != x2[index]:
                 indexes += [str(31-index)]
 
     result = ",".join(indexes)
