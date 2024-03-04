@@ -1,5 +1,3 @@
-<!-- pandoc -s -f gfm -t html README.md -o README.html -->
-
 # Hash collisions and exploitations
 
 By Ange Albertini and Marc Stevens.
@@ -1679,6 +1677,47 @@ $ detectcoll wang2.bin | grep coll
 *coll* 6a8e7124724d5c819401afc202a4fbd0 wang2.bin
 ```
 
+## Signatures
+
+For simplicity, you can parse Detectcoll output with this [script](scripts/logparse.py) and have it match with [known signatures](https://github.com/corkami/collisions/blob/7f7876c431614f33f765bfc1cb62506b476a2eb0/scripts/logparse.py#L15-L24) more easily:
+
+``` shell
+$ detectcoll_unsafe * | ./logparse.py
+apop-1.bin
+block: 2, collision: APop
+cpc1.bin
+block: 9, collision: HashClashCPC
+fastcoll1.bin
+block: 2, collision: FastColl
+single-cpc1.bin
+block: 1, collision: SingleCPC
+single-ipc1.bin
+block: 0, collision: SingleIPC
+wang1.bin
+block: 1, collision: FastColl
+pileup.exe
+block: 10, collision: HashClashCPC
+block: 20, collision: HashClashCPC
+04-unicoll-1.bin
+block: 1, collision: Unicoll1
+05-uc-n2-1.bin
+block: 1, collision: Unicoll2
+05-uc-n3-1.bin
+block: 1, collision: Unicoll3
+05-uc-n3-2.bin
+block: 1, collision: Unicoll3
+12-shattered1.bin
+block: 3, collision: SHAttered/Shambles
+block: 4, collision: SHAttered/Shambles
+13-shambles1.bin
+block: 9, collision: SHAttered/Shambles
+13-shambles2.bin
+block: 9, collision: SHAttered/Shambles
+ca-rogue.der
+block: 10, collision: HashClashCPC
+flame.der
+block: 11, collision: Flame
+```
 
 ### Multiple collisions
 
@@ -1806,3 +1845,5 @@ Thanks also to Philippe Teuwen for his extensive feedback for file formats in ge
 Unless you actively check for malformations or collisions blocks in files, don't use MD5!
 
 It's not a cryptographic hash, it's a toy function!
+
+<!-- pandoc -s -f gfm -t html README.md -o README.html -->

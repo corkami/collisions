@@ -1116,7 +1116,7 @@ sys 2m0.194s
 <p>Thanks to <a href="https://twitter.com/decalage2">Philippe Lagadec</a> for his help on Office file formats!</p>
 <h3 id="others">Others</h3>
 <ul>
-<li>Wasm, via a custom section: <a href="scripts/wasm.py">script</a>, Examples: <a href="examples/free/md5-1.wasm">md5-1.wasm</a> ⟷ <a href="examples/free/md5-2.wasm">md5-2.wasm</a></li>
+<li>Wasm, via a custom section: <a href="scripts/wasm.py">script</a>, examples: <a href="examples/free/md5-1.wasm">md5-1.wasm</a> ⟷ <a href="examples/free/md5-2.wasm">md5-2.wasm</a></li>
 </ul>
 <h2 id="uncommon-strategies">Uncommon strategies</h2>
 <p>Collisions are usually about two valid files of the same type.</p>
@@ -1415,6 +1415,44 @@ ba2499ba3dda9ef818f854b75a2bd1cd9f2b7bed flame.der
 </code></pre>
 <pre><code>$ detectcoll wang2.bin | grep coll
 *coll* 6a8e7124724d5c819401afc202a4fbd0 wang2.bin
+</code></pre>
+<h2 id="signatures">Signatures</h2>
+<p>For simplicity, you can parse Detectcoll output with this <a href="scripts/logparse.py">script</a> and have it match with <a href="https://github.com/corkami/collisions/blob/7f7876c431614f33f765bfc1cb62506b476a2eb0/scripts/logparse.py#L15-L24">known signatures</a> more easily:</p>
+<pre class="shell"><code>$ detectcoll_unsafe * | ./logparse.py
+apop-1.bin
+block: 2, collision: APop
+cpc1.bin
+block: 9, collision: HashClashCPC
+fastcoll1.bin
+block: 2, collision: FastColl
+single-cpc1.bin
+block: 1, collision: SingleCPC
+single-ipc1.bin
+block: 0, collision: SingleIPC
+wang1.bin
+block: 1, collision: FastColl
+pileup.exe
+block: 10, collision: HashClashCPC
+block: 20, collision: HashClashCPC
+04-unicoll-1.bin
+block: 1, collision: Unicoll1
+05-uc-n2-1.bin
+block: 1, collision: Unicoll2
+05-uc-n3-1.bin
+block: 1, collision: Unicoll3
+05-uc-n3-2.bin
+block: 1, collision: Unicoll3
+12-shattered1.bin
+block: 3, collision: SHAttered/Shambles
+block: 4, collision: SHAttered/Shambles
+13-shambles1.bin
+block: 9, collision: SHAttered/Shambles
+13-shambles2.bin
+block: 9, collision: SHAttered/Shambles
+ca-rogue.der
+block: 10, collision: HashClashCPC
+flame.der
+block: 11, collision: Flame
 </code></pre>
 <h3 id="multiple-collisions">Multiple collisions</h3>
 <p>A minor drawback of safe hashes is that they prevent the detection of multiple collisions in the same file, but DetectColl can still detect collisions with 'standard' hashes.</p>
