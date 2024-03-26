@@ -27,7 +27,7 @@ There are other single-bit collision attacks including some on lower bits of byt
 The script is not perfect and sometimes fails (I will try to make it smarter), in which case I suggest to just retry with a slightly modified prefix (another fix is to set `data=200000` in the script to a higher value, say `data=1000000`).
 * Clone hashclash repo
 * Follow instructions to build hashclash
-* Run `[hashclashdir]/scripts/poc_no.sh <prefixfile>` with a prefixfile of length N x 64 + K x 4 bytes where K<=3.
+* Run `[hashclashdir]/scripts/poc_no.sh <prefixfile>` with a prefixfile of length N x 64 + K x 4 bytes
 
 [WY05]: https://link.springer.com/chapter/10.1007/11426639_2 
 [M04]: https://eprint.iacr.org/2004/356.pdf
