@@ -13,6 +13,8 @@ import sys
 # Warning: there could be... collisions (!) in dIhv sigs.
 sigs = {  # dMsg, dIhv
     "APop": ["", "31,31,31,31"],
+    # Bert den Boer & Antoon Bosselaers
+    "dBB": ["5", ""],
     "FastColl": ["4,11,14", "31,31,25,31,25,31,25"],
     "Flame": ["4,11,14", "31,31,30,24,23,13,12,7,4,3,1,31,25,14,9,31,25,9"],
     "Unicoll1": ["2", "31,31,23,31,23,31"],
