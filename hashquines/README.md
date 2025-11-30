@@ -110,6 +110,14 @@ Cf self-descriptive image (here as PNG):
 
 <img src=pocs/hashquine_by_retr0id.png height=600></img>
 
+- a [JPEG XL hashquine](pocs/jxl_hashquine.jxl) by *itszn*
+
+View the JPEG XL file if your browser can render it: [View JPEG XL hashquine](pocs/jxl_hashquine.jxl)
+
+Otherwise here is a render of it in PNG:
+<img src=pics/jxl_hashquine.png height=400></img>
+
+
 
 ## Archive hashquines
 
